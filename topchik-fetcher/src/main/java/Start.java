@@ -42,8 +42,7 @@ public class Start {
   public static void main(String[] args) throws Exception {
 
     final List<String> repos = List.of(
-        "hh-topchik/topchik",
-        "foxel93/C"
+        "hh-topchik/topchik"
     );
 
     for (final String repo : repos) {
