@@ -34,14 +34,6 @@ out/
 *.ipr
 *.iws
 
-##############################
-## React & Redux
-##############################
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
 # testing
 /coverage
 
