@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="entity.Account" table="account" schema="public" catalog="postgres">
+        <id name="accountId">
+            <column name="account_id" sql-type="bigint"/>
+        </id>
+        <property name="login">
+            <column name="login" sql-type="varchar(255)"/>
+        </property>
+        <property name="email">
+            <column name="email" sql-type="varchar(255)"/>
+        </property>
+        <property name="name">
+            <column name="name" sql-type="varchar(255)"/>
+        </property>
+        <set name="approvesByAccountId" inverse="true">
+            <key column="author_id" not-null="true"/>
+            <one-to-many not-found="ignore" class="entity.Approve"/>
+        </set>
+        <set name="commentsByAccountId" inverse="true">
+            <key column="author_id" not-null="true"/>
+            <one-to-many not-found="ignore" class="entity.Comment"/>
+        </set>
+        <set name="commitsByAccountId" inverse="true">
+            <key column="author_id" not-null="true"/>
+            <one-to-many not-found="ignore" class="entity.Commit"/>
+        </set>
+        <set name="pullRequestsByAccountId" inverse="true">
+            <key column="author_id" not-null="true"/>
+            <one-to-many not-found="ignore" class="entity.PullRequest"/>
+        </set>
+    </class>
+</hibernate-mapping>

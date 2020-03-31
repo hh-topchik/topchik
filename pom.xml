@@ -28,6 +28,7 @@
     <modules>
         <module>topchik-fetcher</module>
         <module>topchik-service</module>
+        <module>topchik-model</module>
     </modules>
 
     <build>
