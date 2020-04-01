@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="entity.Commit" table="commit" schema="public" catalog="postgres">
+        <id name="sha">
+            <column name="sha" sql-type="char(40)" length="40"/>
+        </id>
+        <property name="creationTime">
+            <column name="creation_time" sql-type="timestamp"/>
+        </property>
+        <property name="addedLines">
+            <column name="added_lines" sql-type="integer"/>
+        </property>
+        <property name="deletedLines">
+            <column name="deleted_lines" sql-type="integer"/>
+        </property>
+        <many-to-one name="accountByAuthorId" class="entity.Account">
+            <column name="author_id"/>
+        </many-to-one>
+        <many-to-one name="pullRequestByPullRequestId" class="entity.PullRequest">
+            <column name="pull_request_id"/>
+        </many-to-one>
+        <many-to-one name="repositoryByRepoId" class="entity.Repository">
+            <column name="repo_id"/>
+        </many-to-one>
+        <set name="commentsBySha" inverse="true">
+            <key>
+                <column name="commit_hash"/>
+            </key>
+            <one-to-many not-found="ignore" class="entity.Comment"/>
+        </set>
+    </class>
+</hibernate-mapping>
