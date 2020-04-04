@@ -26,6 +26,7 @@
     </properties>
 
     <modules>
+        <module>topchik-aggregator</module>
         <module>topchik-fetcher</module>
         <module>topchik-service</module>
         <module>topchik-model</module>

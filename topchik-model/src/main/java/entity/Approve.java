@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+/**
+ * Класс сущности "Approve" (Статус ревью пулл реквеста)
+ * */
 @Entity
 public class Approve {
   @Id

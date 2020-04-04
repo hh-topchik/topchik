@@ -1,5 +1,8 @@
 package enums;
 
+/**
+ * Перечисление возможных статусов Апрува
+ * */
 public enum ApproveStatus {
     UNKNOWN(-1, "Unknown status"),
     PENDING(0, "Pending"),

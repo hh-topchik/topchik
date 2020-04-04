@@ -11,6 +11,9 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Objects;
 
+/**
+ * Класс сущности "Commit" (Коммит на GitHub)
+ * */
 @Entity
 public class Commit {
   private String sha;

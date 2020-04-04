@@ -10,6 +10,9 @@ import javax.persistence.OneToMany;
 import java.util.Collection;
 import java.util.Objects;
 
+/**
+ * Класс сущности "Repository" (Репозиторий на GitHub)
+ * */
 @Entity
 public class Repository {
   private long repoId;
