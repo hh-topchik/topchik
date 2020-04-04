@@ -8,30 +8,31 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
+/**
+ * Класс запуска агрегатора
+ * */
 public class Main {
   private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
-  private static DbReader reader;
-  private static Counter counter;
-  private static DbWriter writer;
+  private static final DbReader reader = new DbReader();
+  private static final Counter counter = new Counter();
+  private static final DbWriter writer = new DbWriter();
 
-  private static List<PullRequest> mergedPullRequests;
-  private static List<Action> actions;
-  private static List<Achievement> achievements;
-
+  /**
+   * Метод запуска агрегатора
+   * */
   public static void main(String[] args) {
-    LOGGER.info("Инициализация DbReader");
-    reader = new DbReader();
     LOGGER.info("Получение данных о замёрдженных PR из БД");
-    mergedPullRequests = reader.readDataForSprinters();
-    LOGGER.info("Инициализация Counter");
-    counter = new Counter();
+    List<PullRequest> mergedPullRequests = reader.readMergedPullRequests();
+
     LOGGER.info("Подсчет действий и достижений Counter'ом");
-    counter.countStatsForSprinters(mergedPullRequests);
-    actions = counter.getActions();
-    achievements = counter.getAchievements();
-    LOGGER.info("Инициализация DbWriter");
-    writer = new DbWriter(actions, achievements);
+    counter.countActions(mergedPullRequests);
+    counter.countAchievements();
+
+    List<Action> actions = counter.getActions();
+    List<Achievement> achievements = counter.getAchievements();
+    writer.dataToRecordReceiver(actions, achievements);
+
     System.exit(0);
   }
 }

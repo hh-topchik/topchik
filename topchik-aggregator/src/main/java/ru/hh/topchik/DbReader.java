@@ -1,6 +1,7 @@
 package ru.hh.topchik;
 
 import entity.PullRequest;
+import enums.PullRequestStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
@@ -12,6 +13,9 @@ import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс чтения данных из БД агрегатором
+ * */
 public class DbReader {
   private static final Logger LOGGER = LogManager.getLogger(DbReader.class);
 
@@ -21,11 +25,17 @@ public class DbReader {
   public DbReader() {
   }
 
+  /**
+   * Метод открытия сессии для соединения с БД
+   * */
   private void openSession() {
     LOGGER.info("Создание сессии");
     session = createHibernateSession();
   }
 
+  /**
+   * Метод закрытия сессии для соединения с БД
+   * */
   private void closeSession() {
     LOGGER.info("Закрытие сессии");
     session.close();
@@ -36,13 +46,13 @@ public class DbReader {
    *
    * @return - Список замёрдженных Pull Request'ов
    */
-  public List<PullRequest> readDataForSprinters() {
+  public List<PullRequest> readMergedPullRequests() {
     try {
       openSession();
       LOGGER.info("Получение списка замёрдженных PR");
       Transaction transaction = session.beginTransaction();
-      TypedQuery<PullRequest> query = session.createQuery("FROM PullRequest WHERE status = 3",
-          PullRequest.class);
+      TypedQuery<PullRequest> query = session.createQuery("FROM PullRequest WHERE status = :status",
+          PullRequest.class).setParameter("status", PullRequestStatus.MERGED.getId());
       mergedPullRequests = query.getResultList();
       transaction.commit();
       closeSession();

@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Класс сущности "Achievement" (Достижения пользователя за неделю)
+ * */
 @Entity
 public class Achievement {
   private long achievementId;
@@ -120,6 +123,6 @@ public class Achievement {
 
   @Override
   public int hashCode() {
-    return Objects.hash(achievementId, weekDate, category, points, medal);
+    return Objects.hash(weekDate, category, getAccountByDeveloperId().getAccountId());
   }
 }

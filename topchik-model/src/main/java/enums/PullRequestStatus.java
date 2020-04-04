@@ -1,5 +1,8 @@
 package enums;
 
+/**
+ * Перечисление возможных статусов Пулл Реквестов
+ * */
 public enum PullRequestStatus {
     UNKNOWN(-1, "Unknown status"),
     ALL(0, "All"),

@@ -14,6 +14,9 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Objects;
 
+/**
+ * Класс сущности "Pull Request" (Пулл реквест на GitHub)
+ * */
 @Entity
 @Table(name = "pull_request", schema = "public", catalog = "postgres")
 public class PullRequest {

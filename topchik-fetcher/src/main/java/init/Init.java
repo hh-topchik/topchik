@@ -36,7 +36,7 @@ public class Init {
    */
   public Init(final String repo) throws Exception {
     //Токкен не забудьте прописать свой
-    final GitHub github = new GitHubBuilder().withOAuthToken("81a428edf4fe4e3008ff2d7063217703f78aae14").build();
+    final GitHub github = new GitHubBuilder().withOAuthToken("ВВЕДИ СВОЙ ТОКЕН").build();
 
     //Списки сущностей для данного репозитория
     final Set<Account> accounts = new HashSet<>();

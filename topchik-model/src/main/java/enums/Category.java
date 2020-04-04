@@ -1,6 +1,10 @@
 package enums;
 
+/**
+ * Перечисление категорий, по которым составляются топы
+ * */
 public enum Category {
+    UNKNOWN(-1),
     SPRINTERS(1),
     MIND_GIGANTS(2),
     RENOVATORS(3),
@@ -21,5 +25,14 @@ public enum Category {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public static Category getById(int id) {
+        for (Category category : Category.values()) {
+            if (category.id == id) {
+                return category;
+            }
+        }
+        return UNKNOWN;
     }
 }

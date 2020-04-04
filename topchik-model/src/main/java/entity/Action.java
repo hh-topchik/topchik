@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Класс сущности "Action" (Действия пользователя за день)
+ * */
 @Entity
 public class Action {
   private long actionId;
@@ -107,6 +110,6 @@ public class Action {
 
   @Override
   public int hashCode() {
-    return Objects.hash(actionId, date, category, counter);
+    return Objects.hash(date, category, getAccountByDeveloperId().getAccountId());
   }
 }

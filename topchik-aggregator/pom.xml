@@ -13,29 +13,7 @@
 
     <artifactId>topchik-aggregator</artifactId>
 
-    <properties>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.source>11</maven.compiler.source>
-        <nab.version>4.22.20</nab.version>
-        <java.version>11</java.version>
-    </properties>
-
     <dependencies>
-        <dependency>
-            <groupId>ru.hh.nab</groupId>
-            <artifactId>nab-starter</artifactId>
-            <version>${nab.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ru.hh.nab</groupId>
-            <artifactId>nab-hibernate</artifactId>
-            <version>${nab.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ru.hh.nab</groupId>
-            <artifactId>nab-testbase</artifactId>
-            <version>${nab.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -61,64 +39,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <systemProperties>
-                        <systemProperty>
-                            <key>settingsDir</key>
-                            <value>src/etc/backend-homework</value>
-                        </systemProperty>
-                    </systemProperties>
-                    <mainClass>ru.hh.backend.homework.Main</mainClass>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <systemPropertyVariables>
-                        <settingsDir>${basedir}/src/etc/backend-homework</settingsDir>
-                    </systemPropertyVariables>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>

@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+/**
+ * Класс сущности "Comment" (Комментарий к коммиту)
+ * */
 @Entity
 public class Comment {
   @Id

@@ -11,6 +11,9 @@ import org.hibernate.cfg.Configuration;
 
 import java.util.List;
 
+/**
+ * Класс записи данных в БД агрегатором
+ * */
 public class DbWriter {
   private static final Logger LOGGER = LogManager.getLogger(DbWriter.class);
 
@@ -18,7 +21,17 @@ public class DbWriter {
   private List<Action> actions;
   private List<Achievement> achievements;
 
-  public DbWriter(List<Action> actions, List<Achievement> achievements) {
+  public DbWriter() {
+  }
+
+  /**
+   * Метод-приёмник данных для записи в БД
+   *
+   * @param actions - список действий
+   * @param achievements - список достижений
+   *
+   * */
+  public void dataToRecordReceiver(List<Action> actions, List<Achievement> achievements) {
     this.actions = actions;
     this.achievements = achievements;
     LOGGER.info("Создание сессии");
@@ -32,6 +45,9 @@ public class DbWriter {
     }
   }
 
+  /**
+   * Метод добавления записей в БД
+   * */
   private void addRecords() {
     try {
       LOGGER.info("Добавление записей в БД");
