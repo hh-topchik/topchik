@@ -1,0 +1,139 @@
+{
+    "repositories": [
+      {
+        "title": "project_1",
+        "sections": [
+          {
+            "name": "Спринтеры",
+            "description": "Количество замерженных PR",
+            "topWeek": [
+              {
+                "worker": "IvanovIvan777",
+                "points": 19
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 18
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 17
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 16
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 9
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 8
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 7
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 6
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 5
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 4
+              }
+            ],
+            "topQuarter": [
+              {
+                "worker": "IvanovIvan777",
+                "points": 19
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 18
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 17
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 16
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 9
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 8
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 7
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 6
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 5
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 4
+              }
+            ],
+            "topYear": [
+              {
+                "worker": "IvanovIvan777",
+                "points": 19
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 18
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 17
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 16
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 9
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 8
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 7
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 6
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 5
+              },
+              {
+                "worker": "IvanovIvan777",
+                "points": 4
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }

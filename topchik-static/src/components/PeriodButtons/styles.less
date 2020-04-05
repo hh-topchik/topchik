@@ -1,0 +1,35 @@
+@import './../../common/variables.less';
+
+.period-buttons {
+  display: flex;
+  margin: 30px 0 30px 0;
+
+  &__button {
+    border: none;
+    color: @color-primary;
+    background-color: transparent;
+    padding: 0;
+    margin-right: 20px;
+    font-size: 20px;
+    cursor: pointer;
+
+    &:hover {
+        color: @color-primary-hover;
+    }
+
+    &_active {
+      border: none;
+      color: @color-primary-hover;
+      background-color: transparent;
+      padding: 0;
+      margin-right: 20px;
+      font-size: 20px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+  }
+
+  
+
+}

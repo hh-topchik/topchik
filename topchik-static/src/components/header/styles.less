@@ -1,0 +1,28 @@
+@import './../../common/variables.less';
+
+.header {
+    height: 70px;
+    display: flex;
+    background-color: @color-dark;
+    align-items: center;
+
+    &__title {
+        color: white;
+        font-family: 'Source Code Pro', sans-serif;
+        font-size: 14px;
+        margin-left: 15px;
+    }
+    
+    &__logo {
+        margin-left: 30px;
+    }
+
+    &__about {
+        flex-grow: 1;
+        text-align: right;
+        padding-right: 100px;
+        color: white;
+        font-family: 'Source Code Pro', sans-serif;
+        font-size: 18px;
+    }
+}
