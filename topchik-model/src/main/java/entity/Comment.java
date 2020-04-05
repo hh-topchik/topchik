@@ -16,8 +16,6 @@ import java.util.Objects;
  * */
 @Entity
 public class Comment {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long commentId;
   private Timestamp creationTime;
   private Account accountByAuthorId;
@@ -34,6 +32,8 @@ public class Comment {
   public Comment() {
   }
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "comment_id", nullable = false)
   public long getCommentId() {
     return commentId;
