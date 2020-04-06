@@ -2,9 +2,9 @@ package ru.hh.topchik.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import ru.hh.topchik.resource.HelloResource;
+import ru.hh.topchik.resource.AchievementResource;
 
 @Configuration
-@Import(HelloResource.class)
+@Import(AchievementResource.class)
 public class JerseyConfig {
 }

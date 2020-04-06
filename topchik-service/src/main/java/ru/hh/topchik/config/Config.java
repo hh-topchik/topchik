@@ -2,9 +2,13 @@ package ru.hh.topchik.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import ru.hh.nab.hibernate.NabHibernateProdConfig;
 import ru.hh.nab.starter.NabProdConfig;
 
 @Configuration
-@Import(NabProdConfig.class)
+@Import({NabProdConfig.class,
+    NabHibernateProdConfig.class,
+    CommonConfig.class
+})
 public class Config {
 }

@@ -21,7 +21,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>11</jdk.version>
-        <nab.version>4.22.25</nab.version>
+        <nab.version>4.22.20</nab.version>
         <spring.version>5.2.2.RELEASE</spring.version>
     </properties>
 

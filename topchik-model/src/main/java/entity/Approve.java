@@ -16,8 +16,6 @@ import java.util.Objects;
  * */
 @Entity
 public class Approve {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long approveId;
   private int status;
   private Timestamp time;
@@ -36,6 +34,8 @@ public class Approve {
   public Approve() {
   }
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "approve_id", nullable = false)
   public long getApproveId() {
     return approveId;
