@@ -52,7 +52,7 @@ public class AchievementDao {
     return sessionFactory
         .getCurrentSession()
         .createQuery("SELECT ach FROM Achievement ach " +
-            "WHERE year(ach.weekDate) = year(current_date()) " +
+            "WHERE YEAR(ach.weekDate) = YEAR(current_date()) " +
             "ORDER BY ach.points DESC", Achievement.class)
         .setMaxResults(10)
         .getResultList();

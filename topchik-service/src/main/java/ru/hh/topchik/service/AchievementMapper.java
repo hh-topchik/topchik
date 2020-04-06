@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 @Singleton
 public class AchievementMapper {
   private final AchievementService achievementService;
-  private static final String categoryTitle = "Спринтеры";
-  private static final String categoryDescription = "Количество замёрдженных PR";
-  private static final String repoTitle = "hh-topchik/topchik";
+  private static final String CATEGORY_TITLE = "Спринтеры";
+  private static final String CATEGORY_DESCRIPTION = "Количество замёрдженных PR";
+  private static final String REPO_TITLE = "hh-topchik/topchik";
 
   @Inject
   public AchievementMapper(AchievementService achievementService) {
@@ -40,7 +40,7 @@ public class AchievementMapper {
    * Маппинг AchievementDTO на CategoryDTO
    * */
   public CategoryDto mapCategoryDto() {
-    return new CategoryDto(categoryTitle, categoryDescription,
+    return new CategoryDto(CATEGORY_TITLE, CATEGORY_DESCRIPTION,
         filterAchievements(achievementService.getWeekResults().stream().map(this::mapAchievementDto).collect(Collectors.toList())),
         filterAchievements(achievementService.getQuarterResults().stream().map(this::mapAchievementDto).collect(Collectors.toList())),
         filterAchievements(achievementService.getYearResults().stream().map(this::mapAchievementDto).collect(Collectors.toList())),
@@ -51,7 +51,7 @@ public class AchievementMapper {
    * Маппинг CategoryDTO на RepositoryDTO
    * */
   public RepositoryDto mapRepositoryDto(CategoryDto categoryDto) {
-    return new RepositoryDto(repoTitle, List.of(categoryDto));
+    return new RepositoryDto(REPO_TITLE, List.of(categoryDto));
   }
 
   /**
@@ -61,6 +61,9 @@ public class AchievementMapper {
     return new FinalResponseDto(List.of(repositoryDto));
   }
 
+  /**
+   * Метод для склеивания очков пользователя и ранжирования пользователей
+   * */
   public List<AchievementDto> filterAchievements(List<AchievementDto> achievementFromDb) {
     List<AchievementDto> filteredResults = new ArrayList<>();
     for (AchievementDto achievementDto : achievementFromDb) {

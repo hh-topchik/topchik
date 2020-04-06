@@ -9,7 +9,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
@@ -23,9 +22,7 @@ public class AchievementResource {
   }
 
   @GET
-  public List<FinalResponseDto> getTops() {
-    return List.of(achievementMapper.mapFinal(
-        achievementMapper.mapRepositoryDto(achievementMapper.mapCategoryDto())
-    ));
+  public FinalResponseDto getTops() {
+    return achievementMapper.mapFinal(achievementMapper.mapRepositoryDto(achievementMapper.mapCategoryDto()));
   }
 }
