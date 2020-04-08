@@ -17,6 +17,8 @@ import java.util.Optional;
  * */
 public class Counter {
 
+  private static final int DAYS_IN_A_WEEK = 7;
+
   private List<Action> actions = new ArrayList<>();
   private List<Achievement> achievements = new ArrayList<>();
 
@@ -57,8 +59,7 @@ public class Counter {
     for (Action action : actions) {
       Achievement achievement = new Achievement();
       achievement.setAchievementId(i++);
-      long daysToSubtract = action.getDate().getDayOfWeek().getValue() - 1;
-      achievement.setWeekDate(action.getDate().minusDays(daysToSubtract));
+      achievement.setWeekDate(getWeekEndDate(action.getDate()));
       achievement.setCategory(Category.SPRINTERS.getId());
       achievement.setPoints(action.getCounter());
       achievement.setMedal(Medal.NONE.getId());
@@ -80,5 +81,10 @@ public class Counter {
 
   public List<Achievement> getAchievements() {
     return achievements;
+  }
+
+  private LocalDate getWeekEndDate(LocalDate date) {
+    long daysToAdd = DAYS_IN_A_WEEK - date.getDayOfWeek().getValue();
+    return date.plusDays(daysToAdd);
   }
 }
