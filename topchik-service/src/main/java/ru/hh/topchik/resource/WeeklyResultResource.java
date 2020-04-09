@@ -1,7 +1,7 @@
 package ru.hh.topchik.resource;
 
 import ru.hh.topchik.dto.FinalResponseDto;
-import ru.hh.topchik.service.AchievementMapper;
+import ru.hh.topchik.service.WeeklyResultMapper;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -13,16 +13,16 @@ import javax.ws.rs.core.MediaType;
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
 @Singleton
-public class AchievementResource {
-  private final AchievementMapper achievementMapper;
+public class WeeklyResultResource {
+  private final WeeklyResultMapper weeklyResultMapper;
 
   @Inject
-  public AchievementResource(AchievementMapper achievementMapper) {
-    this.achievementMapper = achievementMapper;
+  public WeeklyResultResource(WeeklyResultMapper weeklyResultMapper) {
+    this.weeklyResultMapper = weeklyResultMapper;
   }
 
   @GET
   public FinalResponseDto getTops() {
-    return achievementMapper.mapFinal(achievementMapper.mapRepositoryDto(achievementMapper.mapCategoryDto()));
+    return weeklyResultMapper.mapFinal(weeklyResultMapper.mapRepositoryDto(weeklyResultMapper.mapCategoryDto()));
   }
 }

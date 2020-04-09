@@ -4,9 +4,9 @@
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
-    <class name="entity.Approve" table="approve" schema="public" catalog="postgres">
-        <id name="approveId">
-            <column name="approve_id" sql-type="bigint"/>
+    <class name="entity.Review" table="review" schema="public" catalog="postgres">
+        <id name="reviewId">
+            <column name="review_id" sql-type="bigint"/>
         </id>
         <property name="status">
             <column name="status" sql-type="integer"/>

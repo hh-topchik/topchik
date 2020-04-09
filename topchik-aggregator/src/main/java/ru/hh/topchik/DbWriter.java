@@ -1,7 +1,7 @@
 package ru.hh.topchik;
 
-import entity.Achievement;
-import entity.Action;
+import entity.DailyCount;
+import entity.WeeklyResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
@@ -18,8 +18,8 @@ public class DbWriter {
   private static final Logger LOGGER = LogManager.getLogger(DbWriter.class);
 
   private static Session session;
-  private List<Action> actions;
-  private List<Achievement> achievements;
+  private List<DailyCount> dailyCounts;
+  private List<WeeklyResult> weeklyResults;
 
   public DbWriter() {
   }
@@ -27,13 +27,13 @@ public class DbWriter {
   /**
    * Метод-приёмник данных для записи в БД
    *
-   * @param actions - список действий
-   * @param achievements - список достижений
+   * @param dailyCounts - список действий
+   * @param weeklyResults - список достижений
    *
    * */
-  public void dataToRecordReceiver(List<Action> actions, List<Achievement> achievements) {
-    this.actions = actions;
-    this.achievements = achievements;
+  public void dataToRecordReceiver(List<DailyCount> dailyCounts, List<WeeklyResult> weeklyResults) {
+    this.dailyCounts = dailyCounts;
+    this.weeklyResults = weeklyResults;
     LOGGER.info("Создание сессии");
     session = createHibernateSession();
     if (session != null) {
@@ -53,12 +53,12 @@ public class DbWriter {
       LOGGER.info("Добавление записей в БД");
       Transaction transaction = session.beginTransaction();
 
-      for (Action action : actions) {
-        session.saveOrUpdate(action);
+      for (DailyCount dailyCount : dailyCounts) {
+        session.saveOrUpdate(dailyCount);
       }
 
-      for (Achievement achievement : achievements) {
-        session.saveOrUpdate(achievement);
+      for (WeeklyResult weeklyResult : weeklyResults) {
+        session.saveOrUpdate(weeklyResult);
       }
 
       transaction.commit();

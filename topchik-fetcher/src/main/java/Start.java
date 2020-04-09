@@ -1,6 +1,6 @@
 
 import entity.Account;
-import entity.Approve;
+import entity.Review;
 import entity.Comment;
 import entity.Commit;
 import entity.PullRequest;
@@ -96,8 +96,8 @@ public class Start {
       for (final Comment comment : init.getComments()) {
         session.saveOrUpdate(comment);
       }
-      for (final Approve approve : init.getReviews()) {
-        session.saveOrUpdate(approve);
+      for (final Review review : init.getReviews()) {
+        session.saveOrUpdate(review);
       }
       for (final Account account : init.getAccounts()) {
         session.saveOrUpdate(account);

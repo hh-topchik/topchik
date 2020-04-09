@@ -24,7 +24,7 @@ public class PullRequest {
   private Timestamp creationTime;
   private Timestamp lastUpdateTime;
   private int status;
-  private Collection<Approve> approvesByPullRequestId;
+  private Collection<Review> reviewsByPullRequestId;
   private Collection<Commit> commitsByPullRequestId;
   private Account accountByAuthorId;
   private Repository repositoryByRepoId;
@@ -101,12 +101,12 @@ public class PullRequest {
   }
 
   @OneToMany(mappedBy = "pullRequestByPullRequestId")
-  public Collection<Approve> getApprovesByPullRequestId() {
-    return approvesByPullRequestId;
+  public Collection<Review> getReviewsByPullRequestId() {
+    return reviewsByPullRequestId;
   }
 
-  public void setApprovesByPullRequestId(final Collection<Approve> approvesByPullRequestId) {
-    this.approvesByPullRequestId = approvesByPullRequestId;
+  public void setReviewsByPullRequestId(final Collection<Review> reviewsByPullRequestId) {
+    this.reviewsByPullRequestId = reviewsByPullRequestId;
   }
 
   @OneToMany(mappedBy = "pullRequestByPullRequestId")

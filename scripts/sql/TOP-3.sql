@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS pull_request (
     FOREIGN KEY (repo_id) REFERENCES repository(repo_id)
 );
 
-CREATE TABLE IF NOT EXISTS approve (
-    approve_id bigint PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS review (
+    review_id bigint PRIMARY KEY,
     author_id bigint NOT NULL,
     pull_request_id bigint NOT NULL,
     status int NOT NULL,

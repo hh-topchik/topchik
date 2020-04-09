@@ -8,42 +8,44 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.Objects;
 
 /**
- * Класс сущности "Action" (Действия пользователя за день)
+ * Класс сущности "Daily Count" (Действия пользователя за день)
  * */
 @Entity
-public class Action {
-  private long actionId;
+@Table(name = "daily_count", schema = "public", catalog = "postgres")
+public class DailyCount {
+  private long dailyCountId;
   private LocalDate date;
   private int category;
   private int counter;
-  private Account accountByDeveloperId;
+  private Account accountByAccountId;
   private Repository repositoryByRepoId;
 
-  public Action() {
+  public DailyCount() {
   }
 
-  public Action(long actionId, LocalDate date, int category, int counter, Account accountByDeveloperId, Repository repositoryByRepoId) {
-    this.actionId = actionId;
+  public DailyCount(long dailyCountId, LocalDate date, int category, int counter, Account accountByAccountId, Repository repositoryByRepoId) {
+    this.dailyCountId = dailyCountId;
     this.date = date;
     this.category = category;
     this.counter = counter;
-    this.accountByDeveloperId = accountByDeveloperId;
+    this.accountByAccountId = accountByAccountId;
     this.repositoryByRepoId = repositoryByRepoId;
   }
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "action_id", nullable = false)
-  public long getActionId() {
-    return actionId;
+  @Column(name = "daily_count_id", nullable = false)
+  public long getDailyCountId() {
+    return dailyCountId;
   }
 
-  public void setActionId(long actionId) {
-    this.actionId = actionId;
+  public void setDailyCountId(long dailyCountId) {
+    this.dailyCountId = dailyCountId;
   }
 
   @Basic
@@ -77,13 +79,13 @@ public class Action {
   }
 
   @ManyToOne
-  @JoinColumn(name = "developer_id", referencedColumnName = "account_id", nullable = false, insertable = false, updatable = false)
-  public Account getAccountByDeveloperId() {
-    return accountByDeveloperId;
+  @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false, insertable = false, updatable = false)
+  public Account getAccountByAccountId() {
+    return accountByAccountId;
   }
 
-  public void setAccountByDeveloperId(Account accountByDeveloperId) {
-    this.accountByDeveloperId = accountByDeveloperId;
+  public void setAccountByAccountId(Account accountByAccountId) {
+    this.accountByAccountId = accountByAccountId;
   }
 
   @ManyToOne
@@ -104,12 +106,12 @@ public class Action {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Action action = (Action) o;
-    return actionId == action.actionId;
+    DailyCount dailyCount = (DailyCount) o;
+    return dailyCountId == dailyCount.dailyCountId;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(date, category, getAccountByDeveloperId().getAccountId());
+    return Objects.hash(date, category, getAccountByAccountId().getAccountId());
   }
 }

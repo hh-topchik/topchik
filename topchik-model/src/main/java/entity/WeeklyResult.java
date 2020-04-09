@@ -8,45 +8,47 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.Objects;
 
 /**
- * Класс сущности "Achievement" (Достижения пользователя за неделю)
+ * Класс сущности "Weekly Result" (Достижения пользователя за неделю)
  * */
 @Entity
-public class Achievement {
-  private long achievementId;
+@Table(name = "weekly_result", schema = "public", catalog = "postgres")
+public class WeeklyResult {
+  private long weeklyResultId;
   private LocalDate weekDate;
   private int category;
   private int points;
   private int medal;
-  private Account accountByDeveloperId;
+  private Account accountByAuthorId;
   private Repository repositoryByRepoId;
 
-  public Achievement() {
+  public WeeklyResult() {
   }
 
-  public Achievement(long achievementId, LocalDate weekDate, int category, int points,
-                     int medal, Account accountByDeveloperId, Repository repositoryByRepoId) {
-    this.achievementId = achievementId;
+  public WeeklyResult(long weeklyResultId, LocalDate weekDate, int category, int points,
+                      int medal, Account accountByAuthorId, Repository repositoryByRepoId) {
+    this.weeklyResultId = weeklyResultId;
     this.weekDate = weekDate;
     this.category = category;
     this.points = points;
     this.medal = medal;
-    this.accountByDeveloperId = accountByDeveloperId;
+    this.accountByAuthorId = accountByAuthorId;
     this.repositoryByRepoId = repositoryByRepoId;
   }
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "achievement_id", nullable = false)
-  public long getAchievementId() {
-    return achievementId;
+  @Column(name = "weekly_result_id", nullable = false)
+  public long getWeeklyResultId() {
+    return weeklyResultId;
   }
 
-  public void setAchievementId(long achievementId) {
-    this.achievementId = achievementId;
+  public void setWeeklyResultId(long weeklyResultId) {
+    this.weeklyResultId = weeklyResultId;
   }
 
   @Basic
@@ -90,13 +92,13 @@ public class Achievement {
   }
 
   @ManyToOne
-  @JoinColumn(name = "developer_id", referencedColumnName = "account_id", nullable = false, insertable = false, updatable = false)
-  public Account getAccountByDeveloperId() {
-    return accountByDeveloperId;
+  @JoinColumn(name = "author_id", referencedColumnName = "account_id", nullable = false, insertable = false, updatable = false)
+  public Account getAccountByAuthorId() {
+    return accountByAuthorId;
   }
 
-  public void setAccountByDeveloperId(Account accountByDeveloperId) {
-    this.accountByDeveloperId = accountByDeveloperId;
+  public void setAccountByAuthorId(Account accountByAuthorId) {
+    this.accountByAuthorId = accountByAuthorId;
   }
 
   @ManyToOne
@@ -117,12 +119,12 @@ public class Achievement {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Achievement that = (Achievement) o;
-    return achievementId == that.achievementId;
+    WeeklyResult that = (WeeklyResult) o;
+    return weeklyResultId == that.weeklyResultId;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(weekDate, category, getAccountByDeveloperId().getAccountId());
+    return Objects.hash(weekDate, category, getAccountByAuthorId().getAccountId());
   }
 }

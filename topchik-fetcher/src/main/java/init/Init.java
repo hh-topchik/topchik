@@ -1,7 +1,7 @@
 package init;
 
 import entity.Account;
-import entity.Approve;
+import entity.Review;
 import entity.Comment;
 import entity.Commit;
 import entity.PullRequest;
@@ -25,7 +25,7 @@ public class Init {
   private List<Commit> commits = new ArrayList<>();
   private List<Comment> comments = new ArrayList<>();
   private List<PullRequest> pullRequests = new ArrayList<>();
-  private List<Approve> reviews = new ArrayList<>();
+  private List<Review> reviews = new ArrayList<>();
   private List<Repository> repositories = new ArrayList<>();
 
   /**
@@ -74,7 +74,7 @@ public class Init {
     final List<PullRequest> pullRequests = Converter.listConvertedPullRequest(ghRepository.getPullRequests(GHIssueState.ALL), commits);
 
     //Формирование списка проверок по данным Github для данного репозитория
-    final List<Approve> reviews = Converter.listConvertedApprove(ghRepository.getPullRequests(GHIssueState.ALL));
+    final List<Review> reviews = Converter.listConvertedApprove(ghRepository.getPullRequests(GHIssueState.ALL));
 
     //Слияние списков сущностей данного репозитория со всеми остальными
     this.accounts.addAll(accounts);
@@ -106,7 +106,7 @@ public class Init {
     return pullRequests;
   }
 
-  public List<Approve> getReviews() {
+  public List<Review> getReviews() {
     return reviews;
   }
 

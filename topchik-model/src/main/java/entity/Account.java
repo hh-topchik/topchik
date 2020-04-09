@@ -19,10 +19,10 @@ public class Account {
   private String login;
   private String email;
   private String name;
-  private Collection<Approve> approvesByAccountId;
-  private Collection<Comment> commentsByAccountId;
-  private Collection<Commit> commitsByAccountId;
-  private Collection<PullRequest> pullRequestsByAccountId;
+  private Collection<Review> reviewsByAuthorId;
+  private Collection<Comment> commentsByAuthorId;
+  private Collection<Commit> commitsByAuthorId;
+  private Collection<PullRequest> pullRequestsByAuthorId;
 
   public Account(final long accountId, final String login, final String email, final String name) {
     this.accountId = accountId;
@@ -93,38 +93,38 @@ public class Account {
   }
 
   @OneToMany(mappedBy = "accountByAuthorId")
-  public Collection<Approve> getApprovesByAccountId() {
-    return approvesByAccountId;
+  public Collection<Review> getReviewsByAuthorId() {
+    return reviewsByAuthorId;
   }
 
-  public void setApprovesByAccountId(final Collection<Approve> approvesByAccountId) {
-    this.approvesByAccountId = approvesByAccountId;
-  }
-
-  @OneToMany(mappedBy = "accountByAuthorId")
-  public Collection<Comment> getCommentsByAccountId() {
-    return commentsByAccountId;
-  }
-
-  public void setCommentsByAccountId(final Collection<Comment> commentsByAccountId) {
-    this.commentsByAccountId = commentsByAccountId;
+  public void setReviewsByAuthorId(final Collection<Review> reviewsByAuthorId) {
+    this.reviewsByAuthorId = reviewsByAuthorId;
   }
 
   @OneToMany(mappedBy = "accountByAuthorId")
-  public Collection<Commit> getCommitsByAccountId() {
-    return commitsByAccountId;
+  public Collection<Comment> getCommentsByAuthorId() {
+    return commentsByAuthorId;
   }
 
-  public void setCommitsByAccountId(final Collection<Commit> commitsByAccountId) {
-    this.commitsByAccountId = commitsByAccountId;
+  public void setCommentsByAuthorId(final Collection<Comment> commentsByAuthorId) {
+    this.commentsByAuthorId = commentsByAuthorId;
   }
 
   @OneToMany(mappedBy = "accountByAuthorId")
-  public Collection<PullRequest> getPullRequestsByAccountId() {
-    return pullRequestsByAccountId;
+  public Collection<Commit> getCommitsByAuthorId() {
+    return commitsByAuthorId;
   }
 
-  public void setPullRequestsByAccountId(Collection<PullRequest> pullRequestsByAccountId) {
-    this.pullRequestsByAccountId = pullRequestsByAccountId;
+  public void setCommitsByAuthorId(final Collection<Commit> commitsByAuthorId) {
+    this.commitsByAuthorId = commitsByAuthorId;
+  }
+
+  @OneToMany(mappedBy = "accountByAuthorId")
+  public Collection<PullRequest> getPullRequestsByAuthorId() {
+    return pullRequestsByAuthorId;
+  }
+
+  public void setPullRequestsByAuthorId(Collection<PullRequest> pullRequestsByAuthorId) {
+    this.pullRequestsByAuthorId = pullRequestsByAuthorId;
   }
 }

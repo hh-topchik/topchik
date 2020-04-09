@@ -23,11 +23,11 @@
         <many-to-one name="repositoryByRepoId" class="entity.Repository">
             <column name="repo_id"/>
         </many-to-one>
-        <set name="approvesByPullRequestId" inverse="true">
+        <set name="reviewsByPullRequestId" inverse="true">
             <key>
                 <column name="pull_request_id"/>
             </key>
-            <one-to-many not-found="ignore" class="entity.Approve"/>
+            <one-to-many not-found="ignore" class="entity.Review"/>
         </set>
         <set name="commitsByPullRequestId" inverse="true">
             <key>
