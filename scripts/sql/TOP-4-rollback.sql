@@ -1,2 +1,2 @@
-DROP TABLE IF EXISTS daily_count;
-DROP TABLE IF EXISTS weekly_result;
+DROP TABLE IF EXISTS action;
+DROP TABLE IF EXISTS achievement;

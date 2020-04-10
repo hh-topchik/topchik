@@ -26,8 +26,8 @@ public class Main {
     List<PullRequest> mergedPullRequests = reader.readMergedPullRequests();
 
     LOGGER.info("Подсчет действий и достижений Counter'ом");
-    counter.countDailyCount(mergedPullRequests);
-    counter.countWeeklyResult();
+    counter.getDailyCount(mergedPullRequests);
+    counter.getWeeklyResult();
 
     List<DailyCount> dailyCounts = counter.getDailyCounts();
     List<WeeklyResult> weeklyResults = counter.getWeeklyResults();

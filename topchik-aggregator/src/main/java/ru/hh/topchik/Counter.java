@@ -28,7 +28,7 @@ public class Counter {
    * @param mergedPullRequests - список замёрдженных PR, полученных из БД
    *
    * */
-  public void countDailyCount(List<PullRequest> mergedPullRequests) {
+  public void getDailyCount(List<PullRequest> mergedPullRequests) {
     long i = 0;
     for (PullRequest pr : mergedPullRequests) {
       Timestamp timestamp = pr.getLastUpdateTime();
@@ -54,7 +54,7 @@ public class Counter {
    * Метод подсчёта достижений каждого пользователя за неделю
    *
    * */
-  public void countWeeklyResult() {
+  public void getWeeklyResult() {
     long i = 0L;
     for (DailyCount dailyCount : dailyCounts) {
       WeeklyResult weeklyResult = new WeeklyResult();
