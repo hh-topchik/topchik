@@ -4,9 +4,9 @@
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
-    <class name="entity.Action" table="action" schema="public" catalog="postgres">
-        <id name="actionId">
-            <column name="action_id" sql-type="bigint"/>
+    <class name="entity.DailyCount" table="daily_count" schema="public" catalog="postgres">
+        <id name="dailyCountId">
+            <column name="daily_count_id" sql-type="bigint"/>
         </id>
         <property name="date">
             <column name="date" sql-type="date"/>
@@ -17,8 +17,8 @@
         <property name="counter">
             <column name="counter" sql-type="integer"/>
         </property>
-        <many-to-one name="accountByDeveloperId" class="entity.Account">
-            <column name="developer_id"/>
+        <many-to-one name="accountByAccountId" class="entity.Account">
+            <column name="account_id"/>
         </many-to-one>
         <many-to-one name="repositoryByRepoId" class="entity.Repository">
             <column name="repo_id"/>

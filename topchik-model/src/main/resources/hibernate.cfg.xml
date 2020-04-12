@@ -11,8 +11,8 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
         <mapping resource="Account.hbm.xml"/>
         <mapping class="entity.Account"/>
-        <mapping resource="Approve.hbm.xml"/>
-        <mapping class="entity.Approve"/>
+        <mapping resource="Review.hbm.xml"/>
+        <mapping class="entity.Review"/>
         <mapping class="entity.Comment"/>
         <mapping resource="Comment.hbm.xml"/>
         <mapping resource="Commit.hbm.xml"/>
@@ -21,10 +21,10 @@
         <mapping resource="PullRequest.hbm.xml"/>
         <mapping resource="Repository.hbm.xml"/>
         <mapping class="entity.Repository"/>
-        <mapping class="entity.Action"/>
-        <mapping resource="Action.hbm.xml"/>
-        <mapping class="entity.Achievement"/>
-        <mapping resource="Achievement.hbm.xml"/>
+        <mapping class="entity.DailyCount"/>
+        <mapping resource="DailyCount.hbm.xml"/>
+        <mapping class="entity.WeeklyResult"/>
+        <mapping resource="WeeklyResult.hbm.xml"/>
 
         <!-- DB schema will be updated if needed -->
 

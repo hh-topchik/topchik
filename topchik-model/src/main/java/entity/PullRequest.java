@@ -18,13 +18,13 @@ import java.util.Objects;
  * Класс сущности "Pull Request" (Пулл реквест на GitHub)
  * */
 @Entity
-@Table(name = "pull_request", schema = "public", catalog = "postgres")
+@Table(name = "pull_request")
 public class PullRequest {
   private long pullRequestId;
   private Timestamp creationTime;
   private Timestamp lastUpdateTime;
   private int status;
-  private Collection<Approve> approvesByPullRequestId;
+  private Collection<Review> reviewsByPullRequestId;
   private Collection<Commit> commitsByPullRequestId;
   private Account accountByAuthorId;
   private Repository repositoryByRepoId;
@@ -101,12 +101,12 @@ public class PullRequest {
   }
 
   @OneToMany(mappedBy = "pullRequestByPullRequestId")
-  public Collection<Approve> getApprovesByPullRequestId() {
-    return approvesByPullRequestId;
+  public Collection<Review> getReviewsByPullRequestId() {
+    return reviewsByPullRequestId;
   }
 
-  public void setApprovesByPullRequestId(final Collection<Approve> approvesByPullRequestId) {
-    this.approvesByPullRequestId = approvesByPullRequestId;
+  public void setReviewsByPullRequestId(final Collection<Review> reviewsByPullRequestId) {
+    this.reviewsByPullRequestId = reviewsByPullRequestId;
   }
 
   @OneToMany(mappedBy = "pullRequestByPullRequestId")

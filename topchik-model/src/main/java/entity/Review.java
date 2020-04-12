@@ -12,37 +12,37 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 /**
- * Класс сущности "Approve" (Статус ревью пулл реквеста)
+ * Класс сущности "Review" (Статус ревью пулл реквеста)
  * */
 @Entity
-public class Approve {
-  private long approveId;
+public class Review {
+  private long reviewId;
   private int status;
   private Timestamp time;
   private Account accountByAuthorId;
   private PullRequest pullRequestByPullRequestId;
 
-  public Approve(final long approveId, final Account accountByAuthorId, final PullRequest pullRequestByPullRequestId,
-                 final int status, final Timestamp time) {
-    this.approveId = approveId;
+  public Review(final long reviewId, final Account accountByAuthorId, final PullRequest pullRequestByPullRequestId,
+                final int status, final Timestamp time) {
+    this.reviewId = reviewId;
     this.status = status;
     this.time = time;
     this.accountByAuthorId = accountByAuthorId;
     this.pullRequestByPullRequestId = pullRequestByPullRequestId;
   }
 
-  public Approve() {
+  public Review() {
   }
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "approve_id", nullable = false)
-  public long getApproveId() {
-    return approveId;
+  @Column(name = "review_id", nullable = false)
+  public long getReviewId() {
+    return reviewId;
   }
 
-  public void setApproveId(final long approveId) {
-    this.approveId = approveId;
+  public void setReviewId(final long reviewId) {
+    this.reviewId = reviewId;
   }
 
   @Basic
@@ -73,13 +73,13 @@ public class Approve {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    final Approve approve = (Approve) o;
-    return approveId == approve.approveId;
+    final Review review = (Review) o;
+    return reviewId == review.reviewId;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(approveId);
+    return Objects.hash(reviewId);
   }
 
   @ManyToOne

@@ -1,6 +1,6 @@
 package ru.hh.topchik.config;
 
-import dao.AchievementDao;
+import dao.WeeklyResultDao;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -11,8 +11,8 @@ import ru.hh.nab.datasource.DataSourceType;
 import ru.hh.nab.hibernate.MappingConfig;
 import ru.hh.nab.hibernate.NabHibernateCommonConfig;
 import ru.hh.nab.starter.NabCommonConfig;
-import ru.hh.topchik.service.AchievementMapper;
-import ru.hh.topchik.service.AchievementService;
+import ru.hh.topchik.service.WeeklyResultMapper;
+import ru.hh.topchik.service.WeeklyResultService;
 
 import javax.sql.DataSource;
 
@@ -21,9 +21,9 @@ import javax.sql.DataSource;
 @Import({
     NabCommonConfig.class,
     NabHibernateCommonConfig.class,
-    AchievementDao.class,
-    AchievementService.class,
-    AchievementMapper.class
+    WeeklyResultDao.class,
+    WeeklyResultService.class,
+    WeeklyResultMapper.class
 })
 public class CommonConfig {
   @Bean

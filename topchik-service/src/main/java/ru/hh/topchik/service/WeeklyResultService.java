@@ -1,7 +1,7 @@
 package ru.hh.topchik.service;
 
-import dao.AchievementDao;
-import entity.Achievement;
+import dao.WeeklyResultDao;
+import entity.WeeklyResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,48 +14,48 @@ import java.util.List;
  * Сервис-слой для сущности Achievement
  * */
 @Singleton
-public class AchievementService {
-  private static final Logger LOGGER = LogManager.getLogger(AchievementService.class);
-  private final AchievementDao achievementDao;
+public class WeeklyResultService {
+  private static final Logger LOGGER = LogManager.getLogger(WeeklyResultService.class);
+  private final WeeklyResultDao weeklyResultDao;
 
   @Inject
-  public AchievementService(AchievementDao achievementDao) {
-    this.achievementDao = achievementDao;
+  public WeeklyResultService(WeeklyResultDao weeklyResultDao) {
+    this.weeklyResultDao = weeklyResultDao;
   }
 
   /**
    * Метод получения списка достижений за неделю
    * */
   @Transactional
-  public List<Achievement> getWeekResults() {
+  public List<WeeklyResult> getWeekResults() {
     LOGGER.info("Получение списка результатов за неделю");
-    return achievementDao.getWeekResults();
+    return weeklyResultDao.getWeekResults();
   }
 
   /**
    * Метод получения списка достижений за квартал
    * */
   @Transactional
-  public List<Achievement> getQuarterResults() {
+  public List<WeeklyResult> getQuarterResults() {
     LOGGER.info("Получение списка результатов за квартал");
-    return achievementDao.getQuarterResults();
+    return weeklyResultDao.getQuarterResults();
   }
 
   /**
    * Метод получения списка достижений за год
    * */
   @Transactional
-  public List<Achievement> getYearResults() {
+  public List<WeeklyResult> getYearResults() {
     LOGGER.info("Получение списка результатов за год");
-    return achievementDao.getYearResults();
+    return weeklyResultDao.getYearResults();
   }
 
   /**
    * Метод получения списка достижений за всё время
    * */
   @Transactional
-  public List<Achievement> getAllTimeResults() {
+  public List<WeeklyResult> getAllTimeResults() {
     LOGGER.info("Получение списка результатов за всё время");
-    return achievementDao.getAllTimeResults();
+    return weeklyResultDao.getAllTimeResults();
   }
 }

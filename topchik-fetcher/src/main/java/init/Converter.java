@@ -2,7 +2,7 @@ package init;
 
 
 import entity.Account;
-import entity.Approve;
+import entity.Review;
 import entity.Comment;
 import entity.Commit;
 import entity.PullRequest;
@@ -271,25 +271,25 @@ class Converter {
   }
 
   /**
-   * Создание списка сущносте "Проверка" для данного ПР
+   * Создание списка сущностей "Ревью" для данного ПР
    *
    * @param ghPullRequest
    *            - сущность "Пулл Реквест" из Github
    * @return
-   *            - список сущностей "Проверка" для данного ПР для внесения в БД
+   *            - список сущностей "Ревью" для данного ПР для внесения в БД
    * @throws Exception
    */
-  static List<Approve> convertApproveByGHPullRequest(final GHPullRequest ghPullRequest) throws Exception {
+  static List<Review> convertApproveByGHPullRequest(final GHPullRequest ghPullRequest) throws Exception {
     if (ghPullRequest == null) {
       return Collections.emptyList();
     }
     try {
       LOGGER.info("Начало конвертации списка ревью для пулл реквеста " + ghPullRequest);
-      final List<Approve> approveList = new ArrayList<>();
-      for (final GHPullRequestReview review : ghPullRequest.listReviews()) {
-        LOGGER.info("Начало конвертации ревью для пулл реквеста " + review);
-        final long approveId = review.getId();
-        final Account author = Converter.convertUser(review.getUser());
+      final List<Review> reviewList = new ArrayList<>();
+      for (final GHPullRequestReview ghReview : ghPullRequest.listReviews()) {
+        LOGGER.info("Начало конвертации ревью для пулл реквеста " + ghReview);
+        final long reviewId = ghReview.getId();
+        final Account author = Converter.convertUser(ghReview.getUser());
         if (author == null || author.getLogin() == null) {
           LOGGER.error("Автор ревью для пулл реквеста не найден");
           continue;
@@ -299,14 +299,14 @@ class Converter {
           LOGGER.error("Пулл реквест не найден");
           continue;
         }
-        final Timestamp creationDate = Timestamp.from(review.getCreatedAt().toInstant());
-        final ApproveStatus status = ApproveStatus.valueOf(review.getState().name());
-        final Approve approve = new Approve(approveId, author, pullRequest, status.getId(), creationDate);
+        final Timestamp creationDate = Timestamp.from(ghReview.getCreatedAt().toInstant());
+        final ApproveStatus status = ApproveStatus.valueOf(ghReview.getState().name());
+        final Review review = new Review(reviewId, author, pullRequest, status.getId(), creationDate);
         LOGGER.info("Конвертация ревью для пулл реквеста прошла успешно");
-        approveList.add(approve);
+        reviewList.add(review);
       }
       LOGGER.info("Конвертация списка ревью для пулл реквеста прошла успешно");
-      return approveList;
+      return reviewList;
     } catch (Exception e) {
       LOGGER.error("Ошибка конвертации ревью пулл реквеста ", e);
       throw new Exception("Ошибка конвертации ревью пулл реквеста ", e);
@@ -322,16 +322,16 @@ class Converter {
    *            - список сущностей "Проверка" для внесения в БД
    * @throws Exception
    */
-  static List<Approve> listConvertedApprove(final List<GHPullRequest> ghPullRequestList) throws Exception {
+  static List<Review> listConvertedApprove(final List<GHPullRequest> ghPullRequestList) throws Exception {
     if (ghPullRequestList == null) {
       return Collections.emptyList();
     }
     LOGGER.info("Начало конвертации списка ревью для списка пулл реквестов " + ghPullRequestList);
-    final List<Approve> approveList = new ArrayList<>();
+    final List<Review> reviewList = new ArrayList<>();
     for (final GHPullRequest request : ghPullRequestList) {
-      approveList.addAll(convertApproveByGHPullRequest(request));
+      reviewList.addAll(convertApproveByGHPullRequest(request));
     }
     LOGGER.info("Конвертация списка ревью для списка пулл реквестов прошла успешно");
-    return approveList;
+    return reviewList;
   }
 }

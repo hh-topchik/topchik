@@ -8,17 +8,17 @@ import java.util.List;
 public class CategoryDto {
   private String name;
   private String description;
-  private List<AchievementDto> topWeek;
-  private List<AchievementDto> topQuarter;
-  private List<AchievementDto> topYear;
-  private List<AchievementDto> topAllTime;
+  private List<PointsDto> topWeek;
+  private List<PointsDto> topQuarter;
+  private List<PointsDto> topYear;
+  private List<PointsDto> topAllTime;
 
   public CategoryDto() {
   }
 
   public CategoryDto(String name, String description,
-                     List<AchievementDto> topWeek, List<AchievementDto> topQuarter,
-                     List<AchievementDto> topYear, List<AchievementDto> topAllTime) {
+                     List<PointsDto> topWeek, List<PointsDto> topQuarter,
+                     List<PointsDto> topYear, List<PointsDto> topAllTime) {
     this.name = name;
     this.description = description;
     this.topWeek = topWeek;
@@ -43,35 +43,35 @@ public class CategoryDto {
     this.description = description;
   }
 
-  public List<AchievementDto> getTopWeek() {
+  public List<PointsDto> getTopWeek() {
     return topWeek;
   }
 
-  public void setTopWeek(List<AchievementDto> topWeek) {
+  public void setTopWeek(List<PointsDto> topWeek) {
     this.topWeek = topWeek;
   }
 
-  public List<AchievementDto> getTopQuarter() {
+  public List<PointsDto> getTopQuarter() {
     return topQuarter;
   }
 
-  public void setTopQuarter(List<AchievementDto> topQuarter) {
+  public void setTopQuarter(List<PointsDto> topQuarter) {
     this.topQuarter = topQuarter;
   }
 
-  public List<AchievementDto> getTopYear() {
+  public List<PointsDto> getTopYear() {
     return topYear;
   }
 
-  public void setTopYear(List<AchievementDto> topYear) {
+  public void setTopYear(List<PointsDto> topYear) {
     this.topYear = topYear;
   }
 
-  public List<AchievementDto> getTopAllTime() {
+  public List<PointsDto> getTopAllTime() {
     return topAllTime;
   }
 
-  public void setTopAllTime(List<AchievementDto> topAllTime) {
+  public void setTopAllTime(List<PointsDto> topAllTime) {
     this.topAllTime = topAllTime;
   }
 }

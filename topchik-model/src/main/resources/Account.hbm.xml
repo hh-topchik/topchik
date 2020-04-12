@@ -17,19 +17,19 @@
         <property name="name">
             <column name="name" sql-type="varchar(255)"/>
         </property>
-        <set name="approvesByAccountId" inverse="true">
+        <set name="reviewsByAuthorId" inverse="true">
             <key column="author_id" not-null="true"/>
-            <one-to-many not-found="ignore" class="entity.Approve"/>
+            <one-to-many not-found="ignore" class="entity.Review"/>
         </set>
-        <set name="commentsByAccountId" inverse="true">
+        <set name="commentsByAuthorId" inverse="true">
             <key column="author_id" not-null="true"/>
             <one-to-many not-found="ignore" class="entity.Comment"/>
         </set>
-        <set name="commitsByAccountId" inverse="true">
+        <set name="commitsByAuthorId" inverse="true">
             <key column="author_id" not-null="true"/>
             <one-to-many not-found="ignore" class="entity.Commit"/>
         </set>
-        <set name="pullRequestsByAccountId" inverse="true">
+        <set name="pullRequestsByAuthorId" inverse="true">
             <key column="author_id" not-null="true"/>
             <one-to-many not-found="ignore" class="entity.PullRequest"/>
         </set>

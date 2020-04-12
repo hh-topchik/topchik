@@ -1,7 +1,7 @@
 package ru.hh.topchik;
 
-import entity.Achievement;
-import entity.Action;
+import entity.DailyCount;
+import entity.WeeklyResult;
 import entity.PullRequest;
 import enums.Category;
 import enums.Medal;
@@ -19,8 +19,8 @@ public class Counter {
 
   private static final int DAYS_IN_A_WEEK = 7;
 
-  private List<Action> actions = new ArrayList<>();
-  private List<Achievement> achievements = new ArrayList<>();
+  private List<DailyCount> dailyCounts = new ArrayList<>();
+  private List<WeeklyResult> weeklyResults = new ArrayList<>();
 
   /**
    * Метод подсчёта замёрдженных PR за день для каждого пользователя
@@ -28,24 +28,24 @@ public class Counter {
    * @param mergedPullRequests - список замёрдженных PR, полученных из БД
    *
    * */
-  public void countActions(List<PullRequest> mergedPullRequests) {
+  public void getDailyCount(List<PullRequest> mergedPullRequests) {
     long i = 0;
     for (PullRequest pr : mergedPullRequests) {
       Timestamp timestamp = pr.getLastUpdateTime();
       LocalDate date = timestamp.toLocalDateTime().toLocalDate();
-      Action action = new Action();
-      action.setActionId(i++);
-      action.setDate(date);
-      action.setCategory(Category.SPRINTERS.getId());
-      action.setCounter(1);
-      action.setAccountByDeveloperId(pr.getAccountByAuthorId());
-      action.setRepositoryByRepoId(pr.getRepositoryByRepoId());
-      Optional<Action> duplicate = actions.stream().filter(act -> act.hashCode() == action.hashCode()).findFirst();
+      DailyCount dailyCount = new DailyCount();
+      dailyCount.setDailyCountId(i++);
+      dailyCount.setDate(date);
+      dailyCount.setCategory(Category.SPRINTERS.getId());
+      dailyCount.setCounter(1);
+      dailyCount.setAccountByAccountId(pr.getAccountByAuthorId());
+      dailyCount.setRepositoryByRepoId(pr.getRepositoryByRepoId());
+      Optional<DailyCount> duplicate = dailyCounts.stream().filter(act -> act.hashCode() == dailyCount.hashCode()).findFirst();
       if (duplicate.isPresent()) {
         duplicate.get().setCounter(duplicate.get().getCounter() + 1);
         break;
       } else {
-        actions.add(action);
+        dailyCounts.add(dailyCount);
       }
     }
   }
@@ -54,33 +54,33 @@ public class Counter {
    * Метод подсчёта достижений каждого пользователя за неделю
    *
    * */
-  public void countAchievements() {
+  public void getWeeklyResult() {
     long i = 0L;
-    for (Action action : actions) {
-      Achievement achievement = new Achievement();
-      achievement.setAchievementId(i++);
-      achievement.setWeekDate(getWeekEndDate(action.getDate()));
-      achievement.setCategory(Category.SPRINTERS.getId());
-      achievement.setPoints(action.getCounter());
-      achievement.setMedal(Medal.NONE.getId());
-      achievement.setAccountByDeveloperId(action.getAccountByDeveloperId());
-      achievement.setRepositoryByRepoId(action.getRepositoryByRepoId());
-      Optional<Achievement> duplicate = achievements.stream()
-          .filter(achieve -> achieve.hashCode() == achievement.hashCode()).findFirst();
+    for (DailyCount dailyCount : dailyCounts) {
+      WeeklyResult weeklyResult = new WeeklyResult();
+      weeklyResult.setWeeklyResultId(i++);
+      weeklyResult.setWeekDate(getWeekEndDate(dailyCount.getDate()));
+      weeklyResult.setCategory(Category.SPRINTERS.getId());
+      weeklyResult.setPoints(dailyCount.getCounter());
+      weeklyResult.setMedal(Medal.NONE.getId());
+      weeklyResult.setAccountByAuthorId(dailyCount.getAccountByAccountId());
+      weeklyResult.setRepositoryByRepoId(dailyCount.getRepositoryByRepoId());
+      Optional<WeeklyResult> duplicate = weeklyResults.stream()
+          .filter(achieve -> achieve.hashCode() == weeklyResult.hashCode()).findFirst();
       if (duplicate.isPresent()) {
         duplicate.get().setPoints(duplicate.get().getPoints() + 1);
       } else {
-        achievements.add(achievement);
+        weeklyResults.add(weeklyResult);
       }
     }
   }
 
-  public List<Action> getActions() {
-    return actions;
+  public List<DailyCount> getDailyCounts() {
+    return dailyCounts;
   }
 
-  public List<Achievement> getAchievements() {
-    return achievements;
+  public List<WeeklyResult> getWeeklyResults() {
+    return weeklyResults;
   }
 
   private LocalDate getWeekEndDate(LocalDate date) {

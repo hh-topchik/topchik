@@ -1,7 +1,7 @@
 package ru.hh.topchik;
 
-import entity.Achievement;
-import entity.Action;
+import entity.DailyCount;
+import entity.WeeklyResult;
 import entity.PullRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,12 +26,12 @@ public class Main {
     List<PullRequest> mergedPullRequests = reader.readMergedPullRequests();
 
     LOGGER.info("Подсчет действий и достижений Counter'ом");
-    counter.countActions(mergedPullRequests);
-    counter.countAchievements();
+    counter.getDailyCount(mergedPullRequests);
+    counter.getWeeklyResult();
 
-    List<Action> actions = counter.getActions();
-    List<Achievement> achievements = counter.getAchievements();
-    writer.dataToRecordReceiver(actions, achievements);
+    List<DailyCount> dailyCounts = counter.getDailyCounts();
+    List<WeeklyResult> weeklyResults = counter.getWeeklyResults();
+    writer.dataToRecordReceiver(dailyCounts, weeklyResults);
 
     System.exit(0);
   }
