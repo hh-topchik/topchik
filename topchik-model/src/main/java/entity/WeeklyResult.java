@@ -16,7 +16,7 @@ import java.util.Objects;
  * Класс сущности "Weekly Result" (Достижения пользователя за неделю)
  * */
 @Entity
-@Table(name = "weekly_result", schema = "public", catalog = "postgres")
+@Table(name = "weekly_result")
 public class WeeklyResult {
   private long weeklyResultId;
   private LocalDate weekDate;

@@ -16,7 +16,7 @@ import java.util.Objects;
  * Класс сущности "Daily Count" (Действия пользователя за день)
  * */
 @Entity
-@Table(name = "daily_count", schema = "public", catalog = "postgres")
+@Table(name = "daily_count")
 public class DailyCount {
   private long dailyCountId;
   private LocalDate date;
