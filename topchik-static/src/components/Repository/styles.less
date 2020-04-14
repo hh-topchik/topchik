@@ -1,0 +1,36 @@
+@import './../../common/variables.less';
+
+.repository-wrapper {
+  height: 30px; 
+}
+
+.repository {
+  box-sizing: border-box;
+  text-decoration: none;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  color: black;
+  padding: 5px 0 5px 30px;
+
+  &:hover {
+    border-left: 7px solid @color-primary;
+    padding-left: 23px;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  &_active {
+    box-sizing: border-box;
+    text-decoration: none;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    border-left: 7px solid @color-primary;
+    background-color: #ffffff;
+    color: black;
+    padding: 5px 0 5px 23px;
+  }
+
+}
+
+

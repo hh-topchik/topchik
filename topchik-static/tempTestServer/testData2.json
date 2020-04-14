@@ -1,0 +1,163 @@
+{
+    "repositories": [
+      {
+        "title": "hh-topchik/topchik",
+        "sections": [
+          {
+            "name": "Спринтеры",
+            "description": "Количество замёрдженных PR",
+            "topWeek": [{ "account": "staanov", "points": 30 },
+              { "account": "foxel93", "points": 20 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 }],
+            "topQuarter": [{ "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 }],
+            "topYear": [
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 }
+            ],
+            "topAllTime": [
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "hh-topchik/topchik1",
+        "sections": [
+          {
+            "name": "Спринтеры",
+            "description": "Количество замёрдженных PR",
+            "topWeek": [{ "account": "staanov", "points": 30 },
+              { "account": "foxel93", "points": 20 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 }],
+            "topQuarter": [{ "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 }],
+            "topYear": [
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 }
+            ],
+            "topAllTime": [
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "hh-topchik/topchik2",
+        "sections": [
+          {
+            "name": "Спринтеры",
+            "description": "Количество замёрдженных PR",
+            "topWeek": [{ "account": "staanov", "points": 30 },
+              { "account": "foxel93", "points": 20 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 }],
+            "topQuarter": [{ "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 }],
+            "topYear": [
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 }
+            ],
+            "topAllTime": [
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "staanov", "points": 3 },
+              { "account": "foxel93", "points": 2 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 },
+              { "account": "svelichko", "points": 2 },
+              { "account": "romanphilipskikh", "points": 1 }
+            ]
+          }
+        ]
+      }
+    ]
+  }
