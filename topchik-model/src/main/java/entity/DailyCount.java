@@ -21,14 +21,14 @@ public class DailyCount {
   private long dailyCountId;
   private LocalDate date;
   private int category;
-  private int counter;
+  private long counter;
   private Account accountByAccountId;
   private Repository repositoryByRepoId;
 
   public DailyCount() {
   }
 
-  public DailyCount(long dailyCountId, LocalDate date, int category, int counter, Account accountByAccountId, Repository repositoryByRepoId) {
+  public DailyCount(long dailyCountId, LocalDate date, int category, long counter, Account accountByAccountId, Repository repositoryByRepoId) {
     this.dailyCountId = dailyCountId;
     this.date = date;
     this.category = category;
@@ -70,11 +70,11 @@ public class DailyCount {
 
   @Basic
   @Column(name = "counter", nullable = false)
-  public int getCounter() {
+  public long getCounter() {
     return counter;
   }
 
-  public void setCounter(int counter) {
+  public void setCounter(long counter) {
     this.counter = counter;
   }
 

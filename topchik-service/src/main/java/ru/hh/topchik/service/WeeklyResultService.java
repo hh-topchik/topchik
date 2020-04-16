@@ -1,6 +1,6 @@
 package ru.hh.topchik.service;
 
-import dao.WeeklyResultDao;
+import dao.WeeklyResultDaoImpl;
 import entity.WeeklyResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,11 +16,11 @@ import java.util.List;
 @Singleton
 public class WeeklyResultService {
   private static final Logger LOGGER = LogManager.getLogger(WeeklyResultService.class);
-  private final WeeklyResultDao weeklyResultDao;
+  private final WeeklyResultDaoImpl weeklyResultDaoImpl;
 
   @Inject
-  public WeeklyResultService(WeeklyResultDao weeklyResultDao) {
-    this.weeklyResultDao = weeklyResultDao;
+  public WeeklyResultService(WeeklyResultDaoImpl weeklyResultDaoImpl) {
+    this.weeklyResultDaoImpl = weeklyResultDaoImpl;
   }
 
   /**
@@ -29,7 +29,7 @@ public class WeeklyResultService {
   @Transactional
   public List<WeeklyResult> getWeekResults() {
     LOGGER.info("Получение списка результатов за неделю");
-    return weeklyResultDao.getWeekResults();
+    return weeklyResultDaoImpl.getWeekResults();
   }
 
   /**
@@ -38,7 +38,7 @@ public class WeeklyResultService {
   @Transactional
   public List<WeeklyResult> getQuarterResults() {
     LOGGER.info("Получение списка результатов за квартал");
-    return weeklyResultDao.getQuarterResults();
+    return weeklyResultDaoImpl.getQuarterResults();
   }
 
   /**
@@ -47,7 +47,7 @@ public class WeeklyResultService {
   @Transactional
   public List<WeeklyResult> getYearResults() {
     LOGGER.info("Получение списка результатов за год");
-    return weeklyResultDao.getYearResults();
+    return weeklyResultDaoImpl.getYearResults();
   }
 
   /**
@@ -56,6 +56,6 @@ public class WeeklyResultService {
   @Transactional
   public List<WeeklyResult> getAllTimeResults() {
     LOGGER.info("Получение списка результатов за всё время");
-    return weeklyResultDao.getAllTimeResults();
+    return weeklyResultDaoImpl.getAllTimeResults();
   }
 }

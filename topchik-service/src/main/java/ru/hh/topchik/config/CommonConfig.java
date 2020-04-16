@@ -1,6 +1,6 @@
 package ru.hh.topchik.config;
 
-import dao.WeeklyResultDao;
+import dao.WeeklyResultDaoImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 @Import({
     NabCommonConfig.class,
     NabHibernateCommonConfig.class,
-    WeeklyResultDao.class,
+    WeeklyResultDaoImpl.class,
     WeeklyResultService.class,
     WeeklyResultMapper.class
 })

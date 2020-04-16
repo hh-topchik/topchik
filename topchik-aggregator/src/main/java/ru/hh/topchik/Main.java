@@ -1,12 +1,7 @@
 package ru.hh.topchik;
 
-import entity.DailyCount;
-import entity.WeeklyResult;
-import entity.PullRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.List;
 
 /**
  * Класс запуска агрегатора
@@ -14,24 +9,23 @@ import java.util.List;
 public class Main {
   private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
-  private static final DbReader reader = new DbReader();
-  private static final Counter counter = new Counter();
-  private static final DbWriter writer = new DbWriter();
+  private static DbReader reader;
+  private static DbWriter writer;
 
   /**
    * Метод запуска агрегатора
    * */
   public static void main(String[] args) {
-    LOGGER.info("Получение данных о замёрдженных PR из БД");
-    List<PullRequest> mergedPullRequests = reader.readMergedPullRequests();
 
-    LOGGER.info("Подсчет действий и достижений Counter'ом");
-    counter.getDailyCount(mergedPullRequests);
-    counter.getWeeklyResult();
+    LOGGER.info("Инициализация объектов для чтения и записи из/в БД");
+    reader = new DbReader();
+    writer = new DbWriter();
 
-    List<DailyCount> dailyCounts = counter.getDailyCounts();
-    List<WeeklyResult> weeklyResults = counter.getWeeklyResults();
-    writer.dataToRecordReceiver(dailyCounts, weeklyResults);
+    LOGGER.info("Чтение необходимых данных для составления ежедневной и еженедельной статистики из БД");
+    reader.readDataFromDb();
+
+    LOGGER.info("Запись агрегированных список DailyCount и WeeklyResult в БД");
+    writer.receiveDataToRecord(reader.getDailyCounts(), reader.getWeeklyResults());
 
     System.exit(0);
   }
