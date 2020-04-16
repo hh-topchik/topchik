@@ -31,7 +31,7 @@ function App() {
                 ) : (
                     <Fragment>
                         <Sidebar />
-                        {activeRepositoryId !== 0 ? <Leaderboards /> : null}
+                        {activeRepositoryId !== '0' ? <Leaderboards /> : null}
                     </Fragment>
                 )}
             </div>

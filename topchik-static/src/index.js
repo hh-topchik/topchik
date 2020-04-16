@@ -5,9 +5,7 @@ import { createStore, applyMiddleware } from 'redux';
 import rootReducer from './redux/index';
 import thunkMiddleware from 'redux-thunk';
 import App from './App';
-
-import './common/normalize.less';
-import './common/fonts.less';
+import './common/css/normalize.less';
 
 const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
 store.subscribe(() => console.log('store', store.getState()));

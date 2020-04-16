@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './styles.less';
 import RepoItem from '../Repository/Repository';
 
@@ -12,10 +13,16 @@ export default function RepositoryList({ repositories, onClickHandler, activeRep
                         key={repository.id}
                         id={repository.id}
                         isActive={repository.id === activeRepositoryId}
-                        onClick={() => onClickHandler(repository.id)}
+                        onClickHandler={() => onClickHandler(repository.id)}
                     />
                 );
             })}
         </div>
     );
 }
+
+RepositoryList.propTypes = {
+    repositories: PropTypes.array,
+    activeRepositoryId: PropTypes.string,
+    onClickHandler: PropTypes.func,
+};

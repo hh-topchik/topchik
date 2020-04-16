@@ -21,7 +21,10 @@ function Sidebar() {
             <div className="sidebar__heading-wrapper">
                 <h3 className="sidebar__heading">Проекты</h3>
                 <div className="sidebar__add-repository-button">
-                    <Button variant="add-repository" />
+                    <Button
+                        variant="add-repository"
+                        onClickHandler={() => console.log('add repository click')}
+                    />
                 </div>
             </div>
             <div className="sidebar__list-wrapper">

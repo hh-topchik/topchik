@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import './styles.less';
 
@@ -30,3 +31,8 @@ export default function PeriodButtons({ onClickHandler, activeTimePeriod }) {
         </div>
     );
 }
+
+PeriodButtons.propTypes = {
+    onClickHandler: PropTypes.func,
+    activeTimePeriod: PropTypes.oneOf(['week', 'quarter', 'year', 'allTime']),
+};
