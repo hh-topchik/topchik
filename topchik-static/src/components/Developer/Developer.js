@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import './styles.less';
 
@@ -29,3 +30,10 @@ export default function Developer({ position, countPercent, account, count }) {
         </div>
     );
 }
+
+Developer.propTypes = {
+    position: PropTypes.number,
+    countPercent: PropTypes.number,
+    account: PropTypes.string,
+    count: PropTypes.number,
+};

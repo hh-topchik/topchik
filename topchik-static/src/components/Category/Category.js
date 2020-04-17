@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import './styles.less';
 import PeriodButtons from '../PeriodButtons/PeriodButtons';
 import Developer from './../Developer/Developer';
@@ -37,3 +38,12 @@ export default function Category({ name, description, topWeek, topQuarter, topYe
         </div>
     );
 }
+
+Category.propTypes = {
+    name: PropTypes.string,
+    description: PropTypes.string,
+    topWeek: PropTypes.array,
+    topQuarter: PropTypes.array,
+    topYear: PropTypes.array,
+    topAllTime: PropTypes.array,
+};

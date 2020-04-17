@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './styles.less';
 
 export default function Button({ variant, onClickHandler }) {
@@ -20,3 +21,8 @@ function AddRepositoryButton({ onClickHandler }) {
         </button>
     );
 }
+
+Button.propTypes = {
+    variant: PropTypes.oneOf(['add-repository']),
+    onClickHandler: PropTypes.func.isRequired,
+};
