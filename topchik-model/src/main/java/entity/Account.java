@@ -19,16 +19,17 @@ public class Account {
   private String login;
   private String email;
   private String name;
+  private String avatar;
   private Collection<Review> reviewsByAuthorId;
-  private Collection<Comment> commentsByAuthorId;
   private Collection<Commit> commitsByAuthorId;
   private Collection<PullRequest> pullRequestsByAuthorId;
 
-  public Account(final long accountId, final String login, final String email, final String name) {
+  public Account(final long accountId, final String login, final String email, final String name, final String avatar) {
     this.accountId = accountId;
     this.login = login;
     this.email = email;
     this.name = name;
+    this.avatar = avatar;
   }
 
   public Account() {
@@ -46,7 +47,7 @@ public class Account {
   }
 
   @Basic
-  @Column(name = "login", nullable = false, length = 255)
+  @Column(name = "login", nullable = false)
   public String getLogin() {
     return login;
   }
@@ -56,7 +57,7 @@ public class Account {
   }
 
   @Basic
-  @Column(name = "email", nullable = true, length = 255)
+  @Column(name = "email")
   public String getEmail() {
     return email;
   }
@@ -66,13 +67,23 @@ public class Account {
   }
 
   @Basic
-  @Column(name = "name", nullable = true, length = 255)
+  @Column(name = "name")
   public String getName() {
     return name;
   }
 
   public void setName(final String name) {
     this.name = name;
+  }
+
+  @Basic
+  @Column(name = "avatar")
+  public String getAvatar() {
+    return avatar;
+  }
+
+  public void setAvatar(String avatar) {
+    this.avatar = avatar;
   }
 
   @Override
@@ -99,15 +110,6 @@ public class Account {
 
   public void setReviewsByAuthorId(final Collection<Review> reviewsByAuthorId) {
     this.reviewsByAuthorId = reviewsByAuthorId;
-  }
-
-  @OneToMany(mappedBy = "accountByAuthorId")
-  public Collection<Comment> getCommentsByAuthorId() {
-    return commentsByAuthorId;
-  }
-
-  public void setCommentsByAuthorId(final Collection<Comment> commentsByAuthorId) {
-    this.commentsByAuthorId = commentsByAuthorId;
   }
 
   @OneToMany(mappedBy = "accountByAuthorId")

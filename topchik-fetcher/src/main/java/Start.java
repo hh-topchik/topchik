@@ -1,115 +1,85 @@
-
-import entity.Account;
-import entity.Review;
-import entity.Comment;
-import entity.Commit;
-import entity.PullRequest;
-import entity.Repository;
-import init.Init;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GitHubBuilder;
+import reposettings.RepoSetting;
+import reposettings.RepoSettingsLoader;
+import reposettings.ResourceHelper;
 
+import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Класс запуска Parser'a
  */
-public class Start {
-  private static final Logger LOGGER = LogManager.getLogger(Start.class);
+public class Start implements Runnable {
+  private Logger logger;
+  private RepoSetting repoSetting;
 
-  private static Init init;
-  private static Session session;
-
-  /**
-   * Конструктор класса
-   */
-  private Start() {
-    // Создание сессии
-    session = createHibernateSession();
-    if (session != null) {
-      // Добавление записей в таблицу
-      recordsAdd();
-      if (session.isOpen()) {
-        session.close();
-      }
-    }
-  }
-
-  public static void main(String[] args) throws Exception {
-
-    final List<String> repos = List.of(
-        "hh-topchik/topchik"
-    );
-
-    for (final String repo : repos) {
-      System.out.println("Начало инициализации репозитория " + repo);
-      LOGGER.info("Начало инициализации репозитория {}", repo);
-      init = new Init(repo);
-      System.out.println("Инициализация репозитория " + repo + " прошла успешно");
-      LOGGER.info("Инициализация репозитория {} прошла успешно", repo);
-      new Start();
-    }
-    System.exit(0);
-  }
-
-  /**
-   * Процедура создания сессии
-   *
-   * @return org.hibernate.Session
-   */
-  private Session createHibernateSession() {
-    final SessionFactory sessionFactory;
+  public static void main(String[] args) {
     try {
-      try {
-        Configuration cfg = new Configuration().addResource("hibernate.cfg.xml").configure();
-        sessionFactory = cfg.buildSessionFactory();
-      } catch (Throwable e) {
-        System.err.println("Failed to create sessionFactory object." + e);
-        throw new ExceptionInInitializerError(e);
+      final String settingsFileName;
+      if (args.length == 1) {
+        settingsFileName = args[0];
       }
-      session = sessionFactory.openSession();
-      System.out.println("Создание сессии");
+      else {
+        final String resource = "repo_data.csv";
+        final File settingsFile = ResourceHelper.getResourceFile(resource);
+        settingsFileName = Objects.requireNonNull(settingsFile).getAbsolutePath();
+      }
+      final List<RepoSetting> repoSettings = new RepoSettingsLoader(settingsFileName).getRepoSettings();
+      startMultiThreads(repoSettings);
     } catch (Exception e) {
-      System.out.println(e.getMessage());
+      e.printStackTrace();
     }
-    return session;
+  }
+
+  private static void startMultiThreads(List<RepoSetting> repoSettings) {
+    for (final RepoSetting repoSetting : repoSettings) {
+      final Thread thread = new Thread(new Start(repoSetting, LogManager.getLogger(repoSetting.getPath())));
+      thread.start();
+    }
+  }
+
+  private static void startOneThread(List<RepoSetting> repoSettings) {
+    for (final RepoSetting repoSetting : repoSettings) {
+      final Start start = new Start(repoSetting, LogManager.getLogger(Start.class));
+      start.init();
+    }
   }
 
   /**
-   * Процедура добавления записей в таблицу
+   * Метод инициализации процесса перевода сущностей из Github в БД
    */
-  private void recordsAdd() {
+  private void init() {
     try {
+      final GitHub github = new GitHubBuilder().withOAuthToken(repoSetting.getToken()).build();
+      System.out.println("Начало инициализации репозитория " + repoSetting.getPath());
+      logger.info("Начало инициализации репозитория {}", repoSetting.getPath());
+      final Fetcher fetcher = new Fetcher(github, repoSetting.getPath());
+      System.out.println("Инициализация репозитория " + repoSetting.getPath() + " прошла успешно");
+      logger.info("Инициализация репозитория {} прошла успешно", repoSetting.getPath());
       System.out.println("Добавление записи в таблицу БД");
-      Transaction tx = session.beginTransaction();
-
-      for (final Repository repository : init.getRepositories()) {
-        session.saveOrUpdate(repository);
-      }
-      for (final PullRequest pullRequest : init.getPullRequests()) {
-        session.saveOrUpdate(pullRequest);
-      }
-      for (final Comment comment : init.getComments()) {
-        session.saveOrUpdate(comment);
-      }
-      for (final Review review : init.getReviews()) {
-        session.saveOrUpdate(review);
-      }
-      for (final Account account : init.getAccounts()) {
-        session.saveOrUpdate(account);
-      }
-      for (final Commit commit : init.getCommits()) {
-        session.saveOrUpdate(commit);
-      }
-
-      tx.commit();
+      final SessionFactory sessionFactory = new SessionFactory();
+      sessionFactory.getAccountDao().saveOrUpdateAll(fetcher.getAccounts());
+      sessionFactory.getRepositoryDao().saveOrUpdate(fetcher.getRepository());
+      sessionFactory.getPullRequestDao().saveOrUpdateAll(fetcher.getPullRequests());
+      sessionFactory.getReviewServices().saveOrUpdateAll(fetcher.getReviews());
+      sessionFactory.getCommitDao().saveOrUpdateAll(fetcher.getCommits());
       System.out.println("\tЗаписи добавлены");
     } catch (Exception e) {
-      System.out.println(e.getMessage());
+      e.printStackTrace();
     }
+  }
+
+  private Start(RepoSetting repoSetting, Logger logger) {
+    this.repoSetting = repoSetting;
+    this.logger = logger;
+  }
+
+  @Override
+  public void run() {
+    init();
   }
 }

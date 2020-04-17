@@ -3,7 +3,7 @@ package enums;
 /**
  * Перечисление возможных статусов Апрува
  * */
-public enum ApproveStatus {
+public enum ReviewStatus {
     UNKNOWN(-1, "Unknown status"),
     PENDING(0, "Pending"),
     APPROVED(1, "Approved"),
@@ -14,7 +14,7 @@ public enum ApproveStatus {
     private int id;
     private String description;
 
-    ApproveStatus(final int id, final String description) {
+    ReviewStatus(final int id, final String description) {
         this.id = id;
         this.description = description;
     }
@@ -35,8 +35,8 @@ public enum ApproveStatus {
         this.description = description;
     }
 
-    public static ApproveStatus getById(final int id) {
-        for (final ApproveStatus status : ApproveStatus.values()) {
+    public static ReviewStatus getById(final int id) {
+        for (final ReviewStatus status : ReviewStatus.values()) {
             if (status.id == id) {
                 return status;
             }
