@@ -18,7 +18,7 @@ function App() {
     const getRanking = useCallback((url) => dispatch(fetchRanking(url)), [dispatch]);
 
     useEffect(() => {
-        getRanking('http://localhost:9200/api/getRanking');
+        getRanking('http://localhost:8080/api/getRanking');
     }, []);
 
     return (
