@@ -26,11 +26,5 @@
         <many-to-one name="repositoryByRepoId" class="entity.Repository">
             <column name="repo_id"/>
         </many-to-one>
-        <set name="commentsBySha" inverse="true">
-            <key>
-                <column name="commit_hash"/>
-            </key>
-            <one-to-many not-found="ignore" class="entity.Comment"/>
-        </set>
     </class>
 </hibernate-mapping>

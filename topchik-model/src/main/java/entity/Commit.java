@@ -6,9 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -20,7 +18,6 @@ public class Commit {
   private Timestamp creationTime;
   private int addedLines;
   private int deletedLines;
-  private Collection<Comment> commentsBySha;
   private Account accountByAuthorId;
   private PullRequest pullRequestByPullRequestId;
   private Repository repositoryByRepoId;
@@ -93,15 +90,6 @@ public class Commit {
   @Override
   public int hashCode() {
     return Objects.hash(sha, creationTime, addedLines, deletedLines);
-  }
-
-  @OneToMany(mappedBy = "commitByCommitHash")
-  public Collection<Comment> getCommentsBySha() {
-    return commentsBySha;
-  }
-
-  public void setCommentsBySha(final Collection<Comment> commentsBySha) {
-    this.commentsBySha = commentsBySha;
   }
 
   @ManyToOne
