@@ -8,10 +8,11 @@ import javax.inject.Singleton;
 import java.util.List;
 
 /**
- * Data Access Object (DAO) для сущности WeeklyResult
+ * Имплементация DAO для сущности WeeklyResult
  * */
 @Singleton
 public class WeeklyResultDao {
+
   private final SessionFactory sessionFactory;
 
   @Inject
