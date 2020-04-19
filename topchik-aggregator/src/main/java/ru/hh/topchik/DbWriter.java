@@ -13,9 +13,9 @@ import java.util.List;
 public class DbWriter {
   private static final Logger LOGGER = LogManager.getLogger(DbWriter.class);
 
+  private final DaoFactory daoFactory = new DaoFactory();
   private List<DailyCount> dailyCounts;
   private List<WeeklyResult> weeklyResults;
-  private SessionFactory sessionFactory = new SessionFactory();
 
   public DbWriter() {
   }
@@ -39,10 +39,10 @@ public class DbWriter {
   private void addRecords() {
     try {
       LOGGER.info("Добавление ежедневной статистики в БД");
-      sessionFactory.getDailyCountDao().saveOrUpdateAll(dailyCounts);
+      daoFactory.getDailyCountDao().saveOrUpdateAll(dailyCounts);
 
       LOGGER.info("Добавление еженедельной статистики в БД");
-      sessionFactory.getWeeklyResultDao().saveOrUpdateAll(weeklyResults);
+      daoFactory.getWeeklyResultDao().saveOrUpdateAll(weeklyResults);
 
       LOGGER.info("Записи добавлены");
     } catch (Exception e) {

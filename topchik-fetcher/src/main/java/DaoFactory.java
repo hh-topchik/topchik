@@ -4,7 +4,7 @@ import dao.PullRequestDaoImpl;
 import dao.RepositoryDaoImpl;
 import dao.ReviewDaoImpl;
 
-class SessionFactory {
+class DaoFactory {
   private AccountDaoImpl accountDao;
   private CommitDaoImpl commitDao;
   private PullRequestDaoImpl pullRequestDao;

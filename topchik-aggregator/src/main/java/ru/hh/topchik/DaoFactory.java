@@ -5,7 +5,7 @@ import dao.DailyCountDaoImpl;
 import dao.PullRequestDaoImpl;
 import dao.WeeklyResultDaoImpl;
 
-public class SessionFactory {
+public class DaoFactory {
   private PullRequestDaoImpl pullRequestDao;
   private CommitDaoImpl commitDao;
   private DailyCountDaoImpl dailyCountDao;

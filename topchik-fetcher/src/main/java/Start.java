@@ -61,12 +61,12 @@ public class Start implements Runnable {
       System.out.println("Инициализация репозитория " + repoSetting.getPath() + " прошла успешно");
       logger.info("Инициализация репозитория {} прошла успешно", repoSetting.getPath());
       System.out.println("Добавление записи в таблицу БД");
-      final SessionFactory sessionFactory = new SessionFactory();
-      sessionFactory.getAccountDao().saveOrUpdateAll(fetcher.getAccounts());
-      sessionFactory.getRepositoryDao().saveOrUpdate(fetcher.getRepository());
-      sessionFactory.getPullRequestDao().saveOrUpdateAll(fetcher.getPullRequests());
-      sessionFactory.getReviewServices().saveOrUpdateAll(fetcher.getReviews());
-      sessionFactory.getCommitDao().saveOrUpdateAll(fetcher.getCommits());
+      final DaoFactory daoFactory = new DaoFactory();
+      daoFactory.getAccountDao().saveOrUpdateAll(fetcher.getAccounts());
+      daoFactory.getRepositoryDao().saveOrUpdate(fetcher.getRepository());
+      daoFactory.getPullRequestDao().saveOrUpdateAll(fetcher.getPullRequests());
+      daoFactory.getReviewServices().saveOrUpdateAll(fetcher.getReviews());
+      daoFactory.getCommitDao().saveOrUpdateAll(fetcher.getCommits());
       System.out.println("\tЗаписи добавлены");
     } catch (Exception e) {
       e.printStackTrace();

@@ -9,20 +9,17 @@ import org.apache.logging.log4j.Logger;
 public class Main {
   private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
-  private static DbReader reader;
-  private static DbWriter writer;
-
   /**
    * Метод запуска агрегатора
    * */
   public static void main(String[] args) {
 
     LOGGER.info("Инициализация объектов для чтения и записи из/в БД");
-    reader = new DbReader();
-    writer = new DbWriter();
+    DbReader reader = new DbReader();
+    DbWriter writer = new DbWriter();
 
     LOGGER.info("Чтение необходимых данных для составления ежедневной и еженедельной статистики из БД");
-    reader.readDataFromDb();
+    reader.readAggregatedDataFromDb();
 
     LOGGER.info("Запись агрегированных список DailyCount и WeeklyResult в БД");
     writer.receiveDataToRecord(reader.getDailyCounts(), reader.getWeeklyResults());

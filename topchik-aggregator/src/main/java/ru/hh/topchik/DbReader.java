@@ -22,7 +22,7 @@ public class DbReader {
   private static final int MAX_WEEKLY_POINTS = 10;
   private static final int MIN_WEEKLY_POINTS = 1;
 
-  private SessionFactory sessionFactory = new SessionFactory();
+  private final DaoFactory daoFactory = new DaoFactory();
   private List<DailyCount> dailyCounts = new ArrayList<>();
   private List<WeeklyResult> weeklyResults = new ArrayList<>();
 
@@ -30,7 +30,7 @@ public class DbReader {
   }
 
 
-  public void readDataFromDb() {
+  public void readAggregatedDataFromDb() {
     try {
       LOGGER.info("Получение списка замёрдженных PR");
       countDailyMergedPullRequests(readDailyMergedPullRequests());
@@ -59,7 +59,7 @@ public class DbReader {
   }
 
   private List<PullRequestCountPojo> readDailyMergedPullRequests() {
-    return sessionFactory.getPullRequestDao().getAggregatedDailyMergedPullRequests();
+    return daoFactory.getPullRequestDao().getAggregatedDailyMergedPullRequests();
   }
 
   private void countWeeklyMergedPullRequests(List<PullRequestCountPojo> pullRequestCountPojos) {
@@ -126,7 +126,7 @@ public class DbReader {
   }
 
   private List<PullRequestCountPojo> readWeeklyMergedPullRequests() {
-    return sessionFactory.getPullRequestDao().getAggregatedWeeklyMergedPullRequests();
+    return daoFactory.getPullRequestDao().getAggregatedWeeklyMergedPullRequests();
   }
 
   private void countDailyAddedLines(List<CommitCountPojo> commitCountPojos) {
@@ -144,7 +144,7 @@ public class DbReader {
   }
 
   private List<CommitCountPojo> readDailyAddedLines() {
-    return sessionFactory.getCommitDao().getAggregatedDailyAddedLines();
+    return daoFactory.getCommitDao().getAggregatedDailyAddedLines();
   }
 
   private void countWeeklyAddedLines(List<CommitCountPojo> commitCountPojos) {
@@ -211,7 +211,7 @@ public class DbReader {
   }
 
   private List<CommitCountPojo> readWeeklyAddedLines() {
-    return sessionFactory.getCommitDao().getAggregatedWeeklyAddedLines();
+    return daoFactory.getCommitDao().getAggregatedWeeklyAddedLines();
   }
 
   private void countDailyDeletedLines(List<CommitCountPojo> commitCountPojos) {
@@ -229,7 +229,7 @@ public class DbReader {
   }
 
   private List<CommitCountPojo> readDailyDeletedLines() {
-    return sessionFactory.getCommitDao().getAggregatedDailyDeletedLines();
+    return daoFactory.getCommitDao().getAggregatedDailyDeletedLines();
   }
 
   private void countWeeklyDeletedLines(List<CommitCountPojo> commitCountPojos) {
@@ -296,7 +296,7 @@ public class DbReader {
   }
 
   private List<CommitCountPojo> readWeeklyDeletedLines() {
-    return sessionFactory.getCommitDao().getAggregatedWeeklyDeletedLines();
+    return daoFactory.getCommitDao().getAggregatedWeeklyDeletedLines();
   }
 
   public List<DailyCount> getDailyCounts() {
