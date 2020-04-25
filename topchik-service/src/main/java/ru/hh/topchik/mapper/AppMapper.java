@@ -2,7 +2,6 @@ package ru.hh.topchik.mapper;
 
 import dao.CountPointsDao;
 import dao.RepositoryDaoImpl;
-import entity.Repository;
 import enums.Category;
 import pojo.CountPointsPojo;
 import ru.hh.topchik.dto.CategoryInfoDto;
@@ -13,7 +12,6 @@ import ru.hh.topchik.dto.RepositoryInfoDto;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,19 +35,19 @@ public class AppMapper {
    * которая отправит информацию на фронт
    * */
   public ReposAndCatsDto mapReposAndCats() {
-    List<Repository> repositories = repositoryDao.findAll();
-    List<RepositoryInfoDto> repositoryInfoDtos = new ArrayList<>();
-    for (Repository repository : repositories) {
-      repositoryInfoDtos.add(new RepositoryInfoDto(repository.getRepoId(),
-          repository.getPath().substring(REPO_PATH_PATTERN.length())));
-    }
+    List<RepositoryInfoDto> repositoryInfoDtos = repositoryDao
+        .findAll()
+        .stream()
+        .map(repo -> new RepositoryInfoDto(repo.getRepoId(),
+            repo.getPath().substring(REPO_PATH_PATTERN.length())))
+        .collect(Collectors.toList());
 
-    List<Integer> categoriesId = countPointsDao.getCategoriesIdList();
-    List<CategoryInfoDto> categoryInfoDtos = new ArrayList<>();
-    for (Integer categoryId : categoriesId) {
-      categoryInfoDtos.add(new CategoryInfoDto(categoryId,
-          Category.getById(categoryId).getTitle()));
-    }
+    List<CategoryInfoDto> categoryInfoDtos = countPointsDao
+        .getCategoriesIdList()
+        .stream()
+        .map(catId -> new CategoryInfoDto(catId,
+            Category.getById(catId).getTitle()))
+        .collect(Collectors.toList());
 
     return new ReposAndCatsDto(repositoryInfoDtos, categoryInfoDtos);
   }
@@ -58,15 +56,13 @@ public class AppMapper {
    * Маппинг отдельных топов на глобальный топ по всем категориям
    * */
   public List<CategoryPeriodDto> mapGlobalTops(List<String> categories, String period) {
-    period = period.toLowerCase();
-    List<CategoryPeriodDto> globalTopsList = new ArrayList<>();
-    for (String categoryIdStr : categories) {
-      int categoryId = Integer.parseInt(categoryIdStr);
-      globalTopsList.add(new CategoryPeriodDto(Category.getById(categoryId).getTitle(),
-          Category.getById(categoryId).getDescription(),
-          getGlobalTop(categoryId, period)));
-    }
-    return globalTopsList;
+    return categories
+        .stream()
+        .map(Integer::parseInt)
+        .map(catId -> new CategoryPeriodDto(Category.getById(catId).getTitle(),
+            Category.getById(catId).getDescription(),
+            getGlobalTop(catId, period.toLowerCase())))
+        .collect(Collectors.toList());
   }
 
   /**
@@ -92,15 +88,13 @@ public class AppMapper {
    * Маппинг конкретного топа
    * */
   public List<CategoryPeriodDto> mapConcreteTops(long repoId, List<String> categories, String period) {
-    period = period.toLowerCase();
-    List<CategoryPeriodDto> concreteTopsList = new ArrayList<>();
-    for (String categoryIdStr : categories) {
-      int categoryId = Integer.parseInt(categoryIdStr);
-      concreteTopsList.add(new CategoryPeriodDto(Category.getById(categoryId).getTitle(),
-          Category.getById(categoryId).getDescription(),
-          getConcreteTop(repoId, categoryId, period)));
-    }
-    return concreteTopsList;
+    return categories
+        .stream()
+        .map(Integer::parseInt)
+        .map(catId -> new CategoryPeriodDto(Category.getById(catId).getTitle(),
+            Category.getById(catId).getDescription(),
+            getConcreteTop(repoId, catId, period.toLowerCase())))
+        .collect(Collectors.toList());
   }
 
   /**

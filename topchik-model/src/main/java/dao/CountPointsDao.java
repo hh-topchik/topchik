@@ -91,7 +91,7 @@ public class CountPointsDao {
         "FROM Account acc " +
         "INNER JOIN DailyCount dc ON acc.accountId = dc.accountByAccountId " +
         "INNER JOIN WeeklyResult wr ON acc.accountId = wr.accountByAccountId " +
-        "WHERE ((MONTH(wr.weekDate) - 1) / 3) + 1 = ((MONTH(current_date()) - 1) / 3) + 1 " +
+        "WHERE date_trunc('quarter', wr.weekDate) = date_trunc('quarter', current_date()) " +
         "AND dc.category = :category AND wr.category = :category " +
         "GROUP BY acc.login, acc.avatar " +
         "ORDER BY SUM(wr.points) DESC, SUM(dc.counter) DESC";
@@ -108,7 +108,7 @@ public class CountPointsDao {
         "FROM Account acc " +
         "INNER JOIN DailyCount dc ON acc.accountId = dc.accountByAccountId " +
         "INNER JOIN WeeklyResult wr ON acc.accountId = wr.accountByAccountId " +
-        "WHERE ((MONTH(wr.weekDate) - 1) / 3) + 1 = ((MONTH(current_date()) - 1) / 3) + 1 " +
+        "WHERE date_trunc('quarter', wr.weekDate) = date_trunc('quarter', current_date()) " +
         "AND dc.category = :category AND wr.category = :category AND wr.repositoryByRepoId.repoId = :repo " +
         "GROUP BY acc.login, acc.avatar " +
         "ORDER BY SUM(wr.points) DESC, SUM(dc.counter) DESC";
@@ -125,7 +125,7 @@ public class CountPointsDao {
         "FROM Account acc " +
         "INNER JOIN DailyCount dc ON acc.accountId = dc.accountByAccountId " +
         "INNER JOIN WeeklyResult wr ON acc.accountId = wr.accountByAccountId " +
-        "WHERE YEAR(wr.weekDate) = YEAR(current_date()) " +
+        "WHERE date_trunc('year', wr.weekDate) = date_trunc('year', current_date()) " +
         "AND dc.category = :category AND wr.category = :category " +
         "GROUP BY acc.login, acc.avatar " +
         "ORDER BY SUM(wr.points) DESC, SUM(dc.counter) DESC";
@@ -142,7 +142,7 @@ public class CountPointsDao {
         "FROM Account acc " +
         "INNER JOIN DailyCount dc ON acc.accountId = dc.accountByAccountId " +
         "INNER JOIN WeeklyResult wr ON acc.accountId = wr.accountByAccountId " +
-        "WHERE YEAR(wr.weekDate) = YEAR(current_date()) " +
+        "WHERE date_trunc('year', wr.weekDate) = date_trunc('year', current_date()) " +
         "AND dc.category = :category AND wr.category = :category AND wr.repositoryByRepoId.repoId = :repo " +
         "GROUP BY acc.login, acc.avatar " +
         "ORDER BY SUM(wr.points) DESC, SUM(dc.counter) DESC";
