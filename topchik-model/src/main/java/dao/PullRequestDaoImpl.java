@@ -5,7 +5,7 @@ import enums.PullRequestStatus;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import pojo.PullRequestCountPojo;
+import pojo.PullRequestPojo;
 import util.HibernateUtil;
 
 import javax.inject.Singleton;
@@ -21,10 +21,10 @@ public class PullRequestDaoImpl extends DaoImpl<PullRequest> {
    * Метод получения списка замёрдженных пулл реквестов за каждый день,
    * отсортированных по репозиторию, дате и количеству
    *
-   * @return List<PullRequestCountPojo> - желаемый агрегированный список количества замёрдженных пулл реквестов за каждый день
+   * @return List<PullRequestPojo> - желаемый агрегированный список количества замёрдженных пулл реквестов за каждый день
    * */
-  public List<PullRequestCountPojo> getAggregatedDailyMergedPullRequests() {
-    final String dailyMergedPullRequestsQuery = "SELECT new pojo.PullRequestCountPojo(" +
+  public List<PullRequestPojo> getAggregatedDailyMergedPullRequests() {
+    final String dailyMergedPullRequestsQuery = "SELECT new pojo.PullRequestPojo(" +
         "date_trunc('day', pr.lastUpdateTime) as count_date, pr.accountByAuthorId, pr.repositoryByRepoId, COUNT(pr) as counter) " +
         "FROM entity.PullRequest pr WHERE pr.status = :status AND pr.accountByAuthorId.login NOT LIKE '%[bot]' " +
         "GROUP BY count_date, pr.accountByAuthorId, pr.repositoryByRepoId " +
@@ -36,12 +36,13 @@ public class PullRequestDaoImpl extends DaoImpl<PullRequest> {
    * Метод получения списка замёрдженных пулл реквестов, агрегированный понедельно для каждого аккаунта и
    * отсортированный по репозиторию, дате и количеству
    *
-   * @return List<PullRequestCountPojo> - желаемый агрегированный список количества замёрдженных пулл реквестов за каждый день
+   * @return List<PullRequestPojo> - желаемый агрегированный список количества замёрдженных пулл реквестов за каждый день
    * */
-  public List<PullRequestCountPojo> getAggregatedWeeklyMergedPullRequests() {
-    final String weeklyMergedPullRequestsQuery = "SELECT new pojo.PullRequestCountPojo(" +
+  public List<PullRequestPojo> getAggregatedWeeklyMergedPullRequests() {
+    final String weeklyMergedPullRequestsQuery = "SELECT new pojo.PullRequestPojo(" +
         "date_trunc('week', pr.lastUpdateTime) as week_date, pr.accountByAuthorId, pr.repositoryByRepoId, COUNT(pr) as counter) " +
         "FROM entity.PullRequest pr WHERE pr.status = :status AND pr.accountByAuthorId.login NOT LIKE '%[bot]' " +
+        "AND date_trunc('week', pr.lastUpdateTime) != date_trunc('week', current_date()) " +
         "GROUP BY week_date, pr.accountByAuthorId, pr.repositoryByRepoId " +
         "ORDER BY pr.repositoryByRepoId, week_date, counter DESC";
     return getAggregatedPullRequestData(weeklyMergedPullRequestsQuery);
@@ -52,20 +53,20 @@ public class PullRequestDaoImpl extends DaoImpl<PullRequest> {
    *
    * @param hqlQuery - запрос на языке HQL, который надо выполнить, чтобы забрать из PullRequest агрегированные данные
    *
-   * @return  List<PullRequestCountPojo> - желаемый агрегированный список
+   * @return  List<PullRequestPojo> - желаемый агрегированный список
    * */
-  private List<PullRequestCountPojo> getAggregatedPullRequestData(String hqlQuery) {
+  private List<PullRequestPojo> getAggregatedPullRequestData(String hqlQuery) {
     Transaction transaction;
-    List<PullRequestCountPojo> pullRequestCountPojos = new ArrayList<>();
+    List<PullRequestPojo> pullRequestPojos = new ArrayList<>();
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
-      Query<PullRequestCountPojo> query = session.createQuery(hqlQuery, PullRequestCountPojo.class)
+      Query<PullRequestPojo> query = session.createQuery(hqlQuery, PullRequestPojo.class)
           .setParameter("status", PullRequestStatus.MERGED.getId());
-      pullRequestCountPojos = query.getResultList();
+      pullRequestPojos = query.getResultList();
       transaction.commit();
     } catch (Exception e) {
       e.printStackTrace();
     }
-    return pullRequestCountPojos;
+    return pullRequestPojos;
   }
 }
