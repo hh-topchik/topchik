@@ -4,15 +4,24 @@ import classNames from 'classnames';
 import './styles.less';
 
 export default function Repository({ isActive, name, onClickHandler }) {
-    const className = classNames('repository', {
-        repository_active: isActive,
-    });
-
     return (
-        <div className="repository-wrapper">
-            <a href="#" className={className} onClick={onClickHandler}>
+        <div className="repository">
+            <a
+                href="#"
+                className={classNames('repository__title', {
+                    repository__title_active: isActive,
+                })}
+                onClick={onClickHandler}
+            >
                 {name}
             </a>
+            <div className="repository__dot-wrapper">
+                <div
+                    className={classNames('repository__dot', {
+                        dot_active: isActive,
+                    })}
+                ></div>
+            </div>
         </div>
     );
 }

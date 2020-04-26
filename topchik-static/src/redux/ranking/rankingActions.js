@@ -12,12 +12,11 @@ export const fetchRankingRequest = () => {
 
 export const FETCH_DATA_SUCCESS = 'FETCH_DATA_SUCCESS';
 export const fetchRankingSuccess = (response) => {
-    const repositories = response.data.repositories.map((item, index) => {
+    const repositories = response.data.repositories.map((repository) => {
         return {
             id: uuid(),
-            name: item.title,
-            isActive: false,
-            categories: item.sections,
+            name: repository.title,
+            categories: repository.sections,
         };
     });
 
@@ -25,6 +24,7 @@ export const fetchRankingSuccess = (response) => {
         type: FETCH_DATA_SUCCESS,
         repositories: repositories,
         appStatus: 'ready',
+        activeRepositoryId: repositories[0].id,
     };
 };
 
@@ -43,9 +43,7 @@ export const fetchRanking = (url) => (dispatch) => {
     axios
         .get(url)
         .then((response) => {
-            return new Promise((resolve, reject) => {
-                setTimeout(() => resolve(response), 1500);
-            });
+            return new Promise((resolve, reject) => resolve(response));
         })
         .then((response) => {
             dispatch(fetchRankingSuccess(response));
@@ -53,4 +51,12 @@ export const fetchRanking = (url) => (dispatch) => {
         .catch((error) => {
             dispatch(fetchRankingFailure(error));
         });
+};
+
+export const SHOW_ACTIVE_REPO = 'SHOW_ACTIVE_REPO';
+export const showActiveRepository = (index) => {
+    return {
+        type: SHOW_ACTIVE_REPO,
+        activeRepositoryId: index,
+    };
 };

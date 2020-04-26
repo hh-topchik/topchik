@@ -4,7 +4,7 @@ import Logo from '../Logo/Logo';
 
 export default function Header() {
     return (
-        <header className="app__header header">
+        <header className="header">
             <div className="header__logo">
                 <Logo />
             </div>
@@ -12,7 +12,12 @@ export default function Header() {
                 <h1>топчик</h1>
             </div>
             <div className="header__about">
-                <p>О проекте</p>
+                <a className="header__about-text" href="#">
+                    О проекте
+                </a>
+                <div className="header__about-icon">
+                    <i className="fas fa-info-circle"></i>
+                </div>
             </div>
         </header>
     );

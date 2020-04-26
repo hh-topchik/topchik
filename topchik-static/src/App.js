@@ -3,35 +3,37 @@ import Header from './components/Header/Header';
 import Leaderboards from './components/Leaderboards/Leaderboards';
 import Sidebar from './components/Sidebar/Sidebar';
 import Loader from './components/Loader/Loader';
+import Fail from './components/Fail/Fail';
 import './styles.less';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchRanking } from './redux/ranking/rankingActions';
 
 function App() {
-    const { appStatus, activeRepositoryId } = useSelector((state) => ({
-        repositories: state.repositories,
+    const { appStatus } = useSelector((state) => ({
         appStatus: state.appStatus,
-        activeRepositoryId: state.activeRepositoryId,
     }));
 
     const dispatch = useDispatch();
     const getRanking = useCallback((url) => dispatch(fetchRanking(url)), [dispatch]);
 
     useEffect(() => {
-        getRanking('http://localhost:9200/api/getRanking');
+        getRanking('http://localhost:8080/api/getRanking');
     }, []);
 
     return (
         <div className="app">
-            <Header />
-
+            <div className="app__header">
+                <Header />
+            </div>
             <div className="content">
                 {appStatus === 'not ready' ? (
                     <Loader />
+                ) : appStatus === 'fail' ? (
+                    <Fail />
                 ) : (
                     <Fragment>
                         <Sidebar />
-                        {activeRepositoryId !== '0' ? <Leaderboards /> : null}
+                        <Leaderboards />
                     </Fragment>
                 )}
             </div>

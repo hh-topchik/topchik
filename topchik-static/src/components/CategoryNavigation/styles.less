@@ -1,0 +1,32 @@
+@import "./../../common/css/variables.less";
+
+.category-button {
+  font-family: "Roboto", sans-serif;
+  box-sizing: border-box;
+  font-size: 16px;
+  color: black;
+  display: flex;
+  align-items: center;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+  white-space: nowrap;
+  background-color: @color-light-2;
+  padding: 3px 10px;
+  height: 100%;
+  text-decoration: none;
+
+  @media @screen-gt-m {
+    margin-right: 20px;
+    padding: 5px 20px;   
+  }
+
+  &_active {
+    color: white;
+    background-color: @color-primary;
+  }
+}
+
+.category-navigation {
+  display: flex;
+}

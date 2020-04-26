@@ -1,28 +1,55 @@
-@import './../../common/css/variables.less';
+@import "./../../common/css/variables.less";
 
 .header {
-    height: 70px;
-    display: flex;
-    background-color: @color-dark;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  height: 50px;
 
-    &__title {
-        color: white;
-        font-family: 'Source Code Pro', sans-serif;
-        font-size: 14px;
-        margin-left: 15px;
-    }
-    
-    &__logo {
-        margin-left: 30px;
+  @media @screen-gt-s {
+    height: 80px;
+  }
+
+  @media @screen-gt-m {
+    width: 1200px;
+    margin: 0px auto;
+  }
+
+  &__title {
+    color: white;
+    font-family: "Source Code Pro", sans-serif;
+    font-size: 10px;
+    margin-left: 15px;
+
+    @media @screen-gt-s {
+      font-size: 16px;
     }
 
-    &__about {
-        flex-grow: 1;
-        text-align: right;
-        padding-right: 100px;
-        color: white;
-        font-family: 'Source Code Pro', sans-serif;
-        font-size: 18px;
+  }
+
+  &__about {
+    flex-grow: 1;
+    text-align: right;
+  }
+
+  &__about-icon {
+    display: block;
+    color: white;
+    font-size: 24px;
+
+    @media @screen-gt-s {
+      display: none;
     }
+  }
+
+  &__about-text {
+    display: none;
+    color: white;
+    text-decoration: none;
+    font-family: "Source Code Pro", sans-serif;
+    font-size: 20px;
+
+    @media @screen-gt-s {
+      display: block;
+    }
+  }
 }

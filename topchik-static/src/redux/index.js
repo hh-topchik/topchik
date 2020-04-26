@@ -1,9 +1,14 @@
 import { combineReducers } from 'redux';
-import { repositories, appStatus } from './ranking/rankingReducers';
-import { activeRepositoryId } from './handlers/handlersReducers';
+import {
+    repositories,
+    appStatus,
+    activeRepositoryId,
+    activeCategoryId,
+} from './ranking/rankingReducers';
 
 export default combineReducers({
     repositories,
     appStatus,
     activeRepositoryId,
+    activeCategoryId,
 });

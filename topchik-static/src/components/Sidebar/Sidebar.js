@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 import './styles.less';
 import RepositoryList from '../RepositoryList/RepositoryList';
-import Button from '../Button/Button';
+import AddRepositoryButton from '../AddRepositoryButton/AddRepositoryButton';
 import { useSelector, useDispatch } from 'react-redux';
-import { showActiveRepository } from './../../redux/handlers/handlersActions';
+import { showActiveRepository } from './../../redux/ranking/rankingActions';
 
 function Sidebar() {
     const { repositories, activeRepositoryId } = useSelector((state) => ({
@@ -21,8 +21,7 @@ function Sidebar() {
             <div className="sidebar__heading-wrapper">
                 <h3 className="sidebar__heading">Проекты</h3>
                 <div className="sidebar__add-repository-button">
-                    <Button
-                        variant="add-repository"
+                    <AddRepositoryButton
                         onClickHandler={() => console.log('add repository click')}
                     />
                 </div>
@@ -34,7 +33,6 @@ function Sidebar() {
                     activeRepositoryId={activeRepositoryId}
                 />
             </div>
-            <div className="sidebar__button-wrapper"></div>
         </aside>
     );
 }
