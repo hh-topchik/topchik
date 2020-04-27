@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import './styles.less';
 import PeriodButtons from '../PeriodButtons/PeriodButtons';
 import Developer from './../Developer/Developer';
 
-export default function Category({ name, description, topWeek, topQuarter, topYear, topAllTime }) {
+export default function Category({
+    id,
+    description,
+    topWeek,
+    topQuarter,
+    topYear,
+    topAllTime,
+    isActive,
+}) {
     const tops = {
         week: topWeek,
         quarter: topQuarter,
@@ -15,13 +24,18 @@ export default function Category({ name, description, topWeek, topQuarter, topYe
     const developers = tops[activeTimePeriod];
 
     return (
-        <div className="category">
-            <h3 className="category__name">{name}</h3>
+        <div
+            className={classNames('category', {
+                category_active: isActive,
+            })}
+        >
             <h4 className="category__description">{description}</h4>
-            <PeriodButtons
-                onClickHandler={setActiveTimePeriod}
-                activeTimePeriod={activeTimePeriod}
-            />
+            <div className="category__period-buttons-wrapper">
+                <PeriodButtons
+                    onClickHandler={setActiveTimePeriod}
+                    activeTimePeriod={activeTimePeriod}
+                />
+            </div>
             <div className="category__ranking">
                 {developers.map((developer, index) => {
                     return (

@@ -1,23 +1,58 @@
+@import "./common/css/variables.less";
+
 .app {
   height: 100vh;
-  display: flex;
-  flex-direction: column;
+
+  &__header {
+    padding: 0 10px;
+    background-color: @color-dark;
+
+    @media @screen-gt-s {
+      padding: 0 20px;
+    }
+
+    @media @screen-gt-m {
+      padding: 0;
+      position: sticky;
+      top: 0px;
+    }
+  }
 }
 
 .content {
   display: flex;
-  flex-direction: row;
-  height: 100%;
+  flex-direction: column;
+  padding: 0 10px;
+
+  @media @screen-gt-s {
+    padding: 0 20px;
+  }
+
+  @media @screen-gt-m {
+    flex-direction: row;
+    padding: 0;
+    width: 1200px;
+    margin: 0px auto;
+    height: calc(100vh - 80px);
+    overflow: hidden;
+  }
 
   &__sidebar {
-    width: 300px;
+    width: 100%;
+    margin-top: 20px;
+    
+    @media @screen-gt-m {
+      width: 200px;
+      margin-top: 0;
+    }
   }
 
   &__leaderboards {
-   flex-grow: 1;
-   padding-left: 30px;
+    margin-top: 20px;  
+    flex-grow: 1;
+    
+    @media @screen-gt-m {
+      margin-top: 30px;
+    }
   }
-
 }
-
-

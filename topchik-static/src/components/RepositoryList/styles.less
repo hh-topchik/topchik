@@ -1,4 +1,17 @@
+@import "./../../common/css/variables.less";
+
 .repository-list {
-    margin: 0;
-    padding: 0;
+  height: 100%;
+  display: flex;
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+   }
+ 
+  @media @screen-gt-m {
+    overflow: hidden;
+    flex-direction: column;
+    height: 100%;
+  }
 }

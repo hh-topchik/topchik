@@ -19,14 +19,20 @@ export default function Developer({ position, countPercent, account, count }) {
                     <div className="developer__position-number">{position}</div>
                 )}
             </div>
-            <div className="developer__container">
-                <div className="developer__paint-count" style={{ width: `${countPercent}%` }}></div>
-                <div className="developer__info">
-                    <i className="fas fa-user-astronaut developer__avatar"></i>
-                    <span className="developer__name">{account}</span>
-                    <span className="developer__count">{count}</span>
-                </div>
+            <div className="developer__avatar-wrapper">
+                <i className="fas fa-user-astronaut developer__avatar"></i>
             </div>
+            <div className="developer__count-indicator">
+                <div className="developer__name">{account}</div>
+                <div className="developer__paint-count-wrapper">
+                    <div
+                        className="developer__paint-count"
+                        style={{ width: `${countPercent}%` }}
+                    ></div>
+                </div>
+                <div className="developer__additional-info"></div>
+            </div>
+            <div className="developer__count">{count}</div>
         </div>
     );
 }

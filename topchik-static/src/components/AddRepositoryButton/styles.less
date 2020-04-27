@@ -1,36 +1,26 @@
 @import "./../../common/css/variables.less";
 
-.button-default {
+.add-repository-button {
   box-sizing: border-box;
   height: 100%;
   width: 100%;
+  background-color: @color-light-2;
+  color: @color-dark;
+  border-radius: 5px;
+  text-align: center;
   display: inline-block;
   border: 1px solid transparent;
-  border-radius: 1px;
-  background: @color-primary;
   font: 16px "Source Code Pro", sans-serif;
-  text-align: center;
-  color: #fff;
   user-select: none;
   cursor: pointer;
   transition-duration: 0.2s;
   transition-timing-function: ease;
   transition-property: background-color, border-color, color;
 
-  &_add-repository-button {
-  
-    background-color: @color-light;
-    color: @color-dark;
-    border-radius: 5px;
-  
+  @media @screen-gt-m {
     &:hover,
     &:active {
-      background-color: #f9f9f9;
-      outline: none;
+      background-color: @color-light;
     }
-    
   }
-
 }
-
-
