@@ -9,7 +9,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         port: 8081,
         overlay: true,
         disableHostCheck: true,
-        historyApiFallback: true
+        historyApiFallback: true,
+        host: '0.0.0.0',
     },
     plugins: [
         new webpack.SourceMapDevToolPlugin({
