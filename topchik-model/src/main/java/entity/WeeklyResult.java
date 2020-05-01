@@ -23,20 +23,20 @@ public class WeeklyResult {
   private int category;
   private int points;
   private int medal;
-  private Account accountByAuthorId;
+  private Account accountByAccountId;
   private Repository repositoryByRepoId;
 
   public WeeklyResult() {
   }
 
   public WeeklyResult(long weeklyResultId, LocalDate weekDate, int category, int points,
-                      int medal, Account accountByAuthorId, Repository repositoryByRepoId) {
+                      int medal, Account accountByAccountId, Repository repositoryByRepoId) {
     this.weeklyResultId = weeklyResultId;
     this.weekDate = weekDate;
     this.category = category;
     this.points = points;
     this.medal = medal;
-    this.accountByAuthorId = accountByAuthorId;
+    this.accountByAccountId = accountByAccountId;
     this.repositoryByRepoId = repositoryByRepoId;
   }
 
@@ -92,13 +92,13 @@ public class WeeklyResult {
   }
 
   @ManyToOne
-  @JoinColumn(name = "author_id", referencedColumnName = "account_id", nullable = false, insertable = false, updatable = false)
-  public Account getAccountByAuthorId() {
-    return accountByAuthorId;
+  @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false, insertable = false, updatable = false)
+  public Account getAccountByAccountId() {
+    return accountByAccountId;
   }
 
-  public void setAccountByAuthorId(Account accountByAuthorId) {
-    this.accountByAuthorId = accountByAuthorId;
+  public void setAccountByAccountId(Account accountByAccountId) {
+    this.accountByAccountId = accountByAccountId;
   }
 
   @ManyToOne
@@ -125,6 +125,6 @@ public class WeeklyResult {
 
   @Override
   public int hashCode() {
-    return Objects.hash(weekDate, category, getAccountByAuthorId().getAccountId());
+    return Objects.hash(weekDate, category, getAccountByAccountId().getAccountId());
   }
 }

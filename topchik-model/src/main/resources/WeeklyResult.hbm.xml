@@ -20,8 +20,8 @@
         <property name="medal">
             <column name="medal" sql-type="integer"/>
         </property>
-        <many-to-one name="accountByAuthorId" class="entity.Account">
-            <column name="author_id"/>
+        <many-to-one name="accountByAccountId" class="entity.Account">
+            <column name="account_id"/>
         </many-to-one>
         <many-to-one name="repositoryByRepoId" class="entity.Repository">
             <column name="repo_id"/>

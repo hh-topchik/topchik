@@ -17,7 +17,6 @@ import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -28,9 +27,9 @@ import java.util.Set;
  */
 class Fetcher {
   private final Set<Account> accounts = new HashSet<>();
-  private final List<Commit> commits = new ArrayList<>();
-  private final List<PullRequest> pullRequests = new ArrayList<>();
-  private final List<Review> reviews = new ArrayList<>();
+  private final Set<Commit> commits = new HashSet<>();
+  private final Set<PullRequest> pullRequests = new HashSet<>();
+  private final Set<Review> reviews = new HashSet<>();
   private final Repository repository;
 
   private final GHRepository ghRepository;
@@ -238,15 +237,15 @@ class Fetcher {
     return accounts;
   }
 
-  List<Commit> getCommits() {
+  Set<Commit> getCommits() {
     return commits;
   }
 
-  List<PullRequest> getPullRequests() {
+  Set<PullRequest> getPullRequests() {
     return pullRequests;
   }
 
-  List<Review> getReviews() {
+  Set<Review> getReviews() {
     return reviews;
   }
 

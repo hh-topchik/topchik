@@ -6,19 +6,19 @@ import entity.Repository;
 import java.util.Date;
 
 /**
- * POJO для получения нужных полей из БД по запросу добавленных или удалённых строк
+ * POJO для получения нужных полей (+ count) из БД по запросу замёрдженных PR
  * */
-public class CommitCountPojo {
+public class PullRequestPojo {
   private Date date;
   private Account accountByAuthorId;
   private Repository repositoryByRepoId;
-  private long sumLines;
+  private long count;
 
-  public CommitCountPojo(Date date, Account accountByAuthorId, Repository repositoryByRepoId, long sumLines) {
+  public PullRequestPojo(Date date, Account accountByAuthorId, Repository repositoryByRepoId, long count) {
     this.date = date;
     this.accountByAuthorId = accountByAuthorId;
     this.repositoryByRepoId = repositoryByRepoId;
-    this.sumLines = sumLines;
+    this.count = count;
   }
 
   public Date getDate() {
@@ -45,11 +45,11 @@ public class CommitCountPojo {
     this.repositoryByRepoId = repositoryByRepoId;
   }
 
-  public long getSumLines() {
-    return sumLines;
+  public long getCount() {
+    return count;
   }
 
-  public void setSumLines(long sumLines) {
-    this.sumLines = sumLines;
+  public void setCount(long count) {
+    this.count = count;
   }
 }
