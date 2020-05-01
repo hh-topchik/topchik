@@ -16,8 +16,41 @@ function Leaderboards() {
 
     const [activeCategoryId, setActiveCategoryId] = useState(0);
 
+    const categoryRefs = currentRepository.categories.map(() => {
+        return React.createRef();
+    });
+
+    const onClickCategoryButtonHandler = (id) => {
+        categoryRefs[id].current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+            inline: 'nearest',
+        });
+    };
+
+    const handleScroll = () => {
+        const activeCategoryElement = categoryRefs[activeCategoryId].current;
+        // все категории изначально смещены на значение offsetTop для первой категории
+        // поэтому границу переключения при скролле ВНИЗ нужно задавать как изначальное смещение МИНУС высоты текущей категории
+        const lowerLimit = categoryRefs[0].current.offsetTop - activeCategoryElement.clientHeight;
+        // и границу переключения при скролле ВВЕРХ нужно задавать как изначальное смещение ПЛЮС высоты текущей категории
+        const upperLimit = categoryRefs[0].current.offsetTop + activeCategoryElement.clientHeight;
+        const scrollTop = activeCategoryElement.getBoundingClientRect().top;
+
+        let calculatedActiveCategory = activeCategoryId;
+        if (scrollTop < lowerLimit) {
+            calculatedActiveCategory++;
+        } else if (scrollTop > upperLimit) {
+            calculatedActiveCategory--;
+        }
+
+        if (calculatedActiveCategory !== activeCategoryId) {
+            setActiveCategoryId(calculatedActiveCategory);
+        }
+    };
+
     return (
-        <main className="content__leaderboards leaderboards">
+        <main className="content__leaderboards leaderboards" onScroll={handleScroll}>
             <div className="leaderboards__category-buttons-group">
                 <div className="leaderboards__category-heading-wrapper">
                     <h3 className="leaderboards__category-heading">Категории</h3>
@@ -28,7 +61,7 @@ function Leaderboards() {
                             (category) => category.name,
                         )}
                         activeCategoryId={activeCategoryId}
-                        onClickHandler={setActiveCategoryId}
+                        onClickHandler={onClickCategoryButtonHandler}
                     />
                 </div>
             </div>
@@ -37,6 +70,7 @@ function Leaderboards() {
                     <Category
                         key={index}
                         id={index}
+                        refs={categoryRefs}
                         isActive={activeCategoryId === index}
                         description={category.description}
                         topWeek={category.topWeek}

@@ -23,14 +23,20 @@
 
     @media @screen-gt-m {
       margin-right: 20px;
+      transition-duration: 0.2s;
+      transition-timing-function: ease;
+      transition-property: color;
+      
       &:hover {
         color: @color-primary;
+        outline: none;
       }
     }
 
     &_active {
       color: @color-primary;
       border-bottom: 2px solid @color-primary;
+      outline: none;
     }
   }
 }

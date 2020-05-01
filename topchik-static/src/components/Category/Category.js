@@ -13,6 +13,7 @@ export default function Category({
     topYear,
     topAllTime,
     isActive,
+    refs,
 }) {
     const tops = {
         week: topWeek,
@@ -21,20 +22,24 @@ export default function Category({
         allTime: topAllTime,
     };
     const [activeTimePeriod, setActiveTimePeriod] = useState('week');
+    const [showPaintingAnimation, setShowPaintingAnimation] = useState(true);
     const developers = tops[activeTimePeriod];
+
+    const onClickPeriod = (e) => {
+        setActiveTimePeriod(e.target.value);
+        setShowPaintingAnimation(true);
+    };
 
     return (
         <div
             className={classNames('category', {
                 category_active: isActive,
             })}
+            ref={refs[id]}
         >
             <h4 className="category__description">{description}</h4>
             <div className="category__period-buttons-wrapper">
-                <PeriodButtons
-                    onClickHandler={setActiveTimePeriod}
-                    activeTimePeriod={activeTimePeriod}
-                />
+                <PeriodButtons activeTimePeriod={activeTimePeriod} onClickHandler={onClickPeriod} />
             </div>
             <div className="category__ranking">
                 {developers.map((developer, index) => {
@@ -45,6 +50,8 @@ export default function Category({
                             position={index + 1}
                             countPercent={(developer.points / developers[0].points) * 100}
                             count={developer.points}
+                            onAnimationEndHandler={() => setShowPaintingAnimation(false)}
+                            showPaintingAnimation={showPaintingAnimation}
                         />
                     );
                 })}

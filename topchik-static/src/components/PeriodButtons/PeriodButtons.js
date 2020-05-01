@@ -22,7 +22,7 @@ export default function PeriodButtons({ onClickHandler, activeTimePeriod }) {
                         key={index}
                         className={classNameButton}
                         value={button.periodValue}
-                        onClick={(e) => onClickHandler(e.target.value)}
+                        onClick={onClickHandler}
                     >
                         {button.periodView}
                     </button>

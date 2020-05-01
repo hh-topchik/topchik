@@ -3,7 +3,14 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import './styles.less';
 
-export default function Developer({ position, countPercent, account, count }) {
+export default function Developer({
+    position,
+    countPercent,
+    account,
+    count,
+    showPaintingAnimation,
+    onAnimationEndHandler,
+}) {
     const classNameIcon = classNames('fas fa-trophy', {
         'developer__icon_first-place': position === 1,
         'developer__icon_second-place': position === 2,
@@ -26,9 +33,15 @@ export default function Developer({ position, countPercent, account, count }) {
                 <div className="developer__name">{account}</div>
                 <div className="developer__paint-count-wrapper">
                     <div
-                        className="developer__paint-count"
+                        className="developer__paint-count-container"
                         style={{ width: `${countPercent}%` }}
-                    ></div>
+                    >
+                        <div
+                            className="developer__paint-count"
+                            showpaintinganimation={showPaintingAnimation.toString()}
+                            onAnimationEnd={onAnimationEndHandler}
+                        ></div>
+                    </div>
                 </div>
                 <div className="developer__additional-info"></div>
             </div>
