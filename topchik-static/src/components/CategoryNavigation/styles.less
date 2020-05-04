@@ -18,12 +18,16 @@
 
   @media @screen-gt-m {
     margin-right: 20px;
-    padding: 5px 20px;   
+    padding: 5px 20px;
+    cursor: pointer;
   }
 
   &_active {
     color: white;
     background-color: @color-primary;
+    transition-duration: 0.5s;
+    transition-timing-function: ease;
+    transition-property: background-color;
   }
 }
 

@@ -18,7 +18,7 @@ export default function Repository({ isActive, name, onClickHandler }) {
             <div className="repository__dot-wrapper">
                 <div
                     className={classNames('repository__dot', {
-                        dot_active: isActive,
+                        repository__dot_active: isActive,
                     })}
                 ></div>
             </div>

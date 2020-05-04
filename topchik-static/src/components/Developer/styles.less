@@ -47,6 +47,11 @@
     height: 100%;
     background-color: #0ac789;
     z-index: 2;
+    width: inherit;
+  }
+
+  &__paint-count[showpaintinganimation='true'] {
+    animation: painting-animation .75s ease;
   }
 
   &__count {
@@ -68,4 +73,13 @@
     flex-grow: 1;
   }
 
+}
+
+@keyframes painting-animation {
+  0% {
+    width: 0px;
+  }
+  100% {
+    width: inherit;
+  }
 }

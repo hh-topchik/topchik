@@ -19,8 +19,8 @@ function CategoryButton({ onClickHandler, categoryTitle, id, activeCategoryId })
 CategoryButton.propTypes = {
     onClickHandler: PropTypes.func.isRequired,
     categoryTitle: PropTypes.string,
-    activeCategoryId: PropTypes.string,
-    id: PropTypes.string,
+    activeCategoryId: PropTypes.number,
+    id: PropTypes.number,
 };
 
 export default function CategoryNavigation({ categoryTitles, onClickHandler, activeCategoryId }) {
@@ -42,5 +42,5 @@ export default function CategoryNavigation({ categoryTitles, onClickHandler, act
 CategoryNavigation.propTypes = {
     onClickHandler: PropTypes.func.isRequired,
     categoryTitles: PropTypes.array,
-    activeCategoryId: PropTypes.string,
+    activeCategoryId: PropTypes.number,
 };
