@@ -1,19 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './styles.less';
-import RepoItem from '../Repository/Repository';
+import Repository from '../Repository/Repository';
 
-export default function RepositoryList({ repositories, onClickHandler, activeRepositoryId }) {
+export default function RepositoryList({ repositories, activeRepositoryId }) {
     return (
         <div className="repository-list">
             {repositories.map((repository) => {
                 return (
-                    <RepoItem
-                        name={repository.name}
+                    <Repository
+                        title={repository.title}
                         key={repository.id}
                         id={repository.id}
-                        isActive={repository.id === activeRepositoryId}
-                        onClickHandler={() => onClickHandler(repository.id)}
+                        isActive={repository.id == activeRepositoryId}
                     />
                 );
             })}
@@ -23,6 +22,5 @@ export default function RepositoryList({ repositories, onClickHandler, activeRep
 
 RepositoryList.propTypes = {
     repositories: PropTypes.array,
-    activeRepositoryId: PropTypes.string,
-    onClickHandler: PropTypes.func,
+    activeRepositoryId: PropTypes.number,
 };

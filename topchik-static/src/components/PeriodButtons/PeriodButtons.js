@@ -10,7 +10,12 @@ const buttons = [
     { periodValue: 'allTime', periodView: 'за всё время' },
 ];
 
-export default function PeriodButtons({ onClickHandler, activeTimePeriod }) {
+export default function PeriodButtons({
+    onClickHandler,
+    activeTimePeriod,
+    activeRepositoryId,
+    categoryId,
+}) {
     return (
         <div className="period-buttons">
             {buttons.map((button, index) => {
@@ -22,7 +27,7 @@ export default function PeriodButtons({ onClickHandler, activeTimePeriod }) {
                         key={index}
                         className={classNameButton}
                         value={button.periodValue}
-                        onClick={onClickHandler}
+                        onClick={(e) => onClickHandler(e, activeRepositoryId, categoryId)}
                     >
                         {button.periodView}
                     </button>
