@@ -1,0 +1,51 @@
+@import "./../../common/css/variables.less";
+
+.about {
+  font-family: "Roboto", sans-serif;
+  padding-top: 30px;
+  overflow: auto;
+
+  &__tops-link {
+    font-family: "Roboto", sans-serif;
+    box-sizing: border-box;
+    font-size: 16px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 5px;
+    white-space: nowrap;
+    background-color: @color-primary;
+    padding: 3px 10px;
+    height: 50px;
+    width: 300px;
+    text-decoration: none;
+  }
+
+  &__definition {
+    font-size: 20px;
+  }
+
+  &__team-list {
+    list-style-type: none;
+  }
+
+  &__link {
+    text-decoration: none;
+    color: @color-primary;
+
+    &:hover {
+      color: @color-primary-hover;
+    }
+  }
+
+  &__donation {
+    margin-top: 30px;
+    width: 300px;
+
+    @media @screen-gt-m {
+      width: 500px;
+    }
+  }
+}

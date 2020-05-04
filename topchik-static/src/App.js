@@ -4,6 +4,7 @@ import Leaderboards from './components/Leaderboards/Leaderboards';
 import Sidebar from './components/Sidebar/Sidebar';
 import Loader from './components/Loader/Loader';
 import Fail from './components/Fail/Fail';
+import About from './components/About/About';
 import './styles.less';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchRepositoriesAndCategories } from './redux/ranking/rankingActions';
@@ -36,6 +37,7 @@ function App() {
                         <Redirect from="/" to="/repositories/global" />
                         <Route path="/repositories/:repositoryId" component={Sidebar} />
                         <Route path="/repositories/:repositoryId" component={Leaderboards} />
+                        <Route path="/about" component={About} />
                     </Fragment>
                 )}
             </div>
