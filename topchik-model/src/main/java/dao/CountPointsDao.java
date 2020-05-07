@@ -1,6 +1,8 @@
 package dao;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.transform.Transformers;
+import org.hibernate.type.StandardBasicTypes;
 import pojo.CountPointsPojo;
 
 import javax.inject.Inject;
@@ -26,27 +28,35 @@ public class CountPointsDao {
    * Получение количества очков по любой категории и всем репозиториям
    * */
   @Transactional
-  private List<CountPointsPojo> getFullResults(String hqlQuery, int categoryId) {
+  private List<CountPointsPojo> getFullResults(String query, int categoryId) {
     return sessionFactory
         .getCurrentSession()
-        .createQuery(hqlQuery, CountPointsPojo.class)
+        .createSQLQuery(query)
         .setParameter("category", categoryId)
-        .setMaxResults(10)
-        .getResultList();
+        .addScalar("avatar", StandardBasicTypes.STRING)
+        .addScalar("account", StandardBasicTypes.STRING)
+        .addScalar("count", StandardBasicTypes.LONG)
+        .addScalar("points", StandardBasicTypes.LONG)
+        .setResultTransformer(Transformers.aliasToBean(CountPointsPojo.class))
+        .list();
   }
 
   /**
    * Получение полных результатов по любой категории и конкретному репозиторию
    * */
   @Transactional
-  private List<CountPointsPojo> getFullResults(String hqlQuery, int categoryId, long repoId) {
+  private List<CountPointsPojo> getFullResults(String query, int categoryId, long repoId) {
     return sessionFactory
         .getCurrentSession()
-        .createQuery(hqlQuery, CountPointsPojo.class)
+        .createSQLQuery(query)
         .setParameter("category", categoryId)
         .setParameter("repo", repoId)
-        .setMaxResults(10)
-        .getResultList();
+        .addScalar("avatar", StandardBasicTypes.STRING)
+        .addScalar("account", StandardBasicTypes.STRING)
+        .addScalar("count", StandardBasicTypes.LONG)
+        .addScalar("points", StandardBasicTypes.LONG)
+        .setResultTransformer(Transformers.aliasToBean(CountPointsPojo.class))
+        .list();
   }
 
   /**
@@ -54,14 +64,13 @@ public class CountPointsDao {
    * */
   @Transactional
   public List<CountPointsPojo> getWeekResults(int categoryId) {
-    String query = "SELECT new pojo.CountPointsPojo(" +
-        "acc.avatar, acc.login, SUM(dc.counter), 0L) " +
-        "FROM Account acc " +
-        "INNER JOIN DailyCount dc ON acc.accountId = dc.accountByAccountId " +
-        "WHERE date_trunc('week', dc.date) = date_trunc('week', current_date()) " +
+    String query = "SELECT acc.avatar AS avatar, acc.login AS account, CAST(SUM(dc.counter) AS bigint) AS count, CAST(0 AS bigint) AS points " +
+        "FROM account AS acc " +
+        "INNER JOIN daily_count AS dc ON acc.account_id = dc.account_id " +
+        "WHERE date_trunc('week', dc.date) = date_trunc('week', current_date) " +
         "AND dc.category = :category " +
-        "GROUP BY acc.login, acc.avatar " +
-        "ORDER BY SUM(dc.counter) DESC";
+        "GROUP BY account, avatar " +
+        "ORDER BY count DESC LIMIT 10";
     return getFullResults(query, categoryId);
   }
 
@@ -70,14 +79,13 @@ public class CountPointsDao {
    * */
   @Transactional
   public List<CountPointsPojo> getWeekResults(int categoryId, long repoId) {
-    String query = "SELECT new pojo.CountPointsPojo(" +
-        "acc.avatar, acc.login, SUM(dc.counter), 0L) " +
-        "FROM Account acc " +
-        "INNER JOIN DailyCount dc ON acc.accountId = dc.accountByAccountId " +
-        "WHERE date_trunc('week', dc.date) = date_trunc('week', current_date()) " +
-        "AND dc.category = :category AND wr.repositoryByRepoId.repoId = :repo " +
-        "GROUP BY acc.login, acc.avatar " +
-        "ORDER BY SUM(dc.counter) DESC";
+    String query = "SELECT acc.avatar AS avatar, acc.login AS account, CAST(SUM(dc.counter) AS bigint) AS count, CAST(0 AS bigint) AS points " +
+        "FROM account AS acc " +
+        "INNER JOIN daily_count AS dc ON acc.account_id = dc.account_id " +
+        "WHERE date_trunc('week', dc.date) = date_trunc('week', current_date) " +
+        "AND dc.repo_id = :repo AND dc.category = :category " +
+        "GROUP BY account, avatar " +
+        "ORDER BY count DESC LIMIT 10";
     return getFullResults(query, categoryId, repoId);
   }
 
@@ -86,15 +94,27 @@ public class CountPointsDao {
    * */
   @Transactional
   public List<CountPointsPojo> getQuarterResults(int categoryId) {
-    String query = "SELECT new pojo.CountPointsPojo(" +
-        "acc.avatar, acc.login, SUM(dc.counter), SUM(wr.points)) " +
-        "FROM Account acc " +
-        "INNER JOIN DailyCount dc ON acc.accountId = dc.accountByAccountId " +
-        "INNER JOIN WeeklyResult wr ON acc.accountId = wr.accountByAccountId " +
-        "WHERE date_trunc('quarter', wr.weekDate) = date_trunc('quarter', current_date()) " +
-        "AND dc.category = :category AND wr.category = :category " +
+    String query = "SELECT dc_select.avatar AS avatar, dc_select.login AS account, " +
+        "CAST(SUM(dc_select.count) AS bigint) AS count, CAST(SUM(wr_select.points) AS bigint) AS points " +
+        "FROM " +
+        "(SELECT acc.avatar, acc.login, SUM(dc.counter) AS count " +
+        "FROM account AS acc " +
+        "INNER JOIN daily_count AS dc ON acc.account_id = dc.account_id " +
+        "WHERE date_trunc('quarter', dc.date) = date_trunc('quarter', current_date) " +
+        "AND dc.category = :category " +
         "GROUP BY acc.login, acc.avatar " +
-        "ORDER BY SUM(wr.points) DESC, SUM(dc.counter) DESC";
+        "ORDER BY count DESC) AS dc_select " +
+        "LEFT JOIN " +
+        "(SELECT acc.avatar, acc.login, SUM(wr.points) AS points " +
+        "FROM account AS acc " +
+        "INNER JOIN weekly_result AS wr ON acc.account_id = wr.account_id " +
+        "WHERE date_trunc('quarter', wr.week_date) = date_trunc('quarter', current_date) " +
+        "AND wr.category = :category " +
+        "GROUP BY acc.login, acc.avatar " +
+        "ORDER BY points DESC) AS wr_select " +
+        "ON (dc_select.login = wr_select.login) " +
+        "GROUP BY dc_select.login, dc_select.avatar " +
+        "ORDER BY points DESC, count DESC LIMIT 10";
     return getFullResults(query, categoryId);
   }
 
@@ -103,15 +123,27 @@ public class CountPointsDao {
    * */
   @Transactional
   public List<CountPointsPojo> getQuarterResults(int categoryId, long repoId) {
-    String query = "SELECT new pojo.CountPointsPojo(" +
-        "acc.avatar, acc.login, SUM(dc.counter), SUM(wr.points)) " +
-        "FROM Account acc " +
-        "INNER JOIN DailyCount dc ON acc.accountId = dc.accountByAccountId " +
-        "INNER JOIN WeeklyResult wr ON acc.accountId = wr.accountByAccountId " +
-        "WHERE date_trunc('quarter', wr.weekDate) = date_trunc('quarter', current_date()) " +
-        "AND dc.category = :category AND wr.category = :category AND wr.repositoryByRepoId.repoId = :repo " +
+    String query = "SELECT dc_select.avatar AS avatar, dc_select.login AS account, " +
+        "CAST(SUM(dc_select.count) AS bigint) AS count, CAST(SUM(wr_select.points) AS bigint) AS points " +
+        "FROM " +
+        "(SELECT acc.avatar, acc.login, SUM(dc.counter) AS count " +
+        "FROM account AS acc " +
+        "INNER JOIN daily_count AS dc ON acc.account_id = dc.account_id " +
+        "WHERE date_trunc('quarter', dc.date) = date_trunc('quarter', current_date) " +
+        "AND dc.repo_id = :repo AND dc.category = :category " +
         "GROUP BY acc.login, acc.avatar " +
-        "ORDER BY SUM(wr.points) DESC, SUM(dc.counter) DESC";
+        "ORDER BY count DESC) AS dc_select " +
+        "LEFT JOIN " +
+        "(SELECT acc.avatar, acc.login, SUM(wr.points) AS points " +
+        "FROM account AS acc " +
+        "INNER JOIN weekly_result AS wr ON acc.account_id = wr.account_id " +
+        "WHERE date_trunc('quarter', wr.week_date) = date_trunc('quarter', current_date) " +
+        "AND wr.repo_id = :repo AND wr.category = :category " +
+        "GROUP BY acc.login, acc.avatar " +
+        "ORDER BY points DESC) AS wr_select " +
+        "ON (dc_select.login = wr_select.login) " +
+        "GROUP BY dc_select.login, dc_select.avatar " +
+        "ORDER BY points DESC, count DESC LIMIT 10";
     return getFullResults(query, categoryId, repoId);
   }
 
@@ -120,15 +152,27 @@ public class CountPointsDao {
    * */
   @Transactional
   public List<CountPointsPojo> getYearResults(int categoryId) {
-    String query = "SELECT new pojo.CountPointsPojo(" +
-        "acc.avatar, acc.login, SUM(dc.counter), SUM(wr.points)) " +
-        "FROM Account acc " +
-        "INNER JOIN DailyCount dc ON acc.accountId = dc.accountByAccountId " +
-        "INNER JOIN WeeklyResult wr ON acc.accountId = wr.accountByAccountId " +
-        "WHERE date_trunc('year', wr.weekDate) = date_trunc('year', current_date()) " +
-        "AND dc.category = :category AND wr.category = :category " +
+    String query = "SELECT dc_select.avatar AS avatar, dc_select.login AS account, " +
+        "CAST(SUM(dc_select.count) AS bigint) AS count, CAST(SUM(wr_select.points) AS bigint) AS points " +
+        "FROM " +
+        "(SELECT acc.avatar, acc.login, SUM(dc.counter) AS count " +
+        "FROM account AS acc " +
+        "INNER JOIN daily_count AS dc ON acc.account_id = dc.account_id " +
+        "WHERE date_trunc('year', dc.date) = date_trunc('year', current_date) " +
+        "AND dc.category = :category " +
         "GROUP BY acc.login, acc.avatar " +
-        "ORDER BY SUM(wr.points) DESC, SUM(dc.counter) DESC";
+        "ORDER BY count DESC) AS dc_select " +
+        "LEFT JOIN " +
+        "(SELECT acc.avatar, acc.login, SUM(wr.points) AS points " +
+        "FROM account AS acc " +
+        "INNER JOIN weekly_result AS wr ON acc.account_id = wr.account_id " +
+        "WHERE date_trunc('year', wr.week_date) = date_trunc('year', current_date) " +
+        "AND wr.category = :category " +
+        "GROUP BY acc.login, acc.avatar " +
+        "ORDER BY points DESC) AS wr_select " +
+        "ON (dc_select.login = wr_select.login) " +
+        "GROUP BY dc_select.login, dc_select.avatar " +
+        "ORDER BY points DESC, count DESC LIMIT 10";
     return getFullResults(query, categoryId);
   }
 
@@ -137,15 +181,27 @@ public class CountPointsDao {
    * */
   @Transactional
   public List<CountPointsPojo> getYearResults(int categoryId, long repoId) {
-    String query = "SELECT new pojo.CountPointsPojo(" +
-        "acc.avatar, acc.login, SUM(dc.counter), SUM(wr.points)) " +
-        "FROM Account acc " +
-        "INNER JOIN DailyCount dc ON acc.accountId = dc.accountByAccountId " +
-        "INNER JOIN WeeklyResult wr ON acc.accountId = wr.accountByAccountId " +
-        "WHERE date_trunc('year', wr.weekDate) = date_trunc('year', current_date()) " +
-        "AND dc.category = :category AND wr.category = :category AND wr.repositoryByRepoId.repoId = :repo " +
+    String query = "SELECT dc_select.avatar AS avatar, dc_select.login AS account, " +
+        "CAST(SUM(dc_select.count) AS bigint) AS count, CAST(SUM(wr_select.points) AS bigint) AS points " +
+        "FROM " +
+        "(SELECT acc.avatar, acc.login, SUM(dc.counter) AS count " +
+        "FROM account AS acc " +
+        "INNER JOIN daily_count AS dc ON acc.account_id = dc.account_id " +
+        "WHERE date_trunc('year', dc.date) = date_trunc('year', current_date) " +
+        "AND dc.repo_id = :repo AND dc.category = :category " +
         "GROUP BY acc.login, acc.avatar " +
-        "ORDER BY SUM(wr.points) DESC, SUM(dc.counter) DESC";
+        "ORDER BY count DESC) AS dc_select " +
+        "LEFT JOIN " +
+        "(SELECT acc.avatar, acc.login, SUM(wr.points) AS points " +
+        "FROM account AS acc " +
+        "INNER JOIN weekly_result AS wr ON acc.account_id = wr.account_id " +
+        "WHERE date_trunc('year', wr.week_date) = date_trunc('year', current_date) " +
+        "AND wr.repo_id = :repo AND wr.category = :category " +
+        "GROUP BY acc.login, acc.avatar " +
+        "ORDER BY points DESC) AS wr_select " +
+        "ON (dc_select.login = wr_select.login) " +
+        "GROUP BY dc_select.login, dc_select.avatar " +
+        "ORDER BY points DESC, count DESC LIMIT 10";
     return getFullResults(query, categoryId, repoId);
   }
 
@@ -154,14 +210,25 @@ public class CountPointsDao {
    * */
   @Transactional
   public List<CountPointsPojo> getAllTimeResults(int categoryId) {
-    String query = "SELECT new pojo.CountPointsPojo(" +
-        "acc.avatar, acc.login, SUM(dc.counter), SUM(wr.points)) " +
-        "FROM Account acc " +
-        "INNER JOIN DailyCount dc ON acc.accountId = dc.accountByAccountId " +
-        "INNER JOIN WeeklyResult wr ON acc.accountId = wr.accountByAccountId " +
-        "WHERE dc.category = :category AND wr.category = :category " +
+    String query = "SELECT dc_select.avatar AS avatar, dc_select.login AS account, " +
+        "CAST(SUM(dc_select.count) AS bigint) AS count, CAST(SUM(wr_select.points) AS bigint) AS points " +
+        "FROM " +
+        "(SELECT acc.avatar, acc.login, SUM(dc.counter) AS count " +
+        "FROM account AS acc " +
+        "INNER JOIN daily_count AS dc ON acc.account_id = dc.account_id " +
+        "WHERE dc.category = :category " +
         "GROUP BY acc.login, acc.avatar " +
-        "ORDER BY SUM(wr.points) DESC, SUM(dc.counter) DESC";
+        "ORDER BY count DESC) AS dc_select " +
+        "LEFT JOIN " +
+        "(SELECT acc.avatar, acc.login, SUM(wr.points) AS points " +
+        "FROM account AS acc " +
+        "INNER JOIN weekly_result AS wr ON acc.account_id = wr.account_id " +
+        "WHERE wr.category = :category " +
+        "GROUP BY acc.login, acc.avatar " +
+        "ORDER BY points DESC) AS wr_select " +
+        "ON (dc_select.login = wr_select.login) " +
+        "GROUP BY dc_select.login, dc_select.avatar " +
+        "ORDER BY points DESC, count DESC LIMIT 10";
     return getFullResults(query, categoryId);
   }
 
@@ -170,14 +237,25 @@ public class CountPointsDao {
    * */
   @Transactional
   public List<CountPointsPojo> getAllTimeResults(int categoryId, long repoId) {
-    String query = "SELECT new pojo.CountPointsPojo(" +
-        "acc.avatar, acc.login, SUM(dc.counter), SUM(wr.points)) " +
-        "FROM Account acc " +
-        "INNER JOIN DailyCount dc ON acc.accountId = dc.accountByAccountId " +
-        "INNER JOIN WeeklyResult wr ON acc.accountId = wr.accountByAccountId " +
-        "WHERE dc.category = :category AND wr.category = :category AND wr.repositoryByRepoId.repoId = :repo " +
+    String query = "SELECT dc_select.avatar AS avatar, dc_select.login AS account, " +
+        "CAST(SUM(dc_select.count) AS bigint) AS count, CAST(SUM(wr_select.points) AS bigint) AS points " +
+        "FROM " +
+        "(SELECT acc.avatar, acc.login, SUM(dc.counter) AS count " +
+        "FROM account AS acc " +
+        "INNER JOIN daily_count AS dc ON acc.account_id = dc.account_id " +
+        "WHERE dc.repo_id = :repo AND dc.category = :category " +
         "GROUP BY acc.login, acc.avatar " +
-        "ORDER BY SUM(wr.points) DESC, SUM(dc.counter) DESC";
+        "ORDER BY count DESC) AS dc_select " +
+        "LEFT JOIN " +
+        "(SELECT acc.avatar, acc.login, SUM(wr.points) AS points " +
+        "FROM account AS acc " +
+        "INNER JOIN weekly_result AS wr ON acc.account_id = wr.account_id " +
+        "WHERE wr.repo_id = :repo AND wr.category = :category " +
+        "GROUP BY acc.login, acc.avatar " +
+        "ORDER BY points DESC) AS wr_select " +
+        "ON (dc_select.login = wr_select.login) " +
+        "GROUP BY dc_select.login, dc_select.avatar " +
+        "ORDER BY points DESC, count DESC LIMIT 10";
     return getFullResults(query, categoryId, repoId);
   }
 
@@ -197,5 +275,4 @@ public class CountPointsDao {
     Collections.sort(categoriesList);
     return categoriesList;
   }
-
 }
