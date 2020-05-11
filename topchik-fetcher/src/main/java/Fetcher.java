@@ -13,7 +13,6 @@ import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHPullRequestCommitDetail;
 import org.kohsuke.github.GHPullRequestReview;
-import org.kohsuke.github.GHPullRequestReviewComment;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
@@ -243,7 +242,7 @@ class Fetcher {
       LOGGER.info("Начало конвертации списка ревью для пулл реквеста " + ghPullRequest);
       for (final GHPullRequestReview ghReview : ghPullRequest.listReviews()) {
         LOGGER.info("Начало конвертации ревью для пулл реквеста " + ghReview);
-
+        final long approveId = ghReview.getId();
         final Account author = convertUser(ghReview.getUser());
         if (author == null) {
           LOGGER.error("Автор ревью для пулл реквеста не найден");
@@ -258,6 +257,7 @@ class Fetcher {
         reviews.add(review);
         convertComment(ghReview, review);
         LOGGER.info("Конвертация ревью для пулл реквеста прошла успешно");
+        reviews.add(review);
       }
       LOGGER.info("Конвертация списка ревью для пулл реквеста прошла успешно");
     } catch (Exception e) {

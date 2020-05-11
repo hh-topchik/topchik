@@ -6,8 +6,7 @@ import enums.Category;
 import enums.Medal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pojo.CommitPojo;
-import pojo.PullRequestPojo;
+import pojo.CommonCountPojo;
 
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -29,236 +28,187 @@ public class DbReader {
   public DbReader() {
   }
 
-
   public void readAggregatedDataFromDb() {
     try {
-      LOGGER.info("Получение списка замёрдженных PR");
+      LOGGER.info("Получение агрегированного списка замёрдженных PR");
       countDailyMergedPullRequests(readDailyMergedPullRequests());
       countWeeklyMergedPullRequests(readWeeklyMergedPullRequests());
+      LOGGER.info("Получение агрегированного списка добавленных строк кода");
       countDailyAddedLines(readDailyAddedLines());
       countWeeklyAddedLines(readWeeklyAddedLines());
+      LOGGER.info("Получение агрегированного списка удаленных строк кода");
       countDailyDeletedLines(readDailyDeletedLines());
       countWeeklyDeletedLines(readWeeklyDeletedLines());
+      LOGGER.info("Получение агрегированного списка комментариев на ревью в PR других людей");
+      countDailyComments(readDailyComments());
+      countWeeklyComments(readWeeklyComments());
+      LOGGER.info("Получение агрегированного списка PR, в которых оставлялись комментарии");
+      countDailyCommentedPullRequests(readDailyCommentedPullRequests());
+      countWeeklyCommentedPullRequests(readWeeklyCommentedPullRequests());
+      LOGGER.info("Получение агрегированного списка апрувнутых PR");
+      countDailyApprovedPullRequests(readDailyApprovedPullRequests());
+      countWeeklyApprovedPullRequests(readWeeklyApprovedPullRequests());
+      LOGGER.info("Получение агрегированного списка апрувнутых PR по времени апрува");
+      countDailyTimedApproves(readDailyTimedApproves());
+      countWeeklyTimedApproves(readWeeklyTimedApproves());
     } catch (Exception e) {
       LOGGER.error(e.getMessage());
     }
   }
 
-  private void countDailyMergedPullRequests(List<PullRequestPojo> pullRequestPojos) {
-    long id = dailyCounts.size();
-    for (PullRequestPojo mpr : pullRequestPojos) {
-      DailyCount dailyCount = new DailyCount();
-      dailyCount.setDailyCountId(id++);
-      dailyCount.setDate(mpr.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-      dailyCount.setCategory(Category.SPRINTERS.getId());
-      dailyCount.setCounter(mpr.getCount());
-      dailyCount.setAccountByAccountId(mpr.getAccountByAuthorId());
-      dailyCount.setRepositoryByRepoId(mpr.getRepositoryByRepoId());
-      dailyCounts.add(dailyCount);
-    }
+  private void countDailyMergedPullRequests(List<CommonCountPojo> commonCountPojos) {
+    countDailyData(commonCountPojos, Category.SPRINTERS);
   }
 
-  private List<PullRequestPojo> readDailyMergedPullRequests() {
+  private List<CommonCountPojo> readDailyMergedPullRequests() {
     return daoFactory.getPullRequestDao().getAggregatedDailyMergedPullRequests();
   }
 
-  private void countWeeklyMergedPullRequests(List<PullRequestPojo> pullRequestPojos) {
-    int currentPointsToAdd = MAX_WEEKLY_POINTS;
-    int currentMedalToAdd = Medal.GOLD.getId();
-
-    // Добавление первого (самого старого и максимального на той неделе) недельного результата по замёрдженным PR
-    PullRequestPojo referencePullRequestPojo = pullRequestPojos.get(0);
-    WeeklyResult firstWeeklyResult = new WeeklyResult();
-    firstWeeklyResult.setWeeklyResultId(weeklyResults.size() + 1);
-    firstWeeklyResult.setWeekDate(referencePullRequestPojo.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-        .plusDays(GAP_BETWEEN_MONDAY_AND_SUNDAY));
-    firstWeeklyResult.setCategory(Category.SPRINTERS.getId());
-    firstWeeklyResult.setPoints(currentPointsToAdd);
-    firstWeeklyResult.setMedal(currentMedalToAdd);
-    firstWeeklyResult.setAccountByAccountId(referencePullRequestPojo.getAccountByAuthorId());
-    firstWeeklyResult.setRepositoryByRepoId(referencePullRequestPojo.getRepositoryByRepoId());
-    weeklyResults.add(firstWeeklyResult);
-
-    for (int i = 1; i < pullRequestPojos.size(); i++) {
-      if (referencePullRequestPojo.getDate().equals(pullRequestPojos.get(i).getDate()) &&
-      referencePullRequestPojo.getRepositoryByRepoId().getRepoId() == pullRequestPojos.get(i).getRepositoryByRepoId().getRepoId()) {
-        WeeklyResult weeklyResult = new WeeklyResult();
-        weeklyResult.setWeeklyResultId(weeklyResults.size() + 1);
-        weeklyResult.setWeekDate((pullRequestPojos.get(i).getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-            .plusDays(GAP_BETWEEN_MONDAY_AND_SUNDAY)));
-        weeklyResult.setCategory(Category.SPRINTERS.getId());
-        weeklyResult.setAccountByAccountId(pullRequestPojos.get(i).getAccountByAuthorId());
-        weeklyResult.setRepositoryByRepoId(pullRequestPojos.get(i).getRepositoryByRepoId());
-
-        // Определение сколько давать очков
-        if (currentPointsToAdd < MIN_WEEKLY_POINTS) {
-          weeklyResult.setPoints(currentPointsToAdd);
-        } else {
-          currentPointsToAdd--;
-          weeklyResult.setPoints(currentPointsToAdd);
-        }
-
-        // Определение какую давать медаль (и давать ли)
-        if (currentMedalToAdd >= Medal.BRONZE.getId()) {
-          weeklyResult.setMedal(Medal.NONE.getId());
-        } else {
-          currentMedalToAdd++;
-          weeklyResult.setMedal(currentMedalToAdd);
-        }
-        weeklyResults.add(weeklyResult);
-      } else {
-        referencePullRequestPojo = pullRequestPojos.get(i);
-        currentPointsToAdd = MAX_WEEKLY_POINTS;
-        currentMedalToAdd = Medal.GOLD.getId();
-
-        WeeklyResult weeklyResult = new WeeklyResult();
-        weeklyResult.setWeeklyResultId(weeklyResults.size() + 1);
-        weeklyResult.setWeekDate(referencePullRequestPojo.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-            .plusDays(GAP_BETWEEN_MONDAY_AND_SUNDAY));
-        weeklyResult.setCategory(Category.SPRINTERS.getId());
-        weeklyResult.setPoints(currentPointsToAdd);
-        weeklyResult.setMedal(currentMedalToAdd);
-        weeklyResult.setAccountByAccountId(referencePullRequestPojo.getAccountByAuthorId());
-        weeklyResult.setRepositoryByRepoId(referencePullRequestPojo.getRepositoryByRepoId());
-        weeklyResults.add(weeklyResult);
-      }
-    }
+  private void countWeeklyMergedPullRequests(List<CommonCountPojo> commonCountPojos) {
+    countWeeklyData(commonCountPojos, Category.SPRINTERS);
   }
 
-  private List<PullRequestPojo> readWeeklyMergedPullRequests() {
+  private List<CommonCountPojo> readWeeklyMergedPullRequests() {
     return daoFactory.getPullRequestDao().getAggregatedWeeklyMergedPullRequests();
   }
 
-  private void countDailyAddedLines(List<CommitPojo> commitPojos) {
-    long id = dailyCounts.size();
-    for (CommitPojo line : commitPojos) {
-      DailyCount dailyCount = new DailyCount();
-      dailyCount.setDailyCountId(id++);
-      dailyCount.setDate(line.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-      dailyCount.setCategory(Category.MIND_GIGANTS.getId());
-      dailyCount.setCounter(line.getSumLines());
-      dailyCount.setAccountByAccountId(line.getAccountByAuthorId());
-      dailyCount.setRepositoryByRepoId(line.getRepositoryByRepoId());
-      dailyCounts.add(dailyCount);
-    }
+  private void countDailyAddedLines(List<CommonCountPojo> commonCountPojos) {
+    countDailyData(commonCountPojos, Category.MIND_GIGANTS);
   }
 
-  private List<CommitPojo> readDailyAddedLines() {
+  private List<CommonCountPojo> readDailyAddedLines() {
     return daoFactory.getCommitDao().getAggregatedDailyAddedLines();
   }
 
-  private void countWeeklyAddedLines(List<CommitPojo> commitPojos) {
-    int currentPointsToAdd = MAX_WEEKLY_POINTS;
-    int currentMedalToAdd = Medal.GOLD.getId();
-
-    // Добавление первого (самого старого и максимального на той неделе) недельного результата по добавленным строкам
-    CommitPojo referenceCommitPojo = commitPojos.get(0);
-    WeeklyResult firstWeeklyResult = new WeeklyResult();
-    firstWeeklyResult.setWeeklyResultId(weeklyResults.size() + 1);
-    firstWeeklyResult.setWeekDate(referenceCommitPojo.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-        .plusDays(GAP_BETWEEN_MONDAY_AND_SUNDAY));
-    firstWeeklyResult.setCategory(Category.MIND_GIGANTS.getId());
-    firstWeeklyResult.setPoints(currentPointsToAdd);
-    firstWeeklyResult.setMedal(currentMedalToAdd);
-    firstWeeklyResult.setAccountByAccountId(referenceCommitPojo.getAccountByAuthorId());
-    firstWeeklyResult.setRepositoryByRepoId(referenceCommitPojo.getRepositoryByRepoId());
-    weeklyResults.add(firstWeeklyResult);
-
-    for (int i = 1; i < commitPojos.size(); i++) {
-      if (referenceCommitPojo.getDate().equals(commitPojos.get(i).getDate()) &&
-          referenceCommitPojo.getRepositoryByRepoId().getRepoId() == commitPojos.get(i).getRepositoryByRepoId().getRepoId()) {
-        WeeklyResult weeklyResult = new WeeklyResult();
-        weeklyResult.setWeeklyResultId(weeklyResults.size() + 1);
-        weeklyResult.setWeekDate((commitPojos.get(i).getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-            .plusDays(GAP_BETWEEN_MONDAY_AND_SUNDAY)));
-        weeklyResult.setCategory(Category.MIND_GIGANTS.getId());
-        weeklyResult.setAccountByAccountId(commitPojos.get(i).getAccountByAuthorId());
-        weeklyResult.setRepositoryByRepoId(commitPojos.get(i).getRepositoryByRepoId());
-
-        // Определение сколько давать очков
-        if (currentPointsToAdd < MIN_WEEKLY_POINTS) {
-          weeklyResult.setPoints(currentPointsToAdd);
-        } else {
-          currentPointsToAdd--;
-          weeklyResult.setPoints(currentPointsToAdd);
-        }
-
-        // Определение какую давать медаль (и давать ли)
-        if (currentMedalToAdd >= Medal.BRONZE.getId()) {
-          weeklyResult.setMedal(Medal.NONE.getId());
-        } else {
-          currentMedalToAdd++;
-          weeklyResult.setMedal(currentMedalToAdd);
-        }
-        weeklyResults.add(weeklyResult);
-      } else {
-        referenceCommitPojo = commitPojos.get(i);
-        currentPointsToAdd = MAX_WEEKLY_POINTS;
-        currentMedalToAdd = Medal.GOLD.getId();
-
-        WeeklyResult weeklyResult = new WeeklyResult();
-        weeklyResult.setWeeklyResultId(weeklyResults.size() + 1);
-        weeklyResult.setWeekDate(referenceCommitPojo.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-            .plusDays(GAP_BETWEEN_MONDAY_AND_SUNDAY));
-        weeklyResult.setCategory(Category.MIND_GIGANTS.getId());
-        weeklyResult.setPoints(currentPointsToAdd);
-        weeklyResult.setMedal(currentMedalToAdd);
-        weeklyResult.setAccountByAccountId(referenceCommitPojo.getAccountByAuthorId());
-        weeklyResult.setRepositoryByRepoId(referenceCommitPojo.getRepositoryByRepoId());
-        weeklyResults.add(weeklyResult);
-      }
-    }
+  private void countWeeklyAddedLines(List<CommonCountPojo> commonCountPojos) {
+    countWeeklyData(commonCountPojos, Category.MIND_GIGANTS);
   }
 
-  private List<CommitPojo> readWeeklyAddedLines() {
+  private List<CommonCountPojo> readWeeklyAddedLines() {
     return daoFactory.getCommitDao().getAggregatedWeeklyAddedLines();
   }
 
-  private void countDailyDeletedLines(List<CommitPojo> commitPojos) {
+  private void countDailyDeletedLines(List<CommonCountPojo> commonCountPojos) {
+    countDailyData(commonCountPojos, Category.RENOVATORS);
+  }
+
+  private List<CommonCountPojo> readDailyDeletedLines() {
+    return daoFactory.getCommitDao().getAggregatedDailyDeletedLines();
+  }
+
+  private void countWeeklyDeletedLines(List<CommonCountPojo> commonCountPojos) {
+    countWeeklyData(commonCountPojos, Category.RENOVATORS);
+  }
+
+  private List<CommonCountPojo> readWeeklyDeletedLines() {
+    return daoFactory.getCommitDao().getAggregatedWeeklyDeletedLines();
+  }
+
+  private void countDailyComments(List<CommonCountPojo> commonCountPojos) {
+    countDailyData(commonCountPojos, Category.MASTERS);
+  }
+
+  private List<CommonCountPojo> readDailyComments() {
+    return daoFactory.getReviewDao().getAggregatedDailyComments();
+  }
+
+  private void countWeeklyComments(List<CommonCountPojo> commonCountPojos) {
+    countWeeklyData(commonCountPojos, Category.MASTERS);
+  }
+
+  private List<CommonCountPojo> readWeeklyComments() {
+    return daoFactory.getReviewDao().getAggregatedWeeklyComments();
+  }
+
+  private void countDailyCommentedPullRequests(List<CommonCountPojo> commonCountPojos) {
+    countDailyData(commonCountPojos, Category.OVERSEERS);
+  }
+
+  private List<CommonCountPojo> readDailyCommentedPullRequests() {
+    return daoFactory.getReviewDao().getAggregatedDailyCommentedPullRequests();
+  }
+
+  private void countWeeklyCommentedPullRequests(List<CommonCountPojo> commonCountPojos) {
+    countWeeklyData(commonCountPojos, Category.OVERSEERS);
+  }
+
+  private List<CommonCountPojo> readWeeklyCommentedPullRequests() {
+    return daoFactory.getReviewDao().getAggregatedWeeklyCommentedPullRequests();
+  }
+
+  private void countDailyApprovedPullRequests(List<CommonCountPojo> commonCountPojos) {
+    countDailyData(commonCountPojos, Category.PATRONS);
+  }
+
+  private List<CommonCountPojo> readDailyApprovedPullRequests() {
+    return daoFactory.getReviewDao().getAggregatedDailyApprovedPullRequests();
+  }
+
+  private void countWeeklyApprovedPullRequests(List<CommonCountPojo> commonCountPojos) {
+    countWeeklyData(commonCountPojos, Category.PATRONS);
+  }
+
+  private List<CommonCountPojo> readWeeklyApprovedPullRequests() {
+    return daoFactory.getReviewDao().getAggregatedWeeklyApprovedPullRequests();
+  }
+
+  private void countDailyTimedApproves(List<CommonCountPojo> commonCountPojos) {
+    countDailyData(commonCountPojos, Category.KIND_MEN);
+  }
+
+  private List<CommonCountPojo> readDailyTimedApproves() {
+    return daoFactory.getReviewDao().getAggregatedDailyTimedApproves();
+  }
+
+  private void countWeeklyTimedApproves(List<CommonCountPojo> commonCountPojos) {
+    countWeeklyData(commonCountPojos, Category.KIND_MEN);
+  }
+
+  private List<CommonCountPojo> readWeeklyTimedApproves() {
+    return daoFactory.getReviewDao().getAggregatedDailyTimedApproves();
+  }
+
+  private void countDailyData(List<CommonCountPojo> commonCountPojos, Category category) {
     long id = dailyCounts.size();
-    for (CommitPojo line : commitPojos) {
+    for (CommonCountPojo apr : commonCountPojos) {
       DailyCount dailyCount = new DailyCount();
       dailyCount.setDailyCountId(id++);
-      dailyCount.setDate(line.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-      dailyCount.setCategory(Category.RENOVATORS.getId());
-      dailyCount.setCounter(line.getSumLines());
-      dailyCount.setAccountByAccountId(line.getAccountByAuthorId());
-      dailyCount.setRepositoryByRepoId(line.getRepositoryByRepoId());
+      dailyCount.setDate(apr.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+      dailyCount.setCategory(category.getId());
+      dailyCount.setCounter(apr.getCount());
+      dailyCount.setAccountByAccountId(apr.getAccountByAuthorId());
+      dailyCount.setRepositoryByRepoId(apr.getRepositoryByRepoId());
       dailyCounts.add(dailyCount);
     }
   }
 
-  private List<CommitPojo> readDailyDeletedLines() {
-    return daoFactory.getCommitDao().getAggregatedDailyDeletedLines();
-  }
-
-  private void countWeeklyDeletedLines(List<CommitPojo> commitPojos) {
+  private void countWeeklyData(List<CommonCountPojo> commonCountPojos, Category category) {
     int currentPointsToAdd = MAX_WEEKLY_POINTS;
     int currentMedalToAdd = Medal.GOLD.getId();
 
-    // Добавление первого (самого старого и максимального на той неделе) недельного результата по удаленным строкам
-    CommitPojo referenceCommitPojo = commitPojos.get(0);
+    // Добавление первого (самого старого и максимального на той неделе) недельного результата
+    CommonCountPojo referenceCommonCountPojo = commonCountPojos.get(0);
     WeeklyResult firstWeeklyResult = new WeeklyResult();
     firstWeeklyResult.setWeeklyResultId(weeklyResults.size() + 1);
-    firstWeeklyResult.setWeekDate(referenceCommitPojo.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+    firstWeeklyResult.setWeekDate(referenceCommonCountPojo.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
         .plusDays(GAP_BETWEEN_MONDAY_AND_SUNDAY));
-    firstWeeklyResult.setCategory(Category.RENOVATORS.getId());
+    firstWeeklyResult.setCategory(category.getId());
     firstWeeklyResult.setPoints(currentPointsToAdd);
     firstWeeklyResult.setMedal(currentMedalToAdd);
-    firstWeeklyResult.setAccountByAccountId(referenceCommitPojo.getAccountByAuthorId());
-    firstWeeklyResult.setRepositoryByRepoId(referenceCommitPojo.getRepositoryByRepoId());
+    firstWeeklyResult.setAccountByAccountId(referenceCommonCountPojo.getAccountByAuthorId());
+    firstWeeklyResult.setRepositoryByRepoId(referenceCommonCountPojo.getRepositoryByRepoId());
     weeklyResults.add(firstWeeklyResult);
 
-    for (int i = 1; i < commitPojos.size(); i++) {
-      if (referenceCommitPojo.getDate().equals(commitPojos.get(i).getDate()) &&
-          referenceCommitPojo.getRepositoryByRepoId().getRepoId() == commitPojos.get(i).getRepositoryByRepoId().getRepoId()) {
+    for (int i = 1; i < commonCountPojos.size(); i++) {
+      if (referenceCommonCountPojo.getDate().equals(commonCountPojos.get(i).getDate()) &&
+          referenceCommonCountPojo.getRepositoryByRepoId().getRepoId() == commonCountPojos.get(i).getRepositoryByRepoId().getRepoId()) {
         WeeklyResult weeklyResult = new WeeklyResult();
         weeklyResult.setWeeklyResultId(weeklyResults.size() + 1);
-        weeklyResult.setWeekDate((commitPojos.get(i).getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+        weeklyResult.setWeekDate((commonCountPojos.get(i).getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
             .plusDays(GAP_BETWEEN_MONDAY_AND_SUNDAY)));
-        weeklyResult.setCategory(Category.RENOVATORS.getId());
-        weeklyResult.setAccountByAccountId(commitPojos.get(i).getAccountByAuthorId());
-        weeklyResult.setRepositoryByRepoId(commitPojos.get(i).getRepositoryByRepoId());
+        weeklyResult.setCategory(category.getId());
+        weeklyResult.setAccountByAccountId(commonCountPojos.get(i).getAccountByAuthorId());
+        weeklyResult.setRepositoryByRepoId(commonCountPojos.get(i).getRepositoryByRepoId());
 
         // Определение сколько давать очков
         if (currentPointsToAdd < MIN_WEEKLY_POINTS) {
@@ -277,26 +227,22 @@ public class DbReader {
         }
         weeklyResults.add(weeklyResult);
       } else {
-        referenceCommitPojo = commitPojos.get(i);
+        referenceCommonCountPojo = commonCountPojos.get(i);
         currentPointsToAdd = MAX_WEEKLY_POINTS;
         currentMedalToAdd = Medal.GOLD.getId();
 
         WeeklyResult weeklyResult = new WeeklyResult();
         weeklyResult.setWeeklyResultId(weeklyResults.size() + 1);
-        weeklyResult.setWeekDate(referenceCommitPojo.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+        weeklyResult.setWeekDate(referenceCommonCountPojo.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
             .plusDays(GAP_BETWEEN_MONDAY_AND_SUNDAY));
-        weeklyResult.setCategory(Category.RENOVATORS.getId());
+        weeklyResult.setCategory(category.getId());
         weeklyResult.setPoints(currentPointsToAdd);
         weeklyResult.setMedal(currentMedalToAdd);
-        weeklyResult.setAccountByAccountId(referenceCommitPojo.getAccountByAuthorId());
-        weeklyResult.setRepositoryByRepoId(referenceCommitPojo.getRepositoryByRepoId());
+        weeklyResult.setAccountByAccountId(referenceCommonCountPojo.getAccountByAuthorId());
+        weeklyResult.setRepositoryByRepoId(referenceCommonCountPojo.getRepositoryByRepoId());
         weeklyResults.add(weeklyResult);
       }
     }
-  }
-
-  private List<CommitPojo> readWeeklyDeletedLines() {
-    return daoFactory.getCommitDao().getAggregatedWeeklyDeletedLines();
   }
 
   public List<DailyCount> getDailyCounts() {

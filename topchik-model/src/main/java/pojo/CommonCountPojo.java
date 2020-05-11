@@ -6,15 +6,15 @@ import entity.Repository;
 import java.util.Date;
 
 /**
- * POJO для получения нужных полей (+ count) из БД по запросу замёрдженных PR
+ * POJO для получения нужных полей (+ count) из БД
  * */
-public class PullRequestPojo {
+public class CommonCountPojo {
   private Date date;
   private Account accountByAuthorId;
   private Repository repositoryByRepoId;
   private long count;
 
-  public PullRequestPojo(Date date, Account accountByAuthorId, Repository repositoryByRepoId, long count) {
+  public CommonCountPojo(Date date, Account accountByAuthorId, Repository repositoryByRepoId, long count) {
     this.date = date;
     this.accountByAuthorId = accountByAuthorId;
     this.repositoryByRepoId = repositoryByRepoId;
