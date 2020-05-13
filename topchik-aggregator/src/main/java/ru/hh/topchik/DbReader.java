@@ -165,7 +165,7 @@ public class DbReader {
   }
 
   private List<CommonCountPojo> readWeeklyTimedApproves() {
-    return daoFactory.getReviewDao().getAggregatedDailyTimedApproves();
+    return daoFactory.getReviewDao().getAggregatedWeeklyTimedApproves();
   }
 
   private void countDailyData(List<CommonCountPojo> commonCountPojos, Category category) {

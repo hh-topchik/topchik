@@ -18,7 +18,7 @@ import java.util.List;
 @Singleton
 public class ReviewDaoImpl extends DaoImpl<Review> {
   /**
-   * Метод получения списка комментариев на ревью в PR других людей за каждый день,
+   * Метод подсчёта комментариев на ревью в PR других людей за каждый день,
    * отсортированных по репозиторию, дате и количеству
    *
    * @return List<CommonCountPojo> - желаемый агрегированный список количества комментариев на ревью в PR других людей за каждый день
@@ -26,7 +26,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
   public List<CommonCountPojo> getAggregatedDailyComments() {
     final String dailyCommentsQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('day', r.time) as count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId, COUNT(r) as counter) " +
-        "FROM entity.Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
+        "FROM Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
         "AND r.accountByAuthorId.login NOT LIKE '%[bot]' " +
         "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId " +
         "ORDER BY r.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter DESC";
@@ -34,7 +34,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
   }
 
   /**
-   * Метод получения списка комментариев на ревью в PR других людей, агрегированный понедельно для каждого аккаунта и
+   * Метод подсчёта комментариев на ревью в PR других людей, агрегированных понедельно для каждого аккаунта и
    * отсортированный по репозиторию, дате и количеству
    *
    * @return List<CommonCountPojo> - желаемый агрегированный список количества комментариев на ревью в PR других людей за неделю
@@ -42,7 +42,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
   public List<CommonCountPojo> getAggregatedWeeklyComments() {
     final String weeklyCommentsQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('week', r.time) as count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId, COUNT(r) as counter) " +
-        "FROM entity.Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
+        "FROM Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
         "AND r.accountByAuthorId.login NOT LIKE '%[bot]' AND date_trunc('week', r.time) != date_trunc('week', current_date()) " +
         "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId " +
         "ORDER BY r.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter DESC";
@@ -50,7 +50,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
   }
 
   /**
-   * Метод получения списка PR, в которых оставили комментарии, за каждый день,
+   * Метод подсчёта PR, в которых оставили комментарии, за каждый день,
    * отсортированных по репозиторию, дате и количеству
    *
    * @return List<CommonCountPojo> - желаемый агрегированный список пулл реквестов, в которых оставили комментарии, за каждый день
@@ -59,7 +59,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
     final String dailyCommentsQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('day', r.time) as count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId, " +
         "COUNT(DISTINCT r.pullRequestByPullRequestId) as counter) " +
-        "FROM entity.Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
+        "FROM Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
         "AND r.accountByAuthorId.login NOT LIKE '%[bot]' " +
         "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId " +
         "ORDER BY r.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter DESC";
@@ -67,8 +67,8 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
   }
 
   /**
-   * Метод получения списка комментариев на ревью в PR других людей, агрегированный понедельно для каждого аккаунта и
-   * отсортированный по репозиторию, дате и количеству
+   * Метод подсчёта PR, в которых оставили комментарии, агрегированных понедельно для каждого аккаунта и
+   * отсортированных по репозиторию, дате и количеству
    *
    * @return List<CommonCountPojo> - желаемый агрегированный список пулл реквестов, в которых оставили комментарии, за неделю
    * */
@@ -76,7 +76,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
     final String weeklyCommentsQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('week', r.time) as count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId, " +
         "COUNT(DISTINCT r.pullRequestByPullRequestId) as counter) " +
-        "FROM entity.Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
+        "FROM Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
         "AND r.accountByAuthorId.login NOT LIKE '%[bot]' AND date_trunc('week', r.time) != date_trunc('week', current_date()) " +
         "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId " +
         "ORDER BY r.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter DESC";
@@ -84,7 +84,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
   }
 
   /**
-   * Метод получения списка апрувнутых PR, отсортированных по репозиторию, дате и количеству
+   * Метод подсчёта апрувнутых PR за каждый день, отсортированных по репозиторию, дате и количеству
    *
    * @return List<CommonCountPojo> - желаемый агрегированный список апрувнутых пулл реквестов за каждый день
    * */
@@ -92,7 +92,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
     final String dailyCommentsQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('day', r.time) as count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId, " +
         "COUNT(DISTINCT r.pullRequestByPullRequestId) as counter) " +
-        "FROM entity.Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
+        "FROM Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
         "AND r.accountByAuthorId.login NOT LIKE '%[bot]' " +
         "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId " +
         "ORDER BY r.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter DESC";
@@ -100,8 +100,8 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
   }
 
   /**
-   * Метод получения списка комментариев апрувнутых PR, агрегированный понедельно для каждого аккаунта и
-   * отсортированный по репозиторию, дате и количеству
+   * Метод подсчёта апрувнутых PR, агрегированных понедельно для каждого аккаунта и
+   * отсортированных по репозиторию, дате и количеству
    *
    * @return List<CommonCountPojo> - желаемый агрегированный список апрувнутых пулл реквестов за неделю
    * */
@@ -109,7 +109,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
     final String weeklyCommentsQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('week', r.time) as count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId, " +
         "COUNT(DISTINCT r.pullRequestByPullRequestId) as counter) " +
-        "FROM entity.Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
+        "FROM Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
         "AND r.accountByAuthorId.login NOT LIKE '%[bot]' AND date_trunc('week', r.time) != date_trunc('week', current_date()) " +
         "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId " +
         "ORDER BY r.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter DESC";
@@ -117,7 +117,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
   }
 
   /**
-   * Метод получения списка апрувнутых PR, отсортированных по времени апрува
+   * Метод подсчёта апрувнутых PR, отсортированных по времени апрува
    *
    * @return List<CommonCountPojo> - желаемый агрегированный список апрувнутых PR, отсортированных по времени апрува, за каждый день
    * */
@@ -125,7 +125,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
     final String dailyCommentsQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('day', r.time) as count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId, " +
         "CAST(EXTRACT(SECOND FROM (r.time - r.pullRequestByPullRequestId.creationTime)) as long) as counter) " +
-        "FROM entity.Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
+        "FROM Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
         "AND r.accountByAuthorId.login NOT LIKE '%[bot]' " +
         "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId, " +
         "r.time, r.pullRequestByPullRequestId.creationTime " +
@@ -134,7 +134,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
   }
 
   /**
-   * Метод получения списка апрувнутых PR, отсортированных по времени апрува
+   * Метод подсчёта апрувнутых PR, отсортированных по времени апрува
    *
    * @return List<CommonCountPojo> - желаемый агрегированный список апрувнутых PR, отсортированных по времени апрува, за неделю
    * */
@@ -142,7 +142,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
     final String weeklyCommentsQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('week', r.time) as count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId, " +
         "CAST(EXTRACT(SECOND FROM (r.time - r.pullRequestByPullRequestId.creationTime)) as long) as counter) " +
-        "FROM entity.Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
+        "FROM Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
         "AND r.accountByAuthorId.login NOT LIKE '%[bot]' AND date_trunc('week', r.time) != date_trunc('week', current_date()) " +
         "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId, " +
         "r.time, r.pullRequestByPullRequestId.creationTime " +
@@ -151,7 +151,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
   }
 
   /**
-   * Общий метод для получения агрегированных данных по количеству комментариев на ревью в PR других людей
+   * Общий метод для подсчёта данных по количеству комментариев на ревью в PR других людей
    *
    * @param hqlQuery - запрос на языке HQL, который надо выполнить, чтобы забрать из PullRequest агрегированные данные
    *
