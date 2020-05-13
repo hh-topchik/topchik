@@ -46,7 +46,9 @@ public class AppMapper {
         .getCategoriesIdList()
         .stream()
         .map(catId -> new CategoryInfoDto(catId,
-            Category.getById(catId).getTitle()))
+            Category.getById(catId).getTitle(),
+            Category.getById(catId).getDescription(),
+            Category.getById(catId).getUnitOfMeasure()))
         .collect(Collectors.toList());
 
     return new ReposAndCatsDto(repositoryInfoDtos, categoryInfoDtos);
@@ -59,8 +61,7 @@ public class AppMapper {
     return categories
         .stream()
         .map(Integer::parseInt)
-        .map(catId -> new CategoryPeriodDto(Category.getById(catId).getTitle(),
-            Category.getById(catId).getDescription(),
+        .map(catId -> new CategoryPeriodDto(catId,
             getGlobalTop(catId, period.toLowerCase())))
         .collect(Collectors.toList());
   }
@@ -91,8 +92,7 @@ public class AppMapper {
     return categories
         .stream()
         .map(Integer::parseInt)
-        .map(catId -> new CategoryPeriodDto(Category.getById(catId).getTitle(),
-            Category.getById(catId).getDescription(),
+        .map(catId -> new CategoryPeriodDto(catId,
             getConcreteTop(repoId, catId, period.toLowerCase())))
         .collect(Collectors.toList());
   }
