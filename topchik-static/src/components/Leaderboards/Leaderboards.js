@@ -1,22 +1,21 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import './styles.less';
 import Category from '../Category/Category';
 import CategoryNavigation from '../CategoryNavigation/CategoryNavigation';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 function Leaderboards() {
-    const { activeRepositoryId, repositories } = useSelector((state) => ({
-        repositories: state.repositories,
-        activeRepositoryId: state.activeRepositoryId,
+    const { categories } = useSelector((state) => ({
+        categories: state.categories,
     }));
-
-    const currentRepository = repositories.filter(
-        (repository) => repository.id === activeRepositoryId,
-    )[0];
 
     const [activeCategoryId, setActiveCategoryId] = useState(0);
 
-    const categoryRefs = currentRepository.categories.map(() => {
+    const params = useParams();
+    const repositoryId = params.repositoryId;
+
+    const categoryRefs = categories.map(() => {
         return React.createRef();
     });
 
@@ -26,6 +25,9 @@ function Leaderboards() {
             block: 'end',
             inline: 'nearest',
         });
+        if (window.innerWidth <= 1000) {
+            setActiveCategoryId(id);
+        }
     };
 
     const handleScroll = () => {
@@ -57,26 +59,23 @@ function Leaderboards() {
                 </div>
                 <div className="leaderboards__category-buttons">
                     <CategoryNavigation
-                        categoryTitles={currentRepository.categories.map(
-                            (category) => category.name,
-                        )}
+                        categories={categories}
                         activeCategoryId={activeCategoryId}
                         onClickHandler={onClickCategoryButtonHandler}
                     />
                 </div>
             </div>
             <div className="leaderboards__categories">
-                {currentRepository.categories.map((category, index) => (
+                {categories.map((category, index) => (
                     <Category
                         key={index}
-                        id={index}
+                        categoryId={category.id}
+                        refId={index}
                         refs={categoryRefs}
                         isActive={activeCategoryId === index}
+                        title={category.title}
                         description={category.description}
-                        topWeek={category.topWeek}
-                        topQuarter={category.topQuarter}
-                        topYear={category.topYear}
-                        topAllTime={category.topAllTime}
+                        repositoryId={repositoryId}
                     />
                 ))}
             </div>

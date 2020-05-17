@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useCallback } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import Header from './components/Header/Header';
 import Leaderboards from './components/Leaderboards/Leaderboards';
 import Sidebar from './components/Sidebar/Sidebar';
@@ -6,7 +6,8 @@ import Loader from './components/Loader/Loader';
 import Fail from './components/Fail/Fail';
 import './styles.less';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchRanking } from './redux/ranking/rankingActions';
+import { fetchRepositoriesAndCategories } from './redux/ranking/rankingActions';
+import { Redirect, Route } from 'react-router-dom';
 
 function App() {
     const { appStatus } = useSelector((state) => ({
@@ -14,10 +15,10 @@ function App() {
     }));
 
     const dispatch = useDispatch();
-    const getRanking = useCallback((url) => dispatch(fetchRanking(url)), [dispatch]);
+    const getRepositoriesAndCategories = () => dispatch(fetchRepositoriesAndCategories());
 
     useEffect(() => {
-        getRanking('http://localhost:9200/api/getRanking');
+        getRepositoriesAndCategories();
     }, []);
 
     return (
@@ -32,8 +33,9 @@ function App() {
                     <Fail />
                 ) : (
                     <Fragment>
-                        <Sidebar />
-                        <Leaderboards />
+                        <Redirect from="/" to="/repositories/global" />
+                        <Route path="/repositories/:repositoryId" component={Sidebar} />
+                        <Route path="/repositories/:repositoryId" component={Leaderboards} />
                     </Fragment>
                 )}
             </div>

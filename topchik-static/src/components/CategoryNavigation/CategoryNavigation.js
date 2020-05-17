@@ -23,16 +23,16 @@ CategoryButton.propTypes = {
     id: PropTypes.number,
 };
 
-export default function CategoryNavigation({ categoryTitles, onClickHandler, activeCategoryId }) {
+export default function CategoryNavigation({ categories, onClickHandler, activeCategoryId }) {
     return (
         <div className="category-navigation">
-            {categoryTitles.map((title, index) => (
+            {categories.map((category, index) => (
                 <CategoryButton
                     onClickHandler={onClickHandler}
                     activeCategoryId={activeCategoryId}
                     id={index}
                     key={index}
-                    categoryTitle={title}
+                    categoryTitle={category.title}
                 />
             ))}
         </div>

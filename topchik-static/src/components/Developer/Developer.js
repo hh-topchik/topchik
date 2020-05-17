@@ -10,6 +10,7 @@ export default function Developer({
     count,
     showPaintingAnimation,
     onAnimationEndHandler,
+    avatar,
 }) {
     const classNameIcon = classNames('fas fa-trophy', {
         'developer__icon_first-place': position === 1,
@@ -27,7 +28,7 @@ export default function Developer({
                 )}
             </div>
             <div className="developer__avatar-wrapper">
-                <i className="fas fa-user-astronaut developer__avatar"></i>
+                <img src={avatar} className="developer__avatar" />
             </div>
             <div className="developer__count-indicator">
                 <div className="developer__name">{account}</div>

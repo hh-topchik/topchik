@@ -1,20 +1,43 @@
-import React, { useCallback } from 'react';
+import React, { useEffect } from 'react';
 import './styles.less';
 import RepositoryList from '../RepositoryList/RepositoryList';
 import AddRepositoryButton from '../AddRepositoryButton/AddRepositoryButton';
 import { useSelector, useDispatch } from 'react-redux';
-import { showActiveRepository } from './../../redux/ranking/rankingActions';
+import {
+    fetchCategoryTopForPeriod,
+    showActiveRepository,
+} from './../../redux/ranking/rankingActions';
+import { useParams } from 'react-router-dom';
 
 function Sidebar() {
-    const { repositories, activeRepositoryId } = useSelector((state) => ({
+    const { repositories, categories, leaderboards } = useSelector((state) => ({
         repositories: state.repositories,
-        activeRepositoryId: state.activeRepositoryId,
+        categories: state.categories,
+        leaderboards: state.leaderboards,
     }));
 
+    const params = useParams();
+    const repositoryId = params.repositoryId;
+
     const dispatch = useDispatch();
-    const showActiveRepositoryHandler = useCallback((id) => dispatch(showActiveRepository(id)), [
-        dispatch,
-    ]);
+    const getWeeklyTops = (url, id, categories) =>
+        dispatch(fetchCategoryTopForPeriod(url, id, categories, 'week'));
+
+    const changeActiveRepository = (id) => dispatch(showActiveRepository(id));
+
+    useEffect(() => {
+        const selectRepositoryHandler = async (id, categories) => {
+            if (
+                leaderboards.filter((leaderboard) => leaderboard.repositoryId === id).length === 0
+            ) {
+                const url = id === 'global' ? '/globalTops' : '/concreteTops';
+                await getWeeklyTops(url, id, categories);
+            } else {
+                await changeActiveRepository(id);
+            }
+        };
+        selectRepositoryHandler(repositoryId, categories);
+    }, [repositoryId]);
 
     return (
         <aside className="content__sidebar sidebar">
@@ -27,11 +50,7 @@ function Sidebar() {
                 </div>
             </div>
             <div className="sidebar__list-wrapper">
-                <RepositoryList
-                    repositories={repositories}
-                    onClickHandler={showActiveRepositoryHandler}
-                    activeRepositoryId={activeRepositoryId}
-                />
+                <RepositoryList repositories={repositories} activeRepositoryId={repositoryId} />
             </div>
         </aside>
     );

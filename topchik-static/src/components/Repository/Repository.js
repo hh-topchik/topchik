@@ -2,19 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import './styles.less';
+import { Link } from 'react-router-dom';
 
-export default function Repository({ isActive, name, onClickHandler }) {
+export default function Repository({ id, isActive, title }) {
     return (
         <div className="repository">
-            <a
-                href="#"
+            <Link
+                to={`/repositories/${id}`}
                 className={classNames('repository__title', {
                     repository__title_active: isActive,
                 })}
-                onClick={onClickHandler}
             >
-                {name}
-            </a>
+                {title}
+            </Link>
             <div className="repository__dot-wrapper">
                 <div
                     className={classNames('repository__dot', {
@@ -29,5 +29,4 @@ export default function Repository({ isActive, name, onClickHandler }) {
 Repository.propTypes = {
     isActive: PropTypes.bool,
     name: PropTypes.string,
-    onClickHandler: PropTypes.func,
 };

@@ -48,10 +48,20 @@
     background-color: #0ac789;
     z-index: 2;
     width: inherit;
+
+    @media @screen-only-s {
+      animation: painting-animation .75s ease;  
+    }
+
+    @media @screen-only-m {
+      animation: painting-animation .75s ease;  
+    }
   }
 
   &__paint-count[showpaintinganimation='true'] {
-    animation: painting-animation .75s ease;
+    @media @screen-gt-m {
+      animation: painting-animation .75s ease;  
+    }
   }
 
   &__count {
@@ -61,12 +71,14 @@
   }
 
   &__avatar-wrapper {
-    min-width: 20px;
+    height: 40px;
+    width: 40px;
     margin-right: 10px;
   }
 
   &__avatar {
-    font-size: 20px;
+    height: 40px;
+    width: 40px;
   }
 
   &__count-indicator{
