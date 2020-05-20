@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="entity.Comment" table="comment" schema="public" catalog="postgres">
+        <id name="commentId">
+            <column name="comment_id" sql-type="bigint"/>
+        </id>
+        <property name="creationTime">
+            <column name="creation_time" sql-type="timestamp"/>
+        </property>
+        <many-to-one name="reviewByReviewId" class="entity.Review">
+            <column name="review_id"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

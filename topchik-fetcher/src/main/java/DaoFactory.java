@@ -1,4 +1,5 @@
 import dao.AccountDaoImpl;
+import dao.CommentDaoImpl;
 import dao.CommitDaoImpl;
 import dao.PullRequestDaoImpl;
 import dao.RepositoryDaoImpl;
@@ -10,6 +11,7 @@ class DaoFactory {
   private PullRequestDaoImpl pullRequestDao;
   private RepositoryDaoImpl repositoryDao;
   private ReviewDaoImpl reviewDao;
+  private CommentDaoImpl commentDao;
 
   AccountDaoImpl getAccountDao() {
     if (accountDao == null) {
@@ -44,6 +46,13 @@ class DaoFactory {
       reviewDao = new ReviewDaoImpl();
     }
     return reviewDao;
+  }
+
+  CommentDaoImpl getCommentDao() {
+    if (commentDao == null) {
+      commentDao = new CommentDaoImpl();
+    }
+    return commentDao;
   }
 
 }
