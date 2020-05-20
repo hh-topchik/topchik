@@ -1,6 +1,7 @@
 import React from 'react';
 import './styles.less';
 import Logo from '../Logo/Logo';
+import { Link } from 'react-router-dom';
 
 export default function Header() {
     return (
@@ -12,12 +13,12 @@ export default function Header() {
                 <h1>топчик</h1>
             </div>
             <div className="header__about">
-                <a className="header__about-text" href="#">
+                <Link to={`/about`} className="header__about-text">
                     О проекте
-                </a>
-                <div className="header__about-icon">
+                </Link>
+                <Link to={`/about`} className="header__about-icon">
                     <i className="fas fa-info-circle"></i>
-                </div>
+                </Link>
             </div>
         </header>
     );
