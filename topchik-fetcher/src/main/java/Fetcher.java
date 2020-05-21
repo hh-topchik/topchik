@@ -1,10 +1,11 @@
 import entity.Account;
+import entity.Comment;
 import entity.Commit;
-import entity.Review;
 import entity.PullRequest;
 import entity.Repository;
-import enums.ReviewStatus;
+import entity.Review;
 import enums.PullRequestStatus;
+import enums.ReviewStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kohsuke.github.GHCommit;
@@ -12,11 +13,14 @@ import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHPullRequestCommitDetail;
 import org.kohsuke.github.GHPullRequestReview;
+import org.kohsuke.github.GHPullRequestReviewComment;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 
+import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -30,17 +34,22 @@ class Fetcher {
   private final Set<Commit> commits = new HashSet<>();
   private final Set<PullRequest> pullRequests = new HashSet<>();
   private final Set<Review> reviews = new HashSet<>();
+  private final Set<Comment> comments = new HashSet<>();
   private final Repository repository;
+  private final Date since;
+  private final Date until;
 
   private final GHRepository ghRepository;
   private final List<GHPullRequest> ghPullRequests;
 
   private static final Logger LOGGER = LogManager.getLogger(Fetcher.class);
 
-  Fetcher(final GitHub github, final String repo) throws Exception {
+  Fetcher(final GitHub github, final String repo, final Date since, final Date until) throws Exception {
     ghRepository = github.getRepository(repo);
     ghPullRequests = ghRepository.getPullRequests(GHIssueState.ALL);
     repository = convertRepository();
+    this.since = since;
+    this.until = until;
     convertAll();
   }
 
@@ -73,7 +82,11 @@ class Fetcher {
       return;
     }
     LOGGER.info("Начало конвертации списка пулл реквестов");
+
     for (final GHPullRequest ghPullRequest : ghPullRequests) {
+      if (!pullRequestInInterval(ghPullRequest)) {
+        continue;
+      }
       final PullRequest pullRequest = convertPullRequest(ghPullRequest);
       if (pullRequest != null) {
         pullRequests.add(pullRequest);
@@ -82,6 +95,23 @@ class Fetcher {
       }
     }
     LOGGER.info("Конвертация списка пулл реквестов прошла успешно");
+  }
+
+  /**
+   * Проверка на то, что ПР лежит в заданном промежутке времени
+   *
+   */
+  private boolean pullRequestInInterval(final GHPullRequest ghPullRequest) throws IOException {
+   if (ghPullRequest == null) {
+     return false;
+   }
+   if (since != null && ghPullRequest.getMergedAt() != null && ghPullRequest.getMergedAt().compareTo(since) < 0) {
+     return false;
+   }
+   if (until != null && ghPullRequest.getCreatedAt() != null && ghPullRequest.getCreatedAt().compareTo(until) > 0) {
+     return false;
+   }
+   return true;
   }
 
   /**
@@ -213,23 +243,41 @@ class Fetcher {
       LOGGER.info("Начало конвертации списка ревью для пулл реквеста " + ghPullRequest);
       for (final GHPullRequestReview ghReview : ghPullRequest.listReviews()) {
         LOGGER.info("Начало конвертации ревью для пулл реквеста " + ghReview);
-        final long approveId = ghReview.getId();
+
         final Account author = convertUser(ghReview.getUser());
         if (author == null) {
           LOGGER.error("Автор ревью для пулл реквеста не найден");
           continue;
         }
         accounts.add(author);
-        final Timestamp creationDate = Timestamp.from(ghReview.getCreatedAt().toInstant());
+
         final ReviewStatus status = ReviewStatus.valueOf(Objects.requireNonNull(ghReview.getState()).name());
+        final long approveId = ghReview.getId();
+        final Timestamp creationDate = Timestamp.from(ghReview.getCreatedAt().toInstant());
         final Review review = new Review(approveId, author, pullRequest, status.getId(), creationDate);
-        LOGGER.info("Конвертация ревью для пулл реквеста прошла успешно");
         reviews.add(review);
+        convertComment(ghReview, review);
+        LOGGER.info("Конвертация ревью для пулл реквеста прошла успешно");
       }
       LOGGER.info("Конвертация списка ревью для пулл реквеста прошла успешно");
     } catch (Exception e) {
       LOGGER.error("Ошибка конвертации ревью пулл реквеста ", e);
       throw new Exception("Ошибка конвертации ревью пулл реквеста ", e);
+    }
+  }
+
+  private void convertComment(final GHPullRequestReview ghPullRequestReview, final Review review) throws Exception {
+    try {
+      LOGGER.info("Начало конвертации комментариев " + ghPullRequestReview);
+      for (final GHPullRequestReviewComment ghComment : ghPullRequestReview.listReviewComments()) {
+        final long commentId = ghComment.getId();
+        final Timestamp creationTime = Timestamp.from(ghComment.getCreatedAt().toInstant());
+        final Comment comment = new Comment(commentId, creationTime, review);
+        comments.add(comment);
+      }
+    } catch (Exception e) {
+      LOGGER.error("Ошибка конвертации комментариев ", e);
+      throw new Exception("Ошибка конвертации комментариев ", e);
     }
   }
 
@@ -251,5 +299,9 @@ class Fetcher {
 
   Repository getRepository() {
     return repository;
+  }
+
+  Set<Comment> getComments() {
+    return comments;
   }
 }

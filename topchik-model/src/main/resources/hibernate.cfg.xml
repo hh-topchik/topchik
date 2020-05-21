@@ -23,7 +23,8 @@
         <mapping resource="DailyCount.hbm.xml"/>
         <mapping class="entity.WeeklyResult"/>
         <mapping resource="WeeklyResult.hbm.xml"/>
-
+        <mapping class="entity.Comment"/>
+        <mapping resource="Comment.hbm.xml"/>
         <!-- DB schema will be updated if needed -->
 
     </session-factory>
