@@ -109,7 +109,7 @@ public class DbReader {
   }
 
   private List<CommonCountPojo> readDailyComments() {
-    return daoFactory.getReviewDao().getAggregatedDailyComments();
+    return daoFactory.getCommentDao().getAggregatedDailyComments();
   }
 
   private void countWeeklyComments(List<CommonCountPojo> commonCountPojos) {
@@ -117,7 +117,7 @@ public class DbReader {
   }
 
   private List<CommonCountPojo> readWeeklyComments() {
-    return daoFactory.getReviewDao().getAggregatedWeeklyComments();
+    return daoFactory.getCommentDao().getAggregatedWeeklyComments();
   }
 
   private void countDailyCommentedPullRequests(List<CommonCountPojo> commonCountPojos) {
@@ -125,7 +125,7 @@ public class DbReader {
   }
 
   private List<CommonCountPojo> readDailyCommentedPullRequests() {
-    return daoFactory.getReviewDao().getAggregatedDailyCommentedPullRequests();
+    return daoFactory.getCommentDao().getAggregatedDailyCommentedPullRequests();
   }
 
   private void countWeeklyCommentedPullRequests(List<CommonCountPojo> commonCountPojos) {
@@ -133,7 +133,7 @@ public class DbReader {
   }
 
   private List<CommonCountPojo> readWeeklyCommentedPullRequests() {
-    return daoFactory.getReviewDao().getAggregatedWeeklyCommentedPullRequests();
+    return daoFactory.getCommentDao().getAggregatedWeeklyCommentedPullRequests();
   }
 
   private void countDailyApprovedPullRequests(List<CommonCountPojo> commonCountPojos) {

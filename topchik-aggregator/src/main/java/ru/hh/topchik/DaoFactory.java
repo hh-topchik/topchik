@@ -1,5 +1,6 @@
 package ru.hh.topchik;
 
+import dao.CommentDaoImpl;
 import dao.CommitDaoImpl;
 import dao.DailyCountDaoImpl;
 import dao.PullRequestDaoImpl;
@@ -8,6 +9,7 @@ import dao.WeeklyResultDaoImpl;
 
 public class DaoFactory {
   private PullRequestDaoImpl pullRequestDao;
+  private CommentDaoImpl commentDao;
   private CommitDaoImpl commitDao;
   private ReviewDaoImpl reviewDao;
   private DailyCountDaoImpl dailyCountDao;
@@ -18,6 +20,13 @@ public class DaoFactory {
       pullRequestDao = new PullRequestDaoImpl();
     }
     return pullRequestDao;
+  }
+
+  CommentDaoImpl getCommentDao() {
+    if (commentDao == null) {
+      commentDao = new CommentDaoImpl();
+    }
+    return commentDao;
   }
 
   CommitDaoImpl getCommitDao() {
