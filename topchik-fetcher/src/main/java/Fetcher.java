@@ -102,16 +102,16 @@ class Fetcher {
    *
    */
   private boolean pullRequestInInterval(final GHPullRequest ghPullRequest) throws IOException {
-   if (ghPullRequest == null) {
-     return false;
-   }
-   if (since != null && ghPullRequest.getMergedAt() != null && ghPullRequest.getMergedAt().compareTo(since) < 0) {
-     return false;
-   }
-   if (until != null && ghPullRequest.getCreatedAt() != null && ghPullRequest.getCreatedAt().compareTo(until) > 0) {
-     return false;
-   }
-   return true;
+    if (ghPullRequest == null) {
+      return false;
+    }
+    if (since != null && ghPullRequest.getMergedAt() != null && ghPullRequest.getMergedAt().compareTo(since) < 0) {
+      return false;
+    }
+    if (until != null && ghPullRequest.getCreatedAt() != null && ghPullRequest.getCreatedAt().compareTo(until) > 0) {
+      return false;
+    }
+    return true;
   }
 
   /**

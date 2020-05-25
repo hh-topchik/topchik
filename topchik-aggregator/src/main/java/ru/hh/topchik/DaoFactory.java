@@ -1,13 +1,17 @@
 package ru.hh.topchik;
 
+import dao.CommentDaoImpl;
 import dao.CommitDaoImpl;
 import dao.DailyCountDaoImpl;
 import dao.PullRequestDaoImpl;
+import dao.ReviewDaoImpl;
 import dao.WeeklyResultDaoImpl;
 
 public class DaoFactory {
   private PullRequestDaoImpl pullRequestDao;
+  private CommentDaoImpl commentDao;
   private CommitDaoImpl commitDao;
+  private ReviewDaoImpl reviewDao;
   private DailyCountDaoImpl dailyCountDao;
   private WeeklyResultDaoImpl weeklyResultDao;
 
@@ -18,11 +22,25 @@ public class DaoFactory {
     return pullRequestDao;
   }
 
+  CommentDaoImpl getCommentDao() {
+    if (commentDao == null) {
+      commentDao = new CommentDaoImpl();
+    }
+    return commentDao;
+  }
+
   CommitDaoImpl getCommitDao() {
     if (commitDao == null) {
       commitDao = new CommitDaoImpl();
     }
     return commitDao;
+  }
+
+  ReviewDaoImpl getReviewDao() {
+    if (reviewDao == null) {
+      reviewDao = new ReviewDaoImpl();
+    }
+    return reviewDao;
   }
 
   DailyCountDaoImpl getDailyCountDao() {

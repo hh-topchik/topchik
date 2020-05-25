@@ -4,7 +4,7 @@ import entity.Commit;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import pojo.CommitPojo;
+import pojo.CommonCountPojo;
 import util.HibernateUtil;
 
 import javax.inject.Singleton;
@@ -18,30 +18,30 @@ import java.util.List;
 public class CommitDaoImpl extends DaoImpl<Commit> {
 
   /**
-   * Метод получения списка коммитов, агрегированного по количеству добавленных строк за каждый день,
+   * Метод подсчёта коммитов, агрегированных по количеству добавленных строк за каждый день,
    * отсортированных по репозиторию, дате и количеству
    *
-   * @return List<CommitPojo> - желаемый агрегированный список количества добавленных строк за каждый день
+   * @return List<CommonCountPojo> - желаемый агрегированный список количества добавленных строк за каждый день
    * */
-  public List<CommitPojo> getAggregatedDailyAddedLines() {
-    final String dailyAddedLinesQuery = "SELECT new pojo.CommitPojo(" +
+  public List<CommonCountPojo> getAggregatedDailyAddedLines() {
+    final String dailyAddedLinesQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('day', c.creationTime) as count_date, c.accountByAuthorId, c.repositoryByRepoId, SUM(c.addedLines) as lines) " +
-        "FROM entity.Commit c WHERE c.addedLines != 0 AND c.accountByAuthorId.login NOT LIKE '%[bot]' " +
+        "FROM Commit c WHERE c.addedLines != 0 AND c.accountByAuthorId.login NOT LIKE '%[bot]' " +
         "GROUP BY count_date, c.accountByAuthorId, c.repositoryByRepoId " +
         "ORDER BY c.repositoryByRepoId, count_date, lines DESC";
     return getAggregatedCommitData(dailyAddedLinesQuery);
   }
 
   /**
-   * Метод получения списка коммитов, агрегированного по количеству добавленных строк за всю неделю,
+   * Метод подсчёта коммитов, агрегированных по количеству добавленных строк за всю неделю,
    * отсортированных по репозиторию, дате и количеству
    *
-   * @return List<CommitPojo> - желаемый агрегированный понедельно список количества добавленных строк
+   * @return List<CommonCountPojo> - желаемый агрегированный понедельно список количества добавленных строк
    * */
-  public List<CommitPojo> getAggregatedWeeklyAddedLines() {
-    final String weeklyAddedLinesQuery = "SELECT new pojo.CommitPojo(" +
+  public List<CommonCountPojo> getAggregatedWeeklyAddedLines() {
+    final String weeklyAddedLinesQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('week', c.creationTime) as count_date, c.accountByAuthorId, c.repositoryByRepoId, SUM(c.addedLines) as lines) " +
-        "FROM entity.Commit c WHERE c.addedLines != 0 AND c.accountByAuthorId.login NOT LIKE '%[bot]' " +
+        "FROM Commit c WHERE c.addedLines != 0 AND c.accountByAuthorId.login NOT LIKE '%[bot]' " +
         "AND date_trunc('week', c.creationTime) != date_trunc('week', current_date()) " +
         "GROUP BY count_date, c.accountByAuthorId, c.repositoryByRepoId " +
         "ORDER BY c.repositoryByRepoId, count_date, lines DESC";
@@ -49,30 +49,30 @@ public class CommitDaoImpl extends DaoImpl<Commit> {
   }
 
   /**
-   * Метод получения списка коммитов, агрегированного по количеству удаленных строк за каждый день,
+   * Метод подсчёта коммитов, агрегированных по количеству удаленных строк за каждый день,
    * отсортированных по репозиторию, дате и количеству
    *
-   * @return List<CommitPojo> - желаемый агрегированный список количества удаленных строк за каждый день
+   * @return List<CommonCountPojo> - желаемый агрегированный список количества удаленных строк за каждый день
    * */
-  public List<CommitPojo> getAggregatedDailyDeletedLines() {
-    final String dailyDeletedLinesQuery = "SELECT new pojo.CommitPojo(" +
+  public List<CommonCountPojo> getAggregatedDailyDeletedLines() {
+    final String dailyDeletedLinesQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('day', c.creationTime) as count_date, c.accountByAuthorId, c.repositoryByRepoId, SUM(c.deletedLines) as lines) " +
-        "FROM entity.Commit c WHERE c.deletedLines != 0 AND c.accountByAuthorId.login NOT LIKE '%[bot]' " +
+        "FROM Commit c WHERE c.deletedLines != 0 AND c.accountByAuthorId.login NOT LIKE '%[bot]' " +
         "GROUP BY count_date, c.accountByAuthorId, c.repositoryByRepoId " +
         "ORDER BY c.repositoryByRepoId, count_date, lines DESC";
     return getAggregatedCommitData(dailyDeletedLinesQuery);
   }
 
   /**
-   * Метод получения списка коммитов, агрегированного по количеству удаленных строк за всю неделю,
+   * Метод подсчёта коммитов, агрегированных по количеству удаленных строк за всю неделю,
    * отсортированных по репозиторию, дате и количеству
    *
-   * @return List<CommitPojo> - желаемый агрегированный понедельно список количества удаленных строк
+   * @return List<CommonCountPojo> - желаемый агрегированный понедельно список количества удаленных строк
    * */
-  public List<CommitPojo> getAggregatedWeeklyDeletedLines() {
-    final String weeklyDeletedLinesQuery = "SELECT new pojo.CommitPojo(" +
+  public List<CommonCountPojo> getAggregatedWeeklyDeletedLines() {
+    final String weeklyDeletedLinesQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('week', c.creationTime) as count_date, c.accountByAuthorId, c.repositoryByRepoId, SUM(c.deletedLines) as lines) " +
-        "FROM entity.Commit c WHERE c.deletedLines != 0 AND c.accountByAuthorId.login NOT LIKE '%[bot]' " +
+        "FROM Commit c WHERE c.deletedLines != 0 AND c.accountByAuthorId.login NOT LIKE '%[bot]' " +
         "AND date_trunc('week', c.creationTime) != date_trunc('week', current_date()) " +
         "GROUP BY count_date, c.accountByAuthorId, c.repositoryByRepoId " +
         "ORDER BY c.repositoryByRepoId, count_date, lines DESC";
@@ -80,23 +80,23 @@ public class CommitDaoImpl extends DaoImpl<Commit> {
   }
 
   /**
-   * Общий метод для получения агрегированных данных по количеству добавленных или удаленных строк
+   * Общий метод для подсчёта данных по количеству добавленных или удаленных строк
    *
    * @param hqlQuery - запрос на языке HQL, который надо выполнить, чтобы забрать из Commit агрегированные данные
    *
-   * @return  List<CommitPojo> - желаемый агрегированный список
+   * @return  List<CommonCountPojo> - желаемый агрегированный список
    * */
-  private List<CommitPojo> getAggregatedCommitData(String hqlQuery) {
+  private List<CommonCountPojo> getAggregatedCommitData(String hqlQuery) {
     Transaction transaction;
-    List<CommitPojo> commitPojos = new ArrayList<>();
+    List<CommonCountPojo> commonCountPojos = new ArrayList<>();
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
-      Query<CommitPojo> query = session.createQuery(hqlQuery, CommitPojo.class);
-      commitPojos = query.getResultList();
+      Query<CommonCountPojo> query = session.createQuery(hqlQuery, CommonCountPojo.class);
+      commonCountPojos = query.getResultList();
       transaction.commit();
     } catch (Exception e) {
       e.printStackTrace();
     }
-    return commitPojos;
+    return commonCountPojos;
   }
 }
