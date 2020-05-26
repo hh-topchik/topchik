@@ -66,8 +66,7 @@ public class CommentDaoImpl extends DaoImpl<Comment> {
         "WHERE c.reviewByReviewId.accountByAuthorId != c.reviewByReviewId.pullRequestByPullRequestId.accountByAuthorId " +
         "AND c.reviewByReviewId.accountByAuthorId.login NOT LIKE '%[bot]' " +
         "GROUP BY count_date, c.reviewByReviewId.accountByAuthorId, " +
-        "c.reviewByReviewId.pullRequestByPullRequestId.repositoryByRepoId, " +
-        "c.reviewByReviewId.pullRequestByPullRequestId.pullRequestId " +
+        "c.reviewByReviewId.pullRequestByPullRequestId.repositoryByRepoId " +
         "ORDER BY c.reviewByReviewId.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter DESC";
     return getAggregatedCommentData(dailyCommentsQuery);
   }
@@ -80,7 +79,7 @@ public class CommentDaoImpl extends DaoImpl<Comment> {
    * */
   public List<CommonCountPojo> getAggregatedWeeklyCommentedPullRequests() {
     final String weeklyCommentsQuery = "SELECT new pojo.CommonCountPojo(" +
-        "date_trunc('day', c.creationTime) as count_date, c.reviewByReviewId.accountByAuthorId, " +
+        "date_trunc('week', c.creationTime) as count_date, c.reviewByReviewId.accountByAuthorId, " +
         "c.reviewByReviewId.pullRequestByPullRequestId.repositoryByRepoId, " +
         "COUNT(DISTINCT c.reviewByReviewId.pullRequestByPullRequestId.pullRequestId) as counter) " +
         "FROM Comment c " +
@@ -88,8 +87,7 @@ public class CommentDaoImpl extends DaoImpl<Comment> {
         "AND c.reviewByReviewId.accountByAuthorId.login NOT LIKE '%[bot]' " +
         "AND date_trunc('week', c.creationTime) != date_trunc('week', current_date()) " +
         "GROUP BY count_date, c.reviewByReviewId.accountByAuthorId, " +
-        "c.reviewByReviewId.pullRequestByPullRequestId.repositoryByRepoId, " +
-        "c.reviewByReviewId.pullRequestByPullRequestId.pullRequestId " +
+        "c.reviewByReviewId.pullRequestByPullRequestId.repositoryByRepoId " +
         "ORDER BY c.reviewByReviewId.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter DESC";
     return getAggregatedCommentData(weeklyCommentsQuery);
   }

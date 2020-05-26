@@ -1,6 +1,9 @@
 package dao;
 
 import entity.Repository;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import util.HibernateUtil;
 
 import javax.inject.Singleton;
 
@@ -10,4 +13,17 @@ import javax.inject.Singleton;
 @Singleton
 public class RepositoryDaoImpl extends DaoImpl<Repository> {
 
+  public String getRepoPathByRepo(Repository repo) {
+    Transaction transaction;
+    String path = "";
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+      transaction = session.beginTransaction();
+      session.update(repo);
+      path = repo.getPath();
+      transaction.commit();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return path;
+  }
 }
