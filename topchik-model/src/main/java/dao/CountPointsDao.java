@@ -1,5 +1,6 @@
 package dao;
 
+import enums.Category;
 import org.hibernate.SessionFactory;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.StandardBasicTypes;
@@ -70,7 +71,7 @@ public class CountPointsDao {
         "WHERE date_trunc('week', dc.date) = date_trunc('week', current_date) " +
         "AND dc.category = :category " +
         "GROUP BY account, avatar " +
-        "ORDER BY count DESC LIMIT 10";
+        getOrderSubquery(categoryId, true);
     return getFullResults(query, categoryId);
   }
 
@@ -85,7 +86,7 @@ public class CountPointsDao {
         "WHERE date_trunc('week', dc.date) = date_trunc('week', current_date) " +
         "AND dc.repo_id = :repo AND dc.category = :category " +
         "GROUP BY account, avatar " +
-        "ORDER BY count DESC LIMIT 10";
+        getOrderSubquery(categoryId, true);
     return getFullResults(query, categoryId, repoId);
   }
 
@@ -101,6 +102,7 @@ public class CountPointsDao {
         "FROM account AS acc " +
         "INNER JOIN daily_count AS dc ON acc.account_id = dc.account_id " +
         "WHERE date_trunc('quarter', dc.date) = date_trunc('quarter', current_date) " +
+        "AND date_trunc('week', dc.date) != date_trunc('week', current_date) " +
         "AND dc.category = :category " +
         "GROUP BY acc.login, acc.avatar " +
         "ORDER BY count DESC) AS dc_select " +
@@ -109,12 +111,13 @@ public class CountPointsDao {
         "FROM account AS acc " +
         "INNER JOIN weekly_result AS wr ON acc.account_id = wr.account_id " +
         "WHERE date_trunc('quarter', wr.week_date) = date_trunc('quarter', current_date) " +
+        "AND date_trunc('week', wr.week_date) != date_trunc('week', current_date) " +
         "AND wr.category = :category " +
         "GROUP BY acc.login, acc.avatar " +
         "ORDER BY points DESC) AS wr_select " +
         "ON (dc_select.login = wr_select.login) " +
         "GROUP BY dc_select.login, dc_select.avatar " +
-        "ORDER BY points DESC, count DESC LIMIT 10";
+        getOrderSubquery(categoryId, false);
     return getFullResults(query, categoryId);
   }
 
@@ -130,6 +133,7 @@ public class CountPointsDao {
         "FROM account AS acc " +
         "INNER JOIN daily_count AS dc ON acc.account_id = dc.account_id " +
         "WHERE date_trunc('quarter', dc.date) = date_trunc('quarter', current_date) " +
+        "AND date_trunc('week', dc.date) != date_trunc('week', current_date) " +
         "AND dc.repo_id = :repo AND dc.category = :category " +
         "GROUP BY acc.login, acc.avatar " +
         "ORDER BY count DESC) AS dc_select " +
@@ -138,12 +142,13 @@ public class CountPointsDao {
         "FROM account AS acc " +
         "INNER JOIN weekly_result AS wr ON acc.account_id = wr.account_id " +
         "WHERE date_trunc('quarter', wr.week_date) = date_trunc('quarter', current_date) " +
+        "AND date_trunc('week', wr.week_date) != date_trunc('week', current_date) " +
         "AND wr.repo_id = :repo AND wr.category = :category " +
         "GROUP BY acc.login, acc.avatar " +
         "ORDER BY points DESC) AS wr_select " +
         "ON (dc_select.login = wr_select.login) " +
         "GROUP BY dc_select.login, dc_select.avatar " +
-        "ORDER BY points DESC, count DESC LIMIT 10";
+        getOrderSubquery(categoryId, false);
     return getFullResults(query, categoryId, repoId);
   }
 
@@ -159,6 +164,7 @@ public class CountPointsDao {
         "FROM account AS acc " +
         "INNER JOIN daily_count AS dc ON acc.account_id = dc.account_id " +
         "WHERE date_trunc('year', dc.date) = date_trunc('year', current_date) " +
+        "AND date_trunc('week', dc.date) != date_trunc('week', current_date) " +
         "AND dc.category = :category " +
         "GROUP BY acc.login, acc.avatar " +
         "ORDER BY count DESC) AS dc_select " +
@@ -167,12 +173,13 @@ public class CountPointsDao {
         "FROM account AS acc " +
         "INNER JOIN weekly_result AS wr ON acc.account_id = wr.account_id " +
         "WHERE date_trunc('year', wr.week_date) = date_trunc('year', current_date) " +
+        "AND date_trunc('week', wr.week_date) != date_trunc('week', current_date) " +
         "AND wr.category = :category " +
         "GROUP BY acc.login, acc.avatar " +
         "ORDER BY points DESC) AS wr_select " +
         "ON (dc_select.login = wr_select.login) " +
         "GROUP BY dc_select.login, dc_select.avatar " +
-        "ORDER BY points DESC, count DESC LIMIT 10";
+        getOrderSubquery(categoryId, false);
     return getFullResults(query, categoryId);
   }
 
@@ -188,6 +195,7 @@ public class CountPointsDao {
         "FROM account AS acc " +
         "INNER JOIN daily_count AS dc ON acc.account_id = dc.account_id " +
         "WHERE date_trunc('year', dc.date) = date_trunc('year', current_date) " +
+        "AND date_trunc('week', dc.date) != date_trunc('week', current_date) " +
         "AND dc.repo_id = :repo AND dc.category = :category " +
         "GROUP BY acc.login, acc.avatar " +
         "ORDER BY count DESC) AS dc_select " +
@@ -196,12 +204,13 @@ public class CountPointsDao {
         "FROM account AS acc " +
         "INNER JOIN weekly_result AS wr ON acc.account_id = wr.account_id " +
         "WHERE date_trunc('year', wr.week_date) = date_trunc('year', current_date) " +
+        "AND date_trunc('week', wr.week_date) != date_trunc('week', current_date) " +
         "AND wr.repo_id = :repo AND wr.category = :category " +
         "GROUP BY acc.login, acc.avatar " +
         "ORDER BY points DESC) AS wr_select " +
         "ON (dc_select.login = wr_select.login) " +
         "GROUP BY dc_select.login, dc_select.avatar " +
-        "ORDER BY points DESC, count DESC LIMIT 10";
+        getOrderSubquery(categoryId, false);
     return getFullResults(query, categoryId, repoId);
   }
 
@@ -217,6 +226,7 @@ public class CountPointsDao {
         "FROM account AS acc " +
         "INNER JOIN daily_count AS dc ON acc.account_id = dc.account_id " +
         "WHERE dc.category = :category " +
+        "AND date_trunc('week', dc.date) != date_trunc('week', current_date) " +
         "GROUP BY acc.login, acc.avatar " +
         "ORDER BY count DESC) AS dc_select " +
         "LEFT JOIN " +
@@ -224,11 +234,12 @@ public class CountPointsDao {
         "FROM account AS acc " +
         "INNER JOIN weekly_result AS wr ON acc.account_id = wr.account_id " +
         "WHERE wr.category = :category " +
+        "AND date_trunc('week', wr.week_date) != date_trunc('week', current_date) " +
         "GROUP BY acc.login, acc.avatar " +
         "ORDER BY points DESC) AS wr_select " +
         "ON (dc_select.login = wr_select.login) " +
         "GROUP BY dc_select.login, dc_select.avatar " +
-        "ORDER BY points DESC, count DESC LIMIT 10";
+        getOrderSubquery(categoryId, false);
     return getFullResults(query, categoryId);
   }
 
@@ -244,6 +255,7 @@ public class CountPointsDao {
         "FROM account AS acc " +
         "INNER JOIN daily_count AS dc ON acc.account_id = dc.account_id " +
         "WHERE dc.repo_id = :repo AND dc.category = :category " +
+        "AND date_trunc('week', dc.date) != date_trunc('week', current_date) " +
         "GROUP BY acc.login, acc.avatar " +
         "ORDER BY count DESC) AS dc_select " +
         "LEFT JOIN " +
@@ -251,14 +263,35 @@ public class CountPointsDao {
         "FROM account AS acc " +
         "INNER JOIN weekly_result AS wr ON acc.account_id = wr.account_id " +
         "WHERE wr.repo_id = :repo AND wr.category = :category " +
+        "AND date_trunc('week', wr.week_date) != date_trunc('week', current_date) " +
         "GROUP BY acc.login, acc.avatar " +
         "ORDER BY points DESC) AS wr_select " +
         "ON (dc_select.login = wr_select.login) " +
         "GROUP BY dc_select.login, dc_select.avatar " +
-        "ORDER BY points DESC, count DESC LIMIT 10";
+        getOrderSubquery(categoryId, false);
     return getFullResults(query, categoryId, repoId);
   }
 
+  /**
+   * Метод определения, требуется ли возвращать результат в перевёрнутом (reverse) порядке или нет
+   * */
+  private String getOrderSubquery(int categoryId, boolean isWeekPeriod) {
+    if (categoryId == Category.KIND_MEN.getId()) {
+      if (isWeekPeriod) {
+        return "ORDER BY count LIMIT 10";
+      } else {
+        return "ORDER BY points DESC, count LIMIT 10";
+      }
+    } else {
+      if (isWeekPeriod) {
+        return "ORDER BY count DESC LIMIT 10";
+      } else {
+        return "ORDER BY points DESC, count DESC LIMIT 10";
+      }
+    }
+  }
+
+  
   /**
    * Получение списка id всех имеющихся категорий
    * */

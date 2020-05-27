@@ -27,6 +27,7 @@ public class CommitDaoImpl extends DaoImpl<Commit> {
     final String dailyAddedLinesQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('day', c.creationTime) as count_date, c.accountByAuthorId, c.repositoryByRepoId, SUM(c.addedLines) as lines) " +
         "FROM Commit c WHERE c.addedLines != 0 AND c.accountByAuthorId.login NOT LIKE '%[bot]' " +
+        "AND c.accountByAuthorId.login NOT LIKE 'testUser%' " +
         "GROUP BY count_date, c.accountByAuthorId, c.repositoryByRepoId " +
         "ORDER BY c.repositoryByRepoId, count_date, lines DESC";
     return getAggregatedCommitData(dailyAddedLinesQuery);
@@ -42,6 +43,7 @@ public class CommitDaoImpl extends DaoImpl<Commit> {
     final String weeklyAddedLinesQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('week', c.creationTime) as count_date, c.accountByAuthorId, c.repositoryByRepoId, SUM(c.addedLines) as lines) " +
         "FROM Commit c WHERE c.addedLines != 0 AND c.accountByAuthorId.login NOT LIKE '%[bot]' " +
+        "AND c.accountByAuthorId.login NOT LIKE 'testUser%' " +
         "AND date_trunc('week', c.creationTime) != date_trunc('week', current_date()) " +
         "GROUP BY count_date, c.accountByAuthorId, c.repositoryByRepoId " +
         "ORDER BY c.repositoryByRepoId, count_date, lines DESC";
@@ -58,6 +60,7 @@ public class CommitDaoImpl extends DaoImpl<Commit> {
     final String dailyDeletedLinesQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('day', c.creationTime) as count_date, c.accountByAuthorId, c.repositoryByRepoId, SUM(c.deletedLines) as lines) " +
         "FROM Commit c WHERE c.deletedLines != 0 AND c.accountByAuthorId.login NOT LIKE '%[bot]' " +
+        "AND c.accountByAuthorId.login NOT LIKE 'testUser%' " +
         "GROUP BY count_date, c.accountByAuthorId, c.repositoryByRepoId " +
         "ORDER BY c.repositoryByRepoId, count_date, lines DESC";
     return getAggregatedCommitData(dailyDeletedLinesQuery);
@@ -73,6 +76,7 @@ public class CommitDaoImpl extends DaoImpl<Commit> {
     final String weeklyDeletedLinesQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('week', c.creationTime) as count_date, c.accountByAuthorId, c.repositoryByRepoId, SUM(c.deletedLines) as lines) " +
         "FROM Commit c WHERE c.deletedLines != 0 AND c.accountByAuthorId.login NOT LIKE '%[bot]' " +
+        "AND c.accountByAuthorId.login NOT LIKE 'testUser%' " +
         "AND date_trunc('week', c.creationTime) != date_trunc('week', current_date()) " +
         "GROUP BY count_date, c.accountByAuthorId, c.repositoryByRepoId " +
         "ORDER BY c.repositoryByRepoId, count_date, lines DESC";

@@ -27,6 +27,7 @@ public class PullRequestDaoImpl extends DaoImpl<PullRequest> {
     final String dailyMergedPullRequestsQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('day', pr.lastUpdateTime) as count_date, pr.accountByAuthorId, pr.repositoryByRepoId, COUNT(pr) as counter) " +
         "FROM PullRequest pr WHERE pr.status = :status AND pr.accountByAuthorId.login NOT LIKE '%[bot]' " +
+        "AND pr.accountByAuthorId.login NOT LIKE 'testUser%' " +
         "GROUP BY count_date, pr.accountByAuthorId, pr.repositoryByRepoId " +
         "ORDER BY pr.repositoryByRepoId, count_date, counter DESC";
     return getAggregatedPullRequestData(dailyMergedPullRequestsQuery);
@@ -42,6 +43,7 @@ public class PullRequestDaoImpl extends DaoImpl<PullRequest> {
     final String weeklyMergedPullRequestsQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('week', pr.lastUpdateTime) as week_date, pr.accountByAuthorId, pr.repositoryByRepoId, COUNT(pr) as counter) " +
         "FROM PullRequest pr WHERE pr.status = :status AND pr.accountByAuthorId.login NOT LIKE '%[bot]' " +
+        "AND pr.accountByAuthorId.login NOT LIKE 'testUser%' " +
         "AND date_trunc('week', pr.lastUpdateTime) != date_trunc('week', current_date()) " +
         "GROUP BY week_date, pr.accountByAuthorId, pr.repositoryByRepoId " +
         "ORDER BY pr.repositoryByRepoId, week_date, counter DESC";

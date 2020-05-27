@@ -29,6 +29,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
         "COUNT(DISTINCT r.pullRequestByPullRequestId) as counter) " +
         "FROM Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
         "AND r.accountByAuthorId.login NOT LIKE '%[bot]' " +
+        "AND r.accountByAuthorId.login NOT LIKE 'testUser%' " +
         "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId " +
         "ORDER BY r.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter DESC";
     return getAggregatedReviewData(dailyCommentsQuery, ReviewStatus.APPROVED);
@@ -46,6 +47,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
         "COUNT(DISTINCT r.pullRequestByPullRequestId) as counter) " +
         "FROM Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
         "AND r.accountByAuthorId.login NOT LIKE '%[bot]' AND date_trunc('week', r.time) != date_trunc('week', current_date()) " +
+        "AND r.accountByAuthorId.login NOT LIKE 'testUser%' " +
         "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId " +
         "ORDER BY r.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter DESC";
     return getAggregatedReviewData(weeklyCommentsQuery, ReviewStatus.APPROVED);
@@ -64,7 +66,9 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
         "as long) as counter) " +
         "FROM Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
         "AND r.accountByAuthorId.login NOT LIKE '%[bot]' " +
-        "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId " +
+        "AND r.accountByAuthorId.login NOT LIKE 'testUser%' " +
+        "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId, " +
+        "r.time, r.pullRequestByPullRequestId.creationTime " +
         "ORDER BY r.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter";
     return getAggregatedReviewData(dailyCommentsQuery, ReviewStatus.APPROVED);
   }
@@ -82,7 +86,9 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
         "as long) as counter) " +
         "FROM Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
         "AND r.accountByAuthorId.login NOT LIKE '%[bot]' AND date_trunc('week', r.time) != date_trunc('week', current_date()) " +
-        "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId " +
+        "AND r.accountByAuthorId.login NOT LIKE 'testUser%' " +
+        "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId, " +
+        "r.time, r.pullRequestByPullRequestId.creationTime " +
         "ORDER BY r.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter";
     return getAggregatedReviewData(weeklyCommentsQuery, ReviewStatus.APPROVED);
   }
