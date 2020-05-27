@@ -8,12 +8,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pojo.CommonCountPojo;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,7 +21,6 @@ import java.util.List;
 public class DbReader {
   private static final Logger LOGGER = LogManager.getLogger(DbReader.class);
   private static final int GAP_BETWEEN_MONDAY_AND_SUNDAY = 6;
-  private static final int DAYS_TO_RETURN_TO_PREVIOUS_DAY = 1;
   private static final int MAX_WEEKLY_POINTS = 10;
   private static final int MIN_WEEKLY_POINTS = 1;
 
@@ -205,13 +203,7 @@ public class DbReader {
     firstWeeklyResult.setRepositoryByRepoId(referenceCommonCountPojo.getRepositoryByRepoId());
     weeklyResults.add(firstWeeklyResult);
 
-    if (isTodayIsNotificationDate() && isItLastWeekResult(firstWeeklyResult.getWeekDate())) {
-      notifier.sendNotification(daoFactory, firstWeeklyResult.getAccountByAccountId(),
-          firstWeeklyResult.getRepositoryByRepoId(),
-          (MAX_WEEKLY_POINTS - currentPointsToAdd) + MIN_WEEKLY_POINTS,
-          firstWeeklyResult.getCategory(),
-          referenceCommonCountPojo.getCount());
-    }
+    checkAndSendNotification(firstWeeklyResult, referenceCommonCountPojo, currentPointsToAdd);
 
     for (int i = 1; i < commonCountPojos.size(); i++) {
       if (referenceCommonCountPojo.getDate().equals(commonCountPojos.get(i).getDate()) &&
@@ -230,14 +222,7 @@ public class DbReader {
         } else {
           currentPointsToAdd--;
           weeklyResult.setPoints(currentPointsToAdd);
-
-          if (isTodayIsNotificationDate() && isItLastWeekResult(weeklyResult.getWeekDate())) {
-            notifier.sendNotification(daoFactory, weeklyResult.getAccountByAccountId(),
-                weeklyResult.getRepositoryByRepoId(),
-                (MAX_WEEKLY_POINTS - currentPointsToAdd) + MIN_WEEKLY_POINTS,
-                weeklyResult.getCategory(),
-                referenceCommonCountPojo.getCount());
-          }
+          checkAndSendNotification(weeklyResult, referenceCommonCountPojo, currentPointsToAdd);
         }
 
         // Определение какую давать медаль (и давать ли)
@@ -264,26 +249,31 @@ public class DbReader {
         weeklyResult.setRepositoryByRepoId(referenceCommonCountPojo.getRepositoryByRepoId());
         weeklyResults.add(weeklyResult);
 
-        if (isTodayIsNotificationDate() && isItLastWeekResult(weeklyResult.getWeekDate())) {
-          notifier.sendNotification(daoFactory, weeklyResult.getAccountByAccountId(),
-              weeklyResult.getRepositoryByRepoId(),
-              (MAX_WEEKLY_POINTS - currentPointsToAdd) + MIN_WEEKLY_POINTS,
-              weeklyResult.getCategory(),
-              referenceCommonCountPojo.getCount());
-        }
+        checkAndSendNotification(weeklyResult, referenceCommonCountPojo, currentPointsToAdd);
       }
     }
   }
 
-  private boolean isTodayIsNotificationDate() {
-    Calendar calendar = Calendar.getInstance();
-    long millis = System.currentTimeMillis();
-    calendar.setTime(new Date(millis));
-    return calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY;
+  private void checkAndSendNotification(WeeklyResult weeklyResult, CommonCountPojo referenceCommonCountPojo, int currentPointsToAdd) {
+    if (isNotificationDateToday() && isItLastWeekResult(weeklyResult.getWeekDate())) {
+      notifier.sendNotification(daoFactory, weeklyResult.getAccountByAccountId(),
+          weeklyResult.getRepositoryByRepoId(),
+          getPlace(currentPointsToAdd),
+          weeklyResult.getCategory(),
+          referenceCommonCountPojo.getCount());
+    }
+  }
+
+  private int getPlace(int currentPoints) {
+    return (MAX_WEEKLY_POINTS - currentPoints) + MIN_WEEKLY_POINTS;
+  }
+
+  private boolean isNotificationDateToday() {
+    return LocalDate.now().getDayOfWeek() == DayOfWeek.MONDAY;
   }
 
   private boolean isItLastWeekResult(LocalDate weekDate) {
-    return Math.abs(ChronoUnit.DAYS.between(LocalDate.now(), weekDate)) == DAYS_TO_RETURN_TO_PREVIOUS_DAY;
+    return Math.abs(ChronoUnit.DAYS.between(LocalDate.now(), weekDate)) == LocalDate.now().getDayOfWeek().getValue();
   }
 
   public List<DailyCount> getDailyCounts() {

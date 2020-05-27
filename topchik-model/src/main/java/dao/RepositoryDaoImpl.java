@@ -18,7 +18,7 @@ public class RepositoryDaoImpl extends DaoImpl<Repository> {
     String path = "";
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
-      session.update(repo);
+      session.update(repo); // required for reattaching detached Repository entity to an active Hibernate Session to access Repository fields
       path = repo.getPath();
       transaction.commit();
     } catch (Exception e) {
