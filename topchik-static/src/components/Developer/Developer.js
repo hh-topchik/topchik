@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import './styles.less';
+import { Link, useParams } from 'react-router-dom';
 
 export default function Developer({
     position,
@@ -11,12 +12,17 @@ export default function Developer({
     showPaintingAnimation,
     onAnimationEndHandler,
     avatar,
+    unitOfMeasure,
+    categoryId,
 }) {
-    const classNameIcon = classNames('fas fa-trophy', {
+    const classNameIcon = classNames('fas fa-medal', {
         'developer__icon_first-place': position === 1,
         'developer__icon_second-place': position === 2,
         'developer__icon_third-place': position === 3,
     });
+
+    const params = useParams();
+    const repositoryId = params.repositoryId;
 
     return (
         <div className="developer">
@@ -27,11 +33,31 @@ export default function Developer({
                     <div className="developer__position-number">{position}</div>
                 )}
             </div>
-            <div className="developer__avatar-wrapper">
+            <Link
+                to={{
+                    pathname:
+                        repositoryId === 'global'
+                            ? location.pathname
+                            : `/repositories/${repositoryId}/contributorsStatistics`,
+                    state: { account: account, categoryId: categoryId },
+                }}
+                className="developer__avatar-wrapper"
+            >
                 <img src={avatar} className="developer__avatar" />
-            </div>
+            </Link>
             <div className="developer__count-indicator">
-                <div className="developer__name">{account}</div>
+                <Link
+                    to={{
+                        pathname:
+                            repositoryId === 'global'
+                                ? location.pathname
+                                : `/repositories/${repositoryId}/contributorsStatistics`,
+                        state: { account: account, categoryId: categoryId },
+                    }}
+                    className="developer__name"
+                >
+                    {account}
+                </Link>
                 <div className="developer__paint-count-wrapper">
                     <div
                         className="developer__paint-count-container"
@@ -46,7 +72,9 @@ export default function Developer({
                 </div>
                 <div className="developer__additional-info"></div>
             </div>
-            <div className="developer__count">{count}</div>
+            <div className="developer__count">
+                {count} {unitOfMeasure}
+            </div>
         </div>
     );
 }

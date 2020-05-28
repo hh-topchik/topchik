@@ -1,0 +1,93 @@
+{
+  "contributor": "staanov",
+  "categoriesStatistics": [
+    {
+      "categoryId": 1,
+      "date": [
+        { "week": "15.03.2020", "value": 1, "medal": 1 },
+        { "week": "29.03.2020", "value": 1, "medal": 1 },
+        { "week": "05.04.2020", "value": 2, "medal": 1 },
+        { "week": "12.04.2020", "value": 3, "medal": 1 },
+        { "week": "19.04.2020", "value": 2, "medal": 1 },
+        { "week": "03.05.2020", "value": 1, "medal": 2 },
+        { "week": "10.05.2020", "value": 1, "medal": 1 },
+        { "week": "17.05.2020", "value": 1, "medal": 2 },
+        { "week": "31.05.2020", "value": 4, "medal": 1 }
+      ],
+      "count": 16,
+      "points": 88
+    },
+    {
+      "categoryId": 2,
+      "date": [
+        { "week": "15.03.2020", "value": 122, "medal": 1 },
+        { "week": "29.03.2020", "value": 77, "medal": 1 },
+        { "week": "05.04.2020", "value": 981, "medal": 3 },
+        { "week": "12.04.2020", "value": 963, "medal": 1 },
+        { "week": "19.04.2020", "value": 935, "medal": 2 },
+        { "week": "03.05.2020", "value": 838, "medal": 1 },
+        { "week": "10.05.2020", "value": 147, "medal": 1 },
+        { "week": "17.05.2020", "value": 52, "medal": 2 },
+        { "week": "31.05.2020", "value": 1130, "medal": 1 }
+      ],
+      "count": 5245,
+      "points": 86
+    },
+    {
+      "categoryId": 3,
+      "date": [
+        { "week": "29.03.2020", "value": 17, "medal": 2 },
+        { "week": "05.04.2020", "value": 151, "medal": 1 },
+        { "week": "12.04.2020", "value": 393, "medal": 1 },
+        { "week": "19.04.2020", "value": 493, "medal": 2 },
+        { "week": "03.05.2020", "value": 600, "medal": 1 },
+        { "week": "10.05.2020", "value": 70, "medal": 1 },
+        { "week": "17.05.2020", "value": 32, "medal": 2 },
+        { "week": "31.05.2020", "value": 537, "medal": 1 }
+      ],
+      "count": 2293,
+      "points": 77
+    },
+    {
+      "categoryId": 4,
+      "date": [
+        { "week": "19.04.2020", "value": 11, "medal": 2 },
+        { "week": "24.05.2020", "value": 4, "medal": 2 },
+        { "week": "31.05.2020", "value": 3, "medal": 2 }
+      ],
+      "count": 18,
+      "points": 27
+    },
+    {
+      "categoryId": 5,
+      "date": [
+        { "week": "19.04.2020", "value": 1, "medal": 2 },
+        { "week": "24.05.2020", "value": 2, "medal": 2 },
+        { "week": "31.05.2020", "value": 1, "medal": 3 }
+      ],
+      "count": 4,
+      "points": 26
+    },
+    {
+      "categoryId": 6,
+      "date": [
+        { "week": "19.04.2020", "value": 1, "medal": 3 },
+        { "week": "24.05.2020", "value": 1, "medal": 3 },
+        { "week": "31.05.2020", "value": 1, "medal": 2 }
+      ],
+      "count": 3,
+      "points": 25
+    },
+    {
+      "categoryId": 7,
+      "date": [
+        { "week": "19.04.2020", "value": 10, "medal": 1 },
+        { "week": "24.05.2020", "value": 1, "medal": 1 },
+        { "week": "31.05.2020", "value": 44, "medal": 2 }
+      ],
+      "count": 55,
+      "points": 29
+    }
+  ],
+  "medals": { "gold": 20, "silver": 14, "bronze": 4 }
+}

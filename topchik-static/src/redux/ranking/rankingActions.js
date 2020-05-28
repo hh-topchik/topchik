@@ -1,6 +1,6 @@
 import axios from 'axios';
 const qs = require('qs');
-const HOST = 'http://localhost:8080/api';
+const HOST = 'http://' + window.location.hostname + ':8080/api';
 
 export const FETCH_DATA_REQUEST = 'FETCH_DATA_REQUEST';
 export const fetchRepositoriesAndCategoriesRequest = () => {
@@ -20,6 +20,7 @@ export const fetchRepositoriesAndCategoriesSuccess = (response) => {
         activeRepositoryId: 'global',
         categories: response.data.categories,
         leaderboards: [],
+        contributors: [],
     };
 };
 
@@ -73,25 +74,20 @@ export const fetchRepositoriesAndCategories = () => (dispatch) => {
     axios
         .get(HOST + '/reposAndCategories')
         .then((response) => {
-            return new Promise((resolve, reject) => resolve(response));
-        })
-        .then((response) => {
             dispatch(fetchRepositoriesAndCategoriesSuccess(response));
-            const repositoryId = 'global';
             const categories = response.data.categories;
             axios
                 .get(HOST + '/globalTops/', {
                     params: {
-                        repoId: repositoryId,
                         categoryId: categories.map((category) => category.id),
-                        period: 'year',
+                        period: 'week',
                     },
                     paramsSerializer: (params) => {
                         return qs.stringify(params, { arrayFormat: 'repeat' });
                     },
                 })
                 .then((response) => {
-                    dispatch(fetchRepositoryTopsSuccess(response, repositoryId, 'week'));
+                    dispatch(fetchRepositoryTopsSuccess(response, 'global', 'week'));
                 })
                 .catch((error) => {
                     dispatch(fetchRepositoryTopsFailure(error));

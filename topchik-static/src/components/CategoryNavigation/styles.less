@@ -3,23 +3,27 @@
 .category-button {
   font-family: "Roboto", sans-serif;
   box-sizing: border-box;
-  font-size: 16px;
+  font-size: 18px;
   color: black;
-  display: flex;
-  align-items: center;
   border: none;
-  border-radius: 5px;
-  margin-right: 10px;
   white-space: nowrap;
-  background-color: @color-light-2;
-  padding: 3px 10px;
   height: 100%;
   text-decoration: none;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  padding: 3px 10px;
+  background-color: @color-light-2;
+  border-radius: 5px;
 
   @media @screen-gt-m {
+    display: block;
     margin-right: 20px;
-    padding: 5px 20px;
     cursor: pointer;
+    padding: 0;
+    border-radius: 0;
+    color: @color-noactive-button;
+    background-color: transparent;
   }
 
   &_active {
@@ -28,9 +32,20 @@
     transition-duration: 0.5s;
     transition-timing-function: ease;
     transition-property: background-color;
+
+    @media @screen-gt-m {
+      color: @color-primary;
+      border-bottom: 2px solid @color-primary;
+    }
   }
 }
 
 .category-navigation {
   display: flex;
+  height: 100%;
+
+  @media @screen-gt-m {
+    width: 100%;
+    flex-wrap: wrap;
+  }
 }

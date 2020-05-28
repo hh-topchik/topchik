@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './styles.less';
 import RepositoryList from '../RepositoryList/RepositoryList';
 import AddRepositoryButton from '../AddRepositoryButton/AddRepositoryButton';
@@ -7,33 +7,56 @@ import {
     fetchCategoryTopForPeriod,
     showActiveRepository,
 } from './../../redux/ranking/rankingActions';
+import { fetchContributorsByRepositoryId } from '../../redux/contributorsStatistics/contributorsStatisticsActions';
 import { useParams } from 'react-router-dom';
 
 function Sidebar() {
-    const { repositories, categories, leaderboards } = useSelector((state) => ({
+    const { repositories, categories, leaderboards, contributors } = useSelector((state) => ({
         repositories: state.repositories,
         categories: state.categories,
         leaderboards: state.leaderboards,
+        contributors: state.contributors,
     }));
 
     const params = useParams();
     const repositoryId = params.repositoryId;
 
     const dispatch = useDispatch();
+
     const getWeeklyTops = (url, id, categories) =>
         dispatch(fetchCategoryTopForPeriod(url, id, categories, 'week'));
+
+    const getContributorsByRepoId = (repositoryId) =>
+        dispatch(fetchContributorsByRepositoryId(repositoryId));
 
     const changeActiveRepository = (id) => dispatch(showActiveRepository(id));
 
     useEffect(() => {
-        const selectRepositoryHandler = async (id, categories) => {
+        const currentRepositoryContributors = contributors.filter(
+            (repositoryContributors) => repositoryContributors.repositoryId === repositoryId,
+        );
+
+        const needRequestContributors =
+            contributors.length === 0 || currentRepositoryContributors.length === 0;
+
+        const getContributors = (repositoryId) => {
+            if (needRequestContributors) {
+                getContributorsByRepoId(repositoryId);
+            }
+        };
+        const selectRepositoryHandler = (id, categories) => {
             if (
                 leaderboards.filter((leaderboard) => leaderboard.repositoryId === id).length === 0
             ) {
                 const url = id === 'global' ? '/globalTops' : '/concreteTops';
-                await getWeeklyTops(url, id, categories);
+
+                getWeeklyTops(url, id, categories);
+
+                if (id !== 'global') {
+                    getContributors(id);
+                }
             } else {
-                await changeActiveRepository(id);
+                changeActiveRepository(id);
             }
         };
         selectRepositoryHandler(repositoryId, categories);

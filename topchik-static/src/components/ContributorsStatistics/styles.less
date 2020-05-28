@@ -1,0 +1,115 @@
+@import "./../../common/css/variables.less";
+
+.contributors-statistics {
+  @media @screen-gt-m {
+    margin: 40px 0 0 100px;
+    overflow: auto;
+    width: 100%;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__buttons-group {
+    display: flex;
+  }
+
+  &__heading {
+    font-size: 18px;
+    margin: 20px 0;
+    font-family: "Roboto", sans-serif;
+    
+    @media @screen-gt-s {
+      font-size: 20px;
+      padding-right: 10px;
+      border-bottom: 1px solid @color-dark;
+      width: max-content;
+      margin: 0 0 15px;
+    }
+  }
+}
+
+.chart-select {
+  display: flex;
+  font-family: "Roboto", sans-serif;
+  font-size: 15px;
+  flex-direction: column;
+
+  @media @screen-gt-s {
+    flex-direction: row;
+    align-items: baseline;
+  }
+
+  &__select {
+    border: none;
+    outline: none;
+    background: transparent;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0;
+    margin: 0;
+    display: block;
+    width: 100%;
+    padding: 5px 55px 5px 15px;
+    font-size: 15px;
+    color: black;
+    font-family: "Roboto", sans-serif;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  &__label {
+    position: relative;
+    display: block;
+    width: 300px;
+    margin-top: 5px;
+    border: 1px solid #c5c9ca;
+    border-radius: 2px;
+    background-color: #f9f9f9;
+    z-index: 10;
+
+    @media @screen-gt-s {
+      width: 400px;
+    }
+
+    &:after {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 35px;
+      height: 100%;
+      line-height: 30px;
+      content: "\25BC";
+      text-align: center;
+      color: black;
+      font-size: 14px;
+      border-left: 1px solid #c5c9ca;
+      z-index: -1;
+    }
+  }
+}
+
+.statistics-summary {
+  padding-left: 0;
+  margin-top: 10px;
+
+  @media @screen-gt-s {
+    padding-left: 30px;
+    margin-top: 20px;
+  }
+}
+
+.gold {
+  color: gold;
+}
+
+.silver {
+  color: silver;
+}
+
+.bronze {
+  color: #cd7f32;
+}

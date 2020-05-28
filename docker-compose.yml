@@ -34,6 +34,6 @@ services:
   frontend: 
     build: ./topchik-static
     ports:
-      - "8081:8081"
+      - "80:8081"
     depends_on:
       - backend

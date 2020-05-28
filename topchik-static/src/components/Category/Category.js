@@ -7,7 +7,15 @@ import Developer from './../Developer/Developer';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCategoryTopForPeriod } from '../../redux/ranking/rankingActions';
 
-export default function Category({ refId, categoryId, isActive, refs, description, repositoryId }) {
+export default function Category({
+    refId,
+    categoryId,
+    isActive,
+    refs,
+    description,
+    repositoryId,
+    unitOfMeasure,
+}) {
     const { leaderboards } = useSelector((state) => ({
         leaderboards: state.leaderboards,
     }));
@@ -90,6 +98,12 @@ export default function Category({ refId, categoryId, isActive, refs, descriptio
                                 onAnimationEndHandler={() => setShowPaintingAnimation(false)}
                                 showPaintingAnimation={showPaintingAnimation}
                                 avatar={developer.avatar}
+                                unitOfMeasure={
+                                    activeTimePeriod === 'week'
+                                        ? unitOfMeasure
+                                        : declOfNum(developerCount, ['очко', 'очка', 'очков'])
+                                }
+                                categoryId={categoryId}
                             />
                         );
                     })}
@@ -107,3 +121,10 @@ Category.propTypes = {
     name: PropTypes.string,
     title: PropTypes.string,
 };
+
+function declOfNum(number, titles) {
+    const cases = [2, 0, 1, 1, 1, 2];
+    return titles[
+        number % 100 > 4 && number % 100 < 20 ? 2 : cases[number % 10 < 5 ? number % 10 : 5]
+    ];
+}
