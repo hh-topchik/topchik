@@ -186,9 +186,11 @@ class Fetcher {
    * Создание сущности "Коммит"
    *
    * @param ghCommit - сущность "Коммит" из Github
+   * @param prAuthor - сущность "Аккаунт", представляющая собой автора PR, к которому относится сущность "Коммит"
+   *
    * @return - сущность "Коммит" для внесения в БД
    */
-  private Commit convertCommit(final GHCommit ghCommit) throws Exception {
+  private Commit convertCommit(final GHCommit ghCommit, final Account prAuthor) throws Exception {
     if (ghCommit == null) {
       LOGGER.info("Коммита нет");
       return null;
@@ -196,10 +198,10 @@ class Fetcher {
     try {
       LOGGER.info("Начало конвертации коммита " + ghCommit);
       final String sha = ghCommit.getSHA1();
-      final Account author = convertUser(ghCommit.getAuthor());
+      Account author = convertUser(ghCommit.getAuthor());
       if (author == null) {
-        LOGGER.error("Автор коммита не найден");
-        return null;
+        LOGGER.error("Автор коммита не найден. В качестве автора коммита выбран автор пулл реквеста");
+        author = prAuthor;
       }
       final int linesAdded = ghCommit.getLinesAdded();
       final int linesDeleted = ghCommit.getLinesDeleted();
@@ -222,7 +224,7 @@ class Fetcher {
   private void convertCommits(final GHPullRequest ghPullRequest, final PullRequest pullRequest) throws Exception {
     for (final GHPullRequestCommitDetail commitDetail : ghPullRequest.listCommits()) {
       final GHCommit ghCommit = ghRepository.getCommit(commitDetail.getSha());
-      final Commit commit = convertCommit(ghCommit);
+      final Commit commit = convertCommit(ghCommit, pullRequest.getAccountByAuthorId());
       if (commit != null) {
         commit.setPullRequestByPullRequestId(pullRequest);
         commit.setRepositoryByRepoId(pullRequest.getRepositoryByRepoId());
