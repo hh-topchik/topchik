@@ -52,3 +52,8 @@ yarn-debug.log*
 yarn-error.log*
 
 *.log
+
+.project
+.factorypath
+.classpath
+.settings

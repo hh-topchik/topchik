@@ -1,0 +1,39 @@
+version: "3.4"
+
+services:
+  postgres:
+    image: postgres:12.2-alpine
+    restart: always
+    hostname: postgres
+    volumes:
+      - ./scripts/sql/TOP-18-merged.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      TZ: "Europe/Moscow"
+
+  frontend: 
+    build: ./topchik-static
+    ports:
+      - "8081:8081"
+    depends_on:
+      - backend

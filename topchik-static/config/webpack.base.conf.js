@@ -1,10 +1,9 @@
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const PATHS = {
   src: path.join(__dirname, "./../src"),
-  dist: path.join(__dirname, "./../public")
+  dist: path.join(__dirname, "./../build")
 };
 
 module.exports = {
@@ -54,19 +53,6 @@ module.exports = {
               esModule: false
             }
           },
-          {
-            loader: "image-webpack-loader",
-            options: {
-              mozjpeg: {
-                progressive: true,
-                quality: 70
-              },
-              pngquant: {
-                quality: [0.65, 0.9],
-                speed: 4
-              }
-            }
-          }
         ]
       }
     ]
