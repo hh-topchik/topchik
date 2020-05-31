@@ -8,7 +8,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pojo.CommonCountPojo;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +25,7 @@ public class DbReader {
   private static final int MIN_WEEKLY_POINTS = 1;
 
   private final DaoFactory daoFactory = new DaoFactory();
+  private final Notifier notifier = new Notifier();
   private List<DailyCount> dailyCounts = new ArrayList<>();
   private List<WeeklyResult> weeklyResults = new ArrayList<>();
 
@@ -199,6 +203,8 @@ public class DbReader {
     firstWeeklyResult.setRepositoryByRepoId(referenceCommonCountPojo.getRepositoryByRepoId());
     weeklyResults.add(firstWeeklyResult);
 
+    checkAndSendNotification(firstWeeklyResult, referenceCommonCountPojo, currentPointsToAdd);
+
     for (int i = 1; i < commonCountPojos.size(); i++) {
       if (referenceCommonCountPojo.getDate().equals(commonCountPojos.get(i).getDate()) &&
           referenceCommonCountPojo.getRepositoryByRepoId().getRepoId() == commonCountPojos.get(i).getRepositoryByRepoId().getRepoId()) {
@@ -216,6 +222,7 @@ public class DbReader {
         } else {
           currentPointsToAdd--;
           weeklyResult.setPoints(currentPointsToAdd);
+          checkAndSendNotification(weeklyResult, referenceCommonCountPojo, currentPointsToAdd);
         }
 
         // Определение какую давать медаль (и давать ли)
@@ -241,8 +248,32 @@ public class DbReader {
         weeklyResult.setAccountByAccountId(referenceCommonCountPojo.getAccountByAuthorId());
         weeklyResult.setRepositoryByRepoId(referenceCommonCountPojo.getRepositoryByRepoId());
         weeklyResults.add(weeklyResult);
+
+        checkAndSendNotification(weeklyResult, referenceCommonCountPojo, currentPointsToAdd);
       }
     }
+  }
+
+  private void checkAndSendNotification(WeeklyResult weeklyResult, CommonCountPojo referenceCommonCountPojo, int currentPointsToAdd) {
+    if (isNotificationDateToday() && isItLastWeekResult(weeklyResult.getWeekDate())) {
+      notifier.sendNotification(daoFactory, weeklyResult.getAccountByAccountId(),
+          weeklyResult.getRepositoryByRepoId(),
+          getPlace(currentPointsToAdd),
+          weeklyResult.getCategory(),
+          referenceCommonCountPojo.getCount());
+    }
+  }
+
+  private int getPlace(int currentPoints) {
+    return (MAX_WEEKLY_POINTS - currentPoints) + MIN_WEEKLY_POINTS;
+  }
+
+  private boolean isNotificationDateToday() {
+    return LocalDate.now().getDayOfWeek() == DayOfWeek.MONDAY;
+  }
+
+  private boolean isItLastWeekResult(LocalDate weekDate) {
+    return Math.abs(ChronoUnit.DAYS.between(LocalDate.now(), weekDate)) == LocalDate.now().getDayOfWeek().getValue();
   }
 
   public List<DailyCount> getDailyCounts() {
@@ -252,5 +283,4 @@ public class DbReader {
   public List<WeeklyResult> getWeeklyResults() {
     return weeklyResults;
   }
-
 }

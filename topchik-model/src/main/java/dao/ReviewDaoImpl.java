@@ -17,6 +17,7 @@ import java.util.List;
  * */
 @Singleton
 public class ReviewDaoImpl extends DaoImpl<Review> {
+
   /**
    * Метод подсчёта апрувнутых PR за каждый день, отсортированных по репозиторию, дате и количеству
    *
@@ -59,11 +60,11 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
   public List<CommonCountPojo> getAggregatedDailyTimedApproves() {
     final String dailyCommentsQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('day', r.time) as count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId, " +
-        "CAST(EXTRACT(SECOND FROM (r.time - r.pullRequestByPullRequestId.creationTime)) as long) as counter) " +
+        "CAST(AVG(EXTRACT (EPOCH FROM (r.time - r.pullRequestByPullRequestId.creationTime)) / 3600) " +
+        "as long) as counter) " +
         "FROM Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
         "AND r.accountByAuthorId.login NOT LIKE '%[bot]' " +
-        "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId, " +
-        "r.time, r.pullRequestByPullRequestId.creationTime " +
+        "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId " +
         "ORDER BY r.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter";
     return getAggregatedReviewData(dailyCommentsQuery, ReviewStatus.APPROVED);
   }
@@ -77,11 +78,11 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
   public List<CommonCountPojo> getAggregatedWeeklyTimedApproves() {
     final String weeklyCommentsQuery = "SELECT new pojo.CommonCountPojo(" +
         "date_trunc('week', r.time) as count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId, " +
-        "CAST(EXTRACT(SECOND FROM (r.time - r.pullRequestByPullRequestId.creationTime)) as long) as counter) " +
+        "CAST(AVG(EXTRACT (EPOCH FROM (r.time - r.pullRequestByPullRequestId.creationTime)) / 3600) " +
+        "as long) as counter) " +
         "FROM Review r WHERE r.status = :status AND r.accountByAuthorId != r.pullRequestByPullRequestId.accountByAuthorId " +
         "AND r.accountByAuthorId.login NOT LIKE '%[bot]' AND date_trunc('week', r.time) != date_trunc('week', current_date()) " +
-        "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId, " +
-        "r.time, r.pullRequestByPullRequestId.creationTime " +
+        "GROUP BY count_date, r.accountByAuthorId, r.pullRequestByPullRequestId.repositoryByRepoId " +
         "ORDER BY r.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter";
     return getAggregatedReviewData(weeklyCommentsQuery, ReviewStatus.APPROVED);
   }
