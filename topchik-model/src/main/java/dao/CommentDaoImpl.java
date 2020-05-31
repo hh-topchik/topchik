@@ -28,6 +28,7 @@ public class CommentDaoImpl extends DaoImpl<Comment> {
         "c.reviewByReviewId.pullRequestByPullRequestId.repositoryByRepoId, COUNT(c) as counter) " +
         "FROM Comment c WHERE c.reviewByReviewId.accountByAuthorId != c.reviewByReviewId.pullRequestByPullRequestId.accountByAuthorId " +
         "AND c.reviewByReviewId.accountByAuthorId.login NOT LIKE '%[bot]' " +
+        "AND c.reviewByReviewId.accountByAuthorId.login NOT LIKE 'testUser%' " +
         "GROUP BY count_date, c.reviewByReviewId.accountByAuthorId, c.reviewByReviewId.pullRequestByPullRequestId.repositoryByRepoId " +
         "ORDER BY c.reviewByReviewId.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter DESC";
     return getAggregatedCommentData(dailyCommentsQuery);
@@ -45,6 +46,7 @@ public class CommentDaoImpl extends DaoImpl<Comment> {
         "c.reviewByReviewId.pullRequestByPullRequestId.repositoryByRepoId, COUNT(c) as counter) " +
         "FROM Comment c WHERE c.reviewByReviewId.accountByAuthorId != c.reviewByReviewId.pullRequestByPullRequestId.accountByAuthorId " +
         "AND c.reviewByReviewId.accountByAuthorId.login NOT LIKE '%[bot]' " +
+        "AND c.reviewByReviewId.accountByAuthorId.login NOT LIKE 'testUser%' " +
         "AND date_trunc('week', c.creationTime) != date_trunc('week', current_date()) " +
         "GROUP BY count_date, c.reviewByReviewId.accountByAuthorId, c.reviewByReviewId.pullRequestByPullRequestId.repositoryByRepoId " +
         "ORDER BY c.reviewByReviewId.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter DESC";
@@ -65,6 +67,7 @@ public class CommentDaoImpl extends DaoImpl<Comment> {
         "FROM Comment c " +
         "WHERE c.reviewByReviewId.accountByAuthorId != c.reviewByReviewId.pullRequestByPullRequestId.accountByAuthorId " +
         "AND c.reviewByReviewId.accountByAuthorId.login NOT LIKE '%[bot]' " +
+        "AND c.reviewByReviewId.accountByAuthorId.login NOT LIKE 'testUser%' " +
         "GROUP BY count_date, c.reviewByReviewId.accountByAuthorId, " +
         "c.reviewByReviewId.pullRequestByPullRequestId.repositoryByRepoId " +
         "ORDER BY c.reviewByReviewId.pullRequestByPullRequestId.repositoryByRepoId, count_date, counter DESC";
@@ -85,6 +88,7 @@ public class CommentDaoImpl extends DaoImpl<Comment> {
         "FROM Comment c " +
         "WHERE c.reviewByReviewId.accountByAuthorId != c.reviewByReviewId.pullRequestByPullRequestId.accountByAuthorId " +
         "AND c.reviewByReviewId.accountByAuthorId.login NOT LIKE '%[bot]' " +
+        "AND c.reviewByReviewId.accountByAuthorId.login NOT LIKE 'testUser%' " +
         "AND date_trunc('week', c.creationTime) != date_trunc('week', current_date()) " +
         "GROUP BY count_date, c.reviewByReviewId.accountByAuthorId, " +
         "c.reviewByReviewId.pullRequestByPullRequestId.repositoryByRepoId " +
