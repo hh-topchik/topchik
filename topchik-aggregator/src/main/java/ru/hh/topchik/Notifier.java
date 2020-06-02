@@ -17,8 +17,6 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class Notifier {
-  private static final String SENDER_EMAIL = "hh.topchik@gmail.com";
-  private static final String SENDER_PASSWORD = "XXX"; // <- CHANGE THIS VALUE TO OUR PASSWORD
 
   public Notifier() {
   }
@@ -31,8 +29,8 @@ public class Notifier {
     properties.put("mail.smtp.host", "smtp.gmail.com");
     properties.put("mail.smtp.port", "587");
 
-    String senderEmail;
-    String senderPassword;
+    String senderEmail = "";
+    String senderPassword = "";
 
     try (InputStream input = getClass().getClassLoader().getResourceAsStream("sender.properties")) {
       Properties prop = new Properties();
@@ -40,8 +38,7 @@ public class Notifier {
       senderEmail = prop.getProperty("sender.email");
       senderPassword = prop.getProperty("sender.password");
     } catch (IOException e) {
-      senderEmail = SENDER_EMAIL;
-      senderPassword = SENDER_PASSWORD;
+      e.printStackTrace();
     }
 
     String finalSenderEmail = senderEmail;
