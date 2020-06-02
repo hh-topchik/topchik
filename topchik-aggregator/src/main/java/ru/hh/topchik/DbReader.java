@@ -222,7 +222,7 @@ public class DbReader {
         } else {
           currentPointsToAdd--;
           weeklyResult.setPoints(currentPointsToAdd);
-          checkAndSendNotification(weeklyResult, referenceCommonCountPojo, currentPointsToAdd);
+          checkAndSendNotification(weeklyResult, commonCountPojos.get(i), currentPointsToAdd);
         }
 
         // Определение какую давать медаль (и давать ли)
