@@ -6,7 +6,7 @@ services:
     restart: always
     hostname: postgres
     volumes:
-      - ./scripts/sql/TOP-18-merged.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./scripts/sql/structure.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5433:5432"
     environment:
