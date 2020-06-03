@@ -52,4 +52,23 @@ public class AppResource {
         .header("Access-Control-Allow-Origin", "*")
         .build();
   }
+
+  @GET
+  @Path("/contributors")
+  public Response getContributors(@QueryParam("repoId") Long repoId) {
+    return Response
+        .ok(appMapper.mapContributors(repoId))
+        .header("Access-Control-Allow-Origin", "*")
+        .build();
+  }
+
+  @GET
+  @Path("/contributorStatistics")
+  public Response getContributorStatistics(@QueryParam("repoId") Long repoId,
+                                           @QueryParam("accountId") Long accountId) {
+    return Response
+        .ok(appMapper.mapContributorStatistics(repoId, accountId))
+        .header("Access-Control-Allow-Origin", "*")
+        .build();
+  }
 }
