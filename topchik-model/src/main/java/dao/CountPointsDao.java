@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.transaction.Transactional;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -301,9 +300,9 @@ public class CountPointsDao {
         .getCurrentSession()
         .createNativeQuery("SELECT DISTINCT category FROM daily_count")
         .list();
-    List<Integer> categoriesList = new ArrayList<>();
-    for (Object object : categoriesObjects) {
-      categoriesList.add((Integer) object);
+    List<Integer> categoriesList = null;
+    for (Object categoryIdObject : categoriesObjects) {
+      categoriesList.add((Integer) categoryIdObject);
     }
     Collections.sort(categoriesList);
     return categoriesList;
@@ -319,9 +318,9 @@ public class CountPointsDao {
         .createNativeQuery("SELECT DISTINCT category FROM daily_count WHERE account_id =:account_id")
         .setParameter("account_id", accountId)
         .list();
-    List<Integer> categoriesList = new ArrayList<>();
-    for (Object object : categoriesObjects) {
-      categoriesList.add((Integer) object);
+    List<Integer> categoriesList = null;
+    for (Object categoryIdObject : categoriesObjects) {
+      categoriesList.add((Integer) categoryIdObject);
     }
     Collections.sort(categoriesList);
     return categoriesList;
@@ -337,9 +336,9 @@ public class CountPointsDao {
         .createNativeQuery("SELECT DISTINCT account_id FROM daily_count WHERE repo_id = :repo_id")
         .setParameter("repo_id", repoId)
         .list();
-    List<Integer> accountsList = new ArrayList<>();
-    for (Object object : accountsObjects) {
-      accountsList.add(((BigInteger) object).intValue());
+    List<Integer> accountsList = null;
+    for (Object accountIdObject : accountsObjects) {
+      accountsList.add(((BigInteger) accountIdObject).intValue());
     }
     Collections.sort(accountsList);
     return accountsList;

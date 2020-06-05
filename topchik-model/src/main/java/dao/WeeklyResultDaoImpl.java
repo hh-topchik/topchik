@@ -7,7 +7,6 @@ import util.HibernateUtil;
 
 import javax.inject.Singleton;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +25,7 @@ public class WeeklyResultDaoImpl extends DaoImpl<WeeklyResult> {
    * */
   public Long getCategoryPointsSum(int categoryId, Long accountId, Long repoId) {
     Transaction transaction;
-    Long pointsSum = 0L;
+    Long pointsSum = null;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
       pointsSum = (Long) session.createQuery("SELECT SUM(wr.points) FROM WeeklyResult wr " +
@@ -54,7 +53,7 @@ public class WeeklyResultDaoImpl extends DaoImpl<WeeklyResult> {
    * */
   public Long getMedalSum(int medal, Long accountId, Long repoId) {
     Transaction transaction;
-    Long medalSum = 0L;
+    Long medalSum = null;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
       medalSum = (Long) session.createQuery("SELECT COUNT(wr.medal) FROM WeeklyResult wr " +
@@ -82,7 +81,7 @@ public class WeeklyResultDaoImpl extends DaoImpl<WeeklyResult> {
    * */
   public List<LocalDate> getDistinctWeekDates(int categoryId, Long accountId, Long repoId) {
     Transaction transaction;
-    List<LocalDate> weekDates = new ArrayList<>();
+    List<LocalDate> weekDates = null;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
       weekDates = session.createQuery("SELECT DISTINCT wr.weekDate FROM WeeklyResult wr " +

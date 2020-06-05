@@ -24,7 +24,7 @@ public class DailyCountDaoImpl extends DaoImpl<DailyCount> {
    * */
   public Long getCategoryCountSum(int categoryId, Long accountId, Long repoId) {
     Transaction transaction;
-    Long countSum = 0L;
+    Long countSum = null;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
       countSum = (Long) session.createQuery("SELECT SUM(dc.counter) FROM DailyCount dc " +
@@ -53,7 +53,7 @@ public class DailyCountDaoImpl extends DaoImpl<DailyCount> {
    * */
   public Long getWeekDateCountSum(LocalDate weekDate, int categoryId, Long accountId, Long repoId) {
     Transaction transaction;
-    Long countSum = 0L;
+    Long countSum = null;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
       countSum = (Long) session.createQuery("SELECT SUM(dc.counter) FROM DailyCount dc " +

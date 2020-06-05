@@ -16,7 +16,7 @@ public class AccountDaoImpl extends DaoImpl<Account> {
 
   public String getAccountEmailByAccount(Account account) {
     Transaction transaction;
-    String email = "";
+    String email = null;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
       session.update(account); // required for reattaching detached Account entity to an active Hibernate Session to access Account fields
@@ -30,7 +30,7 @@ public class AccountDaoImpl extends DaoImpl<Account> {
 
   public String getAccountLoginByAccount(Account account) {
     Transaction transaction;
-    String login = "";
+    String login = null;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
       session.update(account); // required for reattaching detached Account entity to an active Hibernate Session to access Account fields
