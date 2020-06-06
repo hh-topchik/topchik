@@ -150,7 +150,8 @@ public class AppMapper {
     List<ContributorInfoDto> contributorInfoDtos = countPointsDao
         .getReposAccountIdList(repoId)
         .stream()
-        .map(accId -> new ContributorInfoDto(accountDao.findById(accId).getAvatar(),
+        .map(accId -> new ContributorInfoDto(accountDao.findById(accId).getAccountId(),
+            accountDao.findById(accId).getAvatar(),
             accountDao.findById(accId).getLogin()))
         .collect(Collectors.toList());
     return new ContributorDto(contributorInfoDtos);

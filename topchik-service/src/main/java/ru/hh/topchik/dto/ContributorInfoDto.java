@@ -1,15 +1,25 @@
 package ru.hh.topchik.dto;
 
 public class ContributorInfoDto {
+  private Long id;
   private String avatar;
   private String account;
 
   public ContributorInfoDto() {
   }
 
-  public ContributorInfoDto(String avatar, String account) {
+  public ContributorInfoDto(Long id, String avatar, String account) {
+    this.id = id;
     this.avatar = avatar;
     this.account = account;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public String getAvatar() {
