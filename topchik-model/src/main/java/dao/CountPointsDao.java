@@ -9,6 +9,7 @@ import pojo.CountPointsPojo;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.transaction.Transactional;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -291,7 +292,6 @@ public class CountPointsDao {
     }
   }
 
-  
   /**
    * Получение списка id всех имеющихся категорий
    * */
@@ -302,10 +302,46 @@ public class CountPointsDao {
         .createNativeQuery("SELECT DISTINCT category FROM daily_count")
         .list();
     List<Integer> categoriesList = new ArrayList<>();
-    for (Object object : categoriesObjects) {
-      categoriesList.add((Integer) object);
+    for (Object categoryIdObject : categoriesObjects) {
+      categoriesList.add((Integer) categoryIdObject);
     }
     Collections.sort(categoriesList);
     return categoriesList;
+  }
+
+  /**
+   * Получение списка id всех имеющихся категорий для конкретного пользователя
+   * */
+  @Transactional
+  public List<Integer> getCategoriesIdList(Long accountId) {
+    List categoriesObjects = sessionFactory
+        .getCurrentSession()
+        .createNativeQuery("SELECT DISTINCT category FROM daily_count WHERE account_id =:account_id")
+        .setParameter("account_id", accountId)
+        .list();
+    List<Integer> categoriesList = new ArrayList<>();
+    for (Object categoryIdObject : categoriesObjects) {
+      categoriesList.add((Integer) categoryIdObject);
+    }
+    Collections.sort(categoriesList);
+    return categoriesList;
+  }
+
+  /**
+   * Получение списка id всех пользователей в данном репозитории
+   * */
+  @Transactional
+  public List<Integer> getReposAccountIdList(Long repoId) {
+    List accountsObjects = sessionFactory
+        .getCurrentSession()
+        .createNativeQuery("SELECT DISTINCT account_id FROM daily_count WHERE repo_id = :repo_id")
+        .setParameter("repo_id", repoId)
+        .list();
+    List<Integer> accountsList = new ArrayList<>();
+    for (Object accountIdObject : accountsObjects) {
+      accountsList.add(((BigInteger) accountIdObject).intValue());
+    }
+    Collections.sort(accountsList);
+    return accountsList;
   }
 }

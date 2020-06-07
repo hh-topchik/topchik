@@ -9,7 +9,6 @@ import pojo.CommonCountPojo;
 import util.HibernateUtil;
 
 import javax.inject.Singleton;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -100,7 +99,7 @@ public class ReviewDaoImpl extends DaoImpl<Review> {
    * */
   private List<CommonCountPojo> getAggregatedReviewData(String hqlQuery, ReviewStatus reviewStatus) {
     Transaction transaction;
-    List<CommonCountPojo> commonCountPojos = new ArrayList<>();
+    List<CommonCountPojo> commonCountPojos = null;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
       Query<CommonCountPojo> query = session.createQuery(hqlQuery, CommonCountPojo.class)

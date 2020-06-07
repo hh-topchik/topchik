@@ -1,17 +1,30 @@
 package ru.hh.topchik.mapper;
 
+import dao.AccountDaoImpl;
 import dao.CountPointsDao;
+import dao.DailyCountDaoImpl;
 import dao.RepositoryDaoImpl;
+import dao.WeeklyResultDaoImpl;
 import enums.Category;
+import enums.Medal;
 import pojo.CountPointsPojo;
 import ru.hh.topchik.dto.CategoryInfoDto;
 import ru.hh.topchik.dto.CategoryPeriodDto;
+import ru.hh.topchik.dto.CategoryStatisticsDto;
+import ru.hh.topchik.dto.ContributorDto;
+import ru.hh.topchik.dto.ContributorInfoDto;
+import ru.hh.topchik.dto.ContributorStatisticsDto;
 import ru.hh.topchik.dto.CountPointsDto;
+import ru.hh.topchik.dto.DateStatisticsDto;
+import ru.hh.topchik.dto.MedalDto;
 import ru.hh.topchik.dto.ReposAndCatsDto;
 import ru.hh.topchik.dto.RepositoryInfoDto;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +35,10 @@ import java.util.stream.Collectors;
 public class AppMapper {
   private static final String REPO_PATH_PATTERN = "https://github.com/";
 
+  private final AccountDaoImpl accountDao = new AccountDaoImpl();
   private final RepositoryDaoImpl repositoryDao = new RepositoryDaoImpl();
+  private final DailyCountDaoImpl dailyCountDao = new DailyCountDaoImpl();
+  private final WeeklyResultDaoImpl weeklyResultDao = new WeeklyResultDaoImpl();
   private final CountPointsDao countPointsDao;
 
   @Inject
@@ -126,4 +142,54 @@ public class AppMapper {
         countPointsPojo.getPoints());
   }
 
+  /**
+   * Маппинг информации (аватар и логин) о всех пользователях в данном репозитории на DTO,
+   * которая отправит информацию на фронт
+   * */
+  public ContributorDto mapContributors(Long repoId) {
+    List<ContributorInfoDto> contributorInfoDtos = countPointsDao
+        .getReposAccountIdList(repoId)
+        .stream()
+        .map(accId -> new ContributorInfoDto(accountDao.findById(accId).getAccountId(),
+            accountDao.findById(accId).getAvatar(),
+            accountDao.findById(accId).getLogin()))
+        .collect(Collectors.toList());
+    return new ContributorDto(contributorInfoDtos);
+  }
+
+  /**
+   * Маппинг личной статистики данного пользователя в данном репозитории на DTO,
+   * которая отправит информацию на фронт
+   * */
+  public ContributorStatisticsDto mapContributorStatistics(Long repoId, Long accountId) {
+    List<CategoryStatisticsDto> categoryStatisticsDtos = new ArrayList<>();
+    for (Integer categoryId : countPointsDao.getCategoriesIdList(accountId)) {
+      List<DateStatisticsDto> dateStatisticsDtos = makeDateStatisticsDto(categoryId, accountId, repoId);
+      Long count = dailyCountDao.getCategoryCountSum(categoryId, accountId, repoId);
+      Long points = weeklyResultDao.getCategoryPointsSum(categoryId, accountId, repoId);
+      categoryStatisticsDtos.add(new CategoryStatisticsDto(categoryId, dateStatisticsDtos, count, points));
+    }
+    return new ContributorStatisticsDto(accountDao.findById(accountId).getLogin(),
+        categoryStatisticsDtos,
+        new MedalDto(
+            weeklyResultDao.getMedalSum(Medal.GOLD.getId(), accountId, repoId),
+            weeklyResultDao.getMedalSum(Medal.SILVER.getId(), accountId, repoId),
+            weeklyResultDao.getMedalSum(Medal.BRONZE.getId(), accountId, repoId)
+        ));
+  }
+
+  /**
+   * Метод формирования DateStatisticsDto
+   * */
+  private List<DateStatisticsDto> makeDateStatisticsDto(Integer categoryId, Long accountId, Long repoId) {
+    List<DateStatisticsDto> dateStatisticsDtos = new ArrayList<>();
+    List<LocalDate> weekDates = weeklyResultDao.getDistinctWeekDates(categoryId, accountId, repoId);
+    for (LocalDate weekDate : weekDates) {
+      Long count = dailyCountDao.getWeekDateCountSum(weekDate, categoryId, accountId, repoId);
+      int medal = weeklyResultDao.getAccountMedalByWeekDate(weekDate, categoryId, accountId, repoId);
+      dateStatisticsDtos.add(new DateStatisticsDto(weekDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
+          count, medal));
+    }
+    return dateStatisticsDtos;
+  }
 }
