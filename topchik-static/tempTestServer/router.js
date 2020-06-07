@@ -6,6 +6,16 @@ const data = fs.readFileSync(
   "utf-8"
 );
 
+const contributorsData = fs.readFileSync(
+  `${__dirname}/testDevelopersList.json`,
+  "utf-8"
+);
+
+const contributorsStatisticsData = fs.readFileSync(
+  `${__dirname}/testStatisticsData.json`,
+  "utf-8"
+);
+
 module.exports = function() {
   const router = new Router({
     prefix: "/api"
@@ -14,6 +24,12 @@ module.exports = function() {
   router
     .get("/getRanking", ctx => {
       ctx.body = JSON.parse(data);
+    })
+    .get("/contributors", ctx => {
+      ctx.body = JSON.parse(contributorsData);
+    })
+    .get("/contributorStatistics", ctx => {
+      ctx.body = JSON.parse(contributorsStatisticsData);
     });
 
   return router;

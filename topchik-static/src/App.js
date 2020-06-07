@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar/Sidebar';
 import Loader from './components/Loader/Loader';
 import Fail from './components/Fail/Fail';
 import About from './components/About/About';
+import ContributorsStatistics from './components/ContributorsStatistics/ContributorsStatistics';
 import './styles.less';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchRepositoriesAndCategories } from './redux/ranking/rankingActions';
@@ -36,8 +37,13 @@ function App() {
                     <Fragment>
                         <Redirect from="/" to="/repositories/global" />
                         <Route path="/repositories/:repositoryId" component={Sidebar} />
-                        <Route path="/repositories/:repositoryId" component={Leaderboards} />
+                        <Route exact path="/repositories/:repositoryId" component={Leaderboards} />
                         <Route path="/about" component={About} />
+                        <Route
+                            exact
+                            path="/repositories/:repositoryId/contributorsStatistics"
+                            component={ContributorsStatistics}
+                        />
                     </Fragment>
                 )}
             </div>

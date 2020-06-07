@@ -1,0 +1,68 @@
+@import "./../../common/css/variables.less";
+
+.contributor-select {
+  margin-top: 20px;
+
+  @media @screen-gt-s {
+    margin-top: 30px;
+  }
+
+  @media @screen-gt-m {
+    margin-top: 0;
+  }
+
+  &__title {
+    font-family: "Roboto", sans-serif;
+    display: none;
+  }
+
+  &__select {
+    border: none;
+    outline: none;
+    background: transparent;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0;
+    margin: 0;
+    display: block;
+    width: 100%;
+    padding: 5px 55px 5px 15px;
+    font-size: 15px;
+    color: black;
+    font-family: "Roboto", sans-serif;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  &__label {
+    position: relative;
+    display: block;
+    width: 300px;
+    margin-top: 5px;
+    border: 1px solid #c5c9ca;
+    border-radius: 2px;
+    background-color: #f9f9f9;
+    z-index: 10;
+
+    @media @screen-gt-s {
+      width: 400px;
+    }
+
+    &:after {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 35px;
+      height: 100%;
+      line-height: 30px;
+      content: "\25BC";
+      text-align: center;
+      color: black;
+      font-size: 14px;
+      border-left: 1px solid #c5c9ca;
+      z-index: -1;
+    }
+  }
+}

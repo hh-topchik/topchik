@@ -54,9 +54,6 @@ function Leaderboards() {
     return (
         <main className="content__leaderboards leaderboards" onScroll={handleScroll}>
             <div className="leaderboards__category-buttons-group">
-                <div className="leaderboards__category-heading-wrapper">
-                    <h3 className="leaderboards__category-heading">Категории</h3>
-                </div>
                 <div className="leaderboards__category-buttons">
                     <CategoryNavigation
                         categories={categories}
@@ -76,6 +73,7 @@ function Leaderboards() {
                         title={category.title}
                         description={category.description}
                         repositoryId={repositoryId}
+                        unitOfMeasure={category.unitOfMeasure}
                     />
                 ))}
             </div>

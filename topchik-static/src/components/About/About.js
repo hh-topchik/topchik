@@ -5,6 +5,9 @@ import { Link } from 'react-router-dom';
 export default function About() {
     return (
         <div className="about">
+            <Link className="about__tops-link" to={'/repositories/global'}>
+                <i class="fas fa-chevron-left"></i> Вернуться к глобальному топу
+            </Link>
             <p className="about__definition">
                 <b>Топчик</b> - это веб-приложение, формирующее топы разработчиков для того, чтобы
                 узнать кто был продуктивнее и вносил наибольший вклад в проекты на основе данных из
@@ -25,7 +28,7 @@ export default function About() {
                             href="https://github.com/ilyashubin"
                             target="_blank"
                         >
-                            Илья Шубин
+                            Шубин Илья
                         </a>
                         , ментор
                     </li>
@@ -35,7 +38,7 @@ export default function About() {
                             href="https://github.com/svelichko"
                             target="_blank"
                         >
-                            Семён Величко
+                            Величко Семён
                         </a>
                         , ментор
                     </li>
@@ -45,7 +48,7 @@ export default function About() {
                             href="https://github.com/staanov"
                             target="_blank"
                         >
-                            Станислав Новиков
+                            Новиков Станислав
                         </a>
                         , бэкенд
                     </li>
@@ -94,9 +97,6 @@ export default function About() {
                 1 место) очков и получить медаль (за первые 3 места). В остальных категориях лучший
                 определяется по очкам, которые он заработал за каждую прошедшую неделю в периоде.
             </p>
-            <Link className="about__tops-link" to={'/repositories/global'}>
-                Вернуться к глобальному топу
-            </Link>
             <div className="about__donation">
                 <iframe
                     src="https://money.yandex.ru/quickpay/shop-widget?writer=seller&targets=%D0%A1%D0%BF%D0%B0%D1%81%D0%B8%D0%B1%D0%BE%20%D0%B7%D0%B0%20%D1%82%D0%BE%D0%BF%D1%87%D0%B8%D0%BA)&targets-hint=&default-sum=100&button-text=11&payment-type-choice=on&comment=on&hint=%D0%BB%D1%8E%D0%B1%D0%B0%D1%8F%20%D0%B5%D1%80%D1%83%D0%BD%D0%B4%D0%B0%20%D0%B5%D1%81%D0%BB%D0%B8%20%D1%85%D0%BE%D1%87%D0%B5%D1%82%D1%81%D1%8F&successURL=&quickpay=shop&account=4100115246755871"

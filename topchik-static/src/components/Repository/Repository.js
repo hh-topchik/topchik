@@ -13,7 +13,7 @@ export default function Repository({ id, isActive, title }) {
                     repository__title_active: isActive,
                 })}
             >
-                {title}
+                <span>{title}</span>
             </Link>
             <div className="repository__dot-wrapper">
                 <div
