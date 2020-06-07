@@ -1,16 +1,4 @@
-import {
-    FETCH_CONTRIBUTORS_SUCCESS,
-    FETCH_CONTRIBUTOR_STATISTICS_SUCCESS,
-} from './contributorsStatisticsActions';
-
-export const contributors = (state = [], action) => {
-    switch (action.type) {
-        case FETCH_CONTRIBUTORS_SUCCESS:
-            return [...state, action.contributors];
-        default:
-            return state;
-    }
-};
+import { FETCH_CONTRIBUTOR_STATISTICS_SUCCESS } from './contributorsStatisticsActions';
 
 export const contributorsStatistics = (state = [], action) => {
     switch (action.type) {

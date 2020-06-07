@@ -6,11 +6,9 @@ import {
     categories,
     error,
     leaderboards,
-} from './ranking/rankingReducers';
-import {
     contributors,
-    contributorsStatistics,
-} from './contributorsStatistics/contributorsStatisticsReducers';
+} from './ranking/rankingReducers';
+import { contributorsStatistics } from './contributorsStatistics/contributorsStatisticsReducers';
 
 export default combineReducers({
     repositories,

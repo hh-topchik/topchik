@@ -7,7 +7,7 @@ import {
     fetchCategoryTopForPeriod,
     showActiveRepository,
 } from './../../redux/ranking/rankingActions';
-import { fetchContributorsByRepositoryId } from '../../redux/contributorsStatistics/contributorsStatisticsActions';
+import { fetchContributorsByRepositoryId } from '../../redux/ranking/rankingActions';
 import { useParams } from 'react-router-dom';
 
 function Sidebar() {
@@ -51,10 +51,7 @@ function Sidebar() {
                 const url = id === 'global' ? '/globalTops' : '/concreteTops';
 
                 getWeeklyTops(url, id, categories);
-
-                if (id !== 'global') {
-                    getContributors(id);
-                }
+                getContributors(id);
             } else {
                 changeActiveRepository(id);
             }

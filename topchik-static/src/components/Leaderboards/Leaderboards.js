@@ -38,11 +38,15 @@ function Leaderboards() {
         // и границу переключения при скролле ВВЕРХ нужно задавать как изначальное смещение ПЛЮС высоты текущей категории
         const upperLimit = categoryRefs[0].current.offsetTop + activeCategoryElement.clientHeight;
         const scrollTop = activeCategoryElement.getBoundingClientRect().top;
+        // если upperLimit получился больше чем видимая область, то нужно отнять разницу между upperLimit и window.innerHeight от window.innerHeight
+        // и использовать это число как верхнее ограничение (для экранов меньше 900 пикселей)
+        const adaptiveUpperLimit =
+            upperLimit > window.innerHeight ? 2 * window.innerHeight - upperLimit : upperLimit;
 
         let calculatedActiveCategory = activeCategoryId;
-        if (scrollTop < lowerLimit) {
+        if (scrollTop < lowerLimit + 60) {
             calculatedActiveCategory++;
-        } else if (scrollTop > upperLimit) {
+        } else if (scrollTop > adaptiveUpperLimit) {
             calculatedActiveCategory--;
         }
 
@@ -74,6 +78,7 @@ function Leaderboards() {
                         description={category.description}
                         repositoryId={repositoryId}
                         unitOfMeasure={category.unitOfMeasure}
+                        title={category.title}
                     />
                 ))}
             </div>

@@ -5,6 +5,7 @@ import {
     SHOW_ACTIVE_REPO,
     FETCH_REPOSITORY_TOPS_FAILURE,
     FETCH_REPOSITORY_TOPS_SUCCESS,
+    FETCH_CONTRIBUTORS_SUCCESS,
 } from './rankingActions';
 
 export const repositories = (state = [], action) => {
@@ -66,6 +67,15 @@ export const leaderboards = (state = [], action) => {
         case FETCH_DATA_SUCCESS:
         case FETCH_REPOSITORY_TOPS_SUCCESS:
             return [...state, ...action.leaderboards];
+        default:
+            return state;
+    }
+};
+
+export const contributors = (state = [], action) => {
+    switch (action.type) {
+        case FETCH_CONTRIBUTORS_SUCCESS:
+            return [...state, action.contributors];
         default:
             return state;
     }

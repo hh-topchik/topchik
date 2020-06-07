@@ -35,10 +35,7 @@ export default function Developer({
             </div>
             <Link
                 to={{
-                    pathname:
-                        repositoryId === 'global'
-                            ? location.pathname
-                            : `/repositories/${repositoryId}/contributorsStatistics`,
+                    pathname: `/repositories/${repositoryId}/contributorsStatistics`,
                     state: { account: account, categoryId: categoryId },
                 }}
                 className="developer__avatar-wrapper"
@@ -48,10 +45,7 @@ export default function Developer({
             <div className="developer__count-indicator">
                 <Link
                     to={{
-                        pathname:
-                            repositoryId === 'global'
-                                ? location.pathname
-                                : `/repositories/${repositoryId}/contributorsStatistics`,
+                        pathname: `/repositories/${repositoryId}/contributorsStatistics`,
                         state: { account: account, categoryId: categoryId },
                     }}
                     className="developer__name"
