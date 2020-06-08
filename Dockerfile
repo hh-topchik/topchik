@@ -31,9 +31,13 @@ COPY ./topchik-service/src ./src
 COPY ./topchik-service/src/etc ./src/etc
 
 WORKDIR /usr/src/topchik
+RUN adduser --disabled-password --gecos '' topchik
+RUN chown topchik /usr/src/topchik -R
+USER topchik
 RUN mvn clean install
 
 FROM openjdk:11-jdk AS run
+USER root
 COPY ./scripts/sh/back_run_docker.sh /usr/local/bin/
 COPY ./scripts/sh/back_run_cron.sh /usr/local/bin/
 COPY --from=build /usr/src/topchik/topchik-fetcher/ \

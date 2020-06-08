@@ -126,7 +126,7 @@ public class CommentDaoImplTest {
   }
 
   @Test
-  public void getAggregatedWeeklyCommentsShouldReturnCorrectAmountOfDailyComments() {
+  public void getAggregatedWeeklyCommentsShouldReturnCorrectAmountOfWeeklyComments() {
     insertData();
     PowerMockito.mockStatic(HibernateUtil.class);
     PowerMockito.when(HibernateUtil.getSessionFactory()).thenReturn(createSessionFactory());
@@ -197,7 +197,7 @@ public class CommentDaoImplTest {
   }
 
   @Test
-  public void getAggregatedWeeklyCommentedPullRequestsShouldReturnCorrectAmountOfDailyComments() {
+  public void getAggregatedWeeklyCommentedPullRequestsShouldReturnCorrectAmountOfWeeklyComments() {
     insertData();
     PowerMockito.mockStatic(HibernateUtil.class);
     PowerMockito.when(HibernateUtil.getSessionFactory()).thenReturn(createSessionFactory());
