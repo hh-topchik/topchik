@@ -56,33 +56,19 @@ public class AppResource {
   @GET
   @Path("/contributors")
   public Response getContributors(@QueryParam("repoId") Long repoId) {
-    if (repoId == null) {
-      return Response
-          .ok(appMapper.mapContributors())
-          .header("Access-Control-Allow-Origin", "*")
-          .build();
-    } else {
-      return Response
-          .ok(appMapper.mapContributors(repoId))
-          .header("Access-Control-Allow-Origin", "*")
-          .build();
-    }
+    return Response
+        .ok(appMapper.mapContributors(repoId))
+        .header("Access-Control-Allow-Origin", "*")
+        .build();
   }
 
   @GET
   @Path("/contributorStatistics")
   public Response getContributorStatistics(@QueryParam("repoId") Long repoId,
                                            @QueryParam("accountId") Long accountId) {
-    if (repoId == null) {
-      return Response
-          .ok(appMapper.mapContributorStatistics(accountId))
-          .header("Access-Control-Allow-Origin", "*")
-          .build();
-    } else {
-      return Response
-          .ok(appMapper.mapContributorStatistics(repoId, accountId))
-          .header("Access-Control-Allow-Origin", "*")
-          .build();
-    }
+    return Response
+        .ok(appMapper.mapContributorStatistics(repoId, accountId))
+        .header("Access-Control-Allow-Origin", "*")
+        .build();
   }
 }
