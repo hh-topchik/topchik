@@ -331,6 +331,23 @@ public class CountPointsDao {
    * Получение списка id всех пользователей в данном репозитории
    * */
   @Transactional
+  public List<Integer> getReposAccountIdList() {
+    List accountsObjects = sessionFactory
+        .getCurrentSession()
+        .createNativeQuery("SELECT DISTINCT account_id FROM daily_count")
+        .list();
+    List<Integer> accountsList = new ArrayList<>();
+    for (Object accountIdObject : accountsObjects) {
+      accountsList.add(((BigInteger) accountIdObject).intValue());
+    }
+    Collections.sort(accountsList);
+    return accountsList;
+  }
+
+  /**
+   * Получение списка id всех пользователей в данном репозитории
+   * */
+  @Transactional
   public List<Integer> getReposAccountIdList(Long repoId) {
     List accountsObjects = sessionFactory
         .getCurrentSession()

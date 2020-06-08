@@ -143,6 +143,21 @@ public class AppMapper {
   }
 
   /**
+   * Маппинг информации (аватар и логин) о всех пользователях в БД на DTO,
+   * которая отправит информацию на фронт
+   * */
+  public ContributorDto mapContributors() {
+    List<ContributorInfoDto> contributorInfoDtos = countPointsDao
+        .getReposAccountIdList()
+        .stream()
+        .map(accId -> new ContributorInfoDto(accountDao.findById(accId).getAccountId(),
+            accountDao.findById(accId).getAvatar(),
+            accountDao.findById(accId).getLogin()))
+        .collect(Collectors.toList());
+    return new ContributorDto(contributorInfoDtos);
+  }
+
+  /**
    * Маппинг информации (аватар и логин) о всех пользователях в данном репозитории на DTO,
    * которая отправит информацию на фронт
    * */
@@ -155,6 +170,27 @@ public class AppMapper {
             accountDao.findById(accId).getLogin()))
         .collect(Collectors.toList());
     return new ContributorDto(contributorInfoDtos);
+  }
+
+  /**
+   * Маппинг личной статистики данного пользователя на DTO,
+   * которая отправит информацию на фронт
+   * */
+  public ContributorStatisticsDto mapContributorStatistics(Long accountId) {
+    List<CategoryStatisticsDto> categoryStatisticsDtos = new ArrayList<>();
+    for (Integer categoryId : countPointsDao.getCategoriesIdList(accountId)) {
+      List<DateStatisticsDto> dateStatisticsDtos = makeDateStatisticsDto(categoryId, accountId);
+      Long count = dailyCountDao.getCategoryCountSum(categoryId, accountId);
+      Long points = weeklyResultDao.getCategoryPointsSum(categoryId, accountId);
+      categoryStatisticsDtos.add(new CategoryStatisticsDto(categoryId, dateStatisticsDtos, count, points));
+    }
+    return new ContributorStatisticsDto(accountDao.findById(accountId).getLogin(),
+        categoryStatisticsDtos,
+        new MedalDto(
+            weeklyResultDao.getMedalSum(Medal.GOLD.getId(), accountId),
+            weeklyResultDao.getMedalSum(Medal.SILVER.getId(), accountId),
+            weeklyResultDao.getMedalSum(Medal.BRONZE.getId(), accountId)
+        ));
   }
 
   /**
@@ -176,6 +212,21 @@ public class AppMapper {
             weeklyResultDao.getMedalSum(Medal.SILVER.getId(), accountId, repoId),
             weeklyResultDao.getMedalSum(Medal.BRONZE.getId(), accountId, repoId)
         ));
+  }
+
+  /**
+   * Метод формирования DateStatisticsDto
+   * */
+  private List<DateStatisticsDto> makeDateStatisticsDto(Integer categoryId, Long accountId) {
+    List<DateStatisticsDto> dateStatisticsDtos = new ArrayList<>();
+    List<LocalDate> weekDates = weeklyResultDao.getDistinctWeekDates(categoryId, accountId);
+    for (LocalDate weekDate : weekDates) {
+      Long count = dailyCountDao.getWeekDateCountSum(weekDate, categoryId, accountId);
+      int medal = weeklyResultDao.getAccountMedalByWeekDate(weekDate, categoryId, accountId);
+      dateStatisticsDtos.add(new DateStatisticsDto(weekDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
+          count, medal));
+    }
+    return dateStatisticsDtos;
   }
 
   /**
