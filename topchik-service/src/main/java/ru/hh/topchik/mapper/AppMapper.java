@@ -22,6 +22,7 @@ import ru.hh.topchik.dto.RepositoryInfoDto;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class AppMapper {
         .collect(Collectors.toList());
 
     List<CategoryInfoDto> categoryInfoDtos = countPointsDao
-        .getCategoriesIdList()
+        .getCategoriesIdList(null)
         .stream()
         .map(catId -> new CategoryInfoDto(catId,
             Category.getById(catId).getTitle(),
@@ -85,16 +86,16 @@ public class AppMapper {
   /**
    * Получение топа в зависимости от временного промежутка
    * */
-  private List<CountPointsDto> getGlobalTop(int categoryId, String period) {
+  private List<CountPointsDto> getGlobalTop(Integer categoryId, String period) {
     switch (period) {
       case "week":
-        return countPointsDao.getWeekResults(categoryId).stream().map(this::mapCountPointsDto).collect(Collectors.toList());
+        return countPointsDao.getWeekResults(categoryId, null).stream().map(this::mapCountPointsDto).collect(Collectors.toList());
       case "quarter":
-        return countPointsDao.getQuarterResults(categoryId).stream().map(this::mapCountPointsDto).collect(Collectors.toList());
+        return countPointsDao.getQuarterResults(categoryId, null).stream().map(this::mapCountPointsDto).collect(Collectors.toList());
       case "year":
-        return countPointsDao.getYearResults(categoryId).stream().map(this::mapCountPointsDto).collect(Collectors.toList());
+        return countPointsDao.getYearResults(categoryId, null).stream().map(this::mapCountPointsDto).collect(Collectors.toList());
       case "alltime":
-        return countPointsDao.getAllTimeResults(categoryId).stream().map(this::mapCountPointsDto).collect(Collectors.toList());
+        return countPointsDao.getAllTimeResults(categoryId, null).stream().map(this::mapCountPointsDto).collect(Collectors.toList());
       default:
         System.out.println("Нет такого временного промежутка");
         return null;
@@ -143,21 +144,6 @@ public class AppMapper {
   }
 
   /**
-   * Маппинг информации (аватар и логин) о всех пользователях в БД на DTO,
-   * которая отправит информацию на фронт
-   * */
-  public ContributorDto mapContributors() {
-    List<ContributorInfoDto> contributorInfoDtos = countPointsDao
-        .getReposAccountIdList()
-        .stream()
-        .map(accId -> new ContributorInfoDto(accountDao.findById(accId).getAccountId(),
-            accountDao.findById(accId).getAvatar(),
-            accountDao.findById(accId).getLogin()))
-        .collect(Collectors.toList());
-    return new ContributorDto(contributorInfoDtos);
-  }
-
-  /**
    * Маппинг информации (аватар и логин) о всех пользователях в данном репозитории на DTO,
    * которая отправит информацию на фронт
    * */
@@ -165,32 +151,12 @@ public class AppMapper {
     List<ContributorInfoDto> contributorInfoDtos = countPointsDao
         .getReposAccountIdList(repoId)
         .stream()
+        .map(BigInteger::longValue)
         .map(accId -> new ContributorInfoDto(accountDao.findById(accId).getAccountId(),
             accountDao.findById(accId).getAvatar(),
             accountDao.findById(accId).getLogin()))
         .collect(Collectors.toList());
     return new ContributorDto(contributorInfoDtos);
-  }
-
-  /**
-   * Маппинг личной статистики данного пользователя на DTO,
-   * которая отправит информацию на фронт
-   * */
-  public ContributorStatisticsDto mapContributorStatistics(Long accountId) {
-    List<CategoryStatisticsDto> categoryStatisticsDtos = new ArrayList<>();
-    for (Integer categoryId : countPointsDao.getCategoriesIdList(accountId)) {
-      List<DateStatisticsDto> dateStatisticsDtos = makeDateStatisticsDto(categoryId, accountId);
-      Long count = dailyCountDao.getCategoryCountSum(categoryId, accountId);
-      Long points = weeklyResultDao.getCategoryPointsSum(categoryId, accountId);
-      categoryStatisticsDtos.add(new CategoryStatisticsDto(categoryId, dateStatisticsDtos, count, points));
-    }
-    return new ContributorStatisticsDto(accountDao.findById(accountId).getLogin(),
-        categoryStatisticsDtos,
-        new MedalDto(
-            weeklyResultDao.getMedalSum(Medal.GOLD.getId(), accountId),
-            weeklyResultDao.getMedalSum(Medal.SILVER.getId(), accountId),
-            weeklyResultDao.getMedalSum(Medal.BRONZE.getId(), accountId)
-        ));
   }
 
   /**
@@ -212,21 +178,6 @@ public class AppMapper {
             weeklyResultDao.getMedalSum(Medal.SILVER.getId(), accountId, repoId),
             weeklyResultDao.getMedalSum(Medal.BRONZE.getId(), accountId, repoId)
         ));
-  }
-
-  /**
-   * Метод формирования DateStatisticsDto
-   * */
-  private List<DateStatisticsDto> makeDateStatisticsDto(Integer categoryId, Long accountId) {
-    List<DateStatisticsDto> dateStatisticsDtos = new ArrayList<>();
-    List<LocalDate> weekDates = weeklyResultDao.getDistinctWeekDates(categoryId, accountId);
-    for (LocalDate weekDate : weekDates) {
-      Long count = dailyCountDao.getWeekDateCountSum(weekDate, categoryId, accountId);
-      int medal = weeklyResultDao.getAccountMedalByWeekDate(weekDate, categoryId, accountId);
-      dateStatisticsDtos.add(new DateStatisticsDto(weekDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
-          count, medal));
-    }
-    return dateStatisticsDtos;
   }
 
   /**

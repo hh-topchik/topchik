@@ -125,81 +125,36 @@ public class WeeklyResultDaoImpl extends DaoImpl<WeeklyResult> {
    *
    * @param categoryId - id категории
    * @param accountId - id пользователя
-   *
-   * @return List<Date> - список уникальных дат
-   * */
-  public List<LocalDate> getDistinctWeekDates(int categoryId, Long accountId) {
-    Transaction transaction;
-    List<LocalDate> weekDates = null;
-    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-      transaction = session.beginTransaction();
-      weekDates = session.createQuery("SELECT DISTINCT wr.weekDate FROM WeeklyResult wr " +
-          "WHERE wr.category = :category AND wr.accountByAccountId.accountId = :accountId")
-          .setParameter("category", categoryId)
-          .setParameter("accountId", accountId)
-          .getResultList();
-      transaction.commit();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return weekDates;
-  }
-
-  /**
-   * Метод возврата списка уникальных дат, за которые есть недельные результаты пользователя в данной категории
-   *
-   * @param categoryId - id категории
-   * @param accountId - id пользователя
    * @param repoId - id репозитория
    *
    * @return List<Date> - список уникальных дат
    * */
+  @SuppressWarnings("unchecked")
   public List<LocalDate> getDistinctWeekDates(int categoryId, Long accountId, Long repoId) {
     Transaction transaction;
     List<LocalDate> weekDates = null;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
-      weekDates = session.createQuery("SELECT DISTINCT wr.weekDate FROM WeeklyResult wr " +
-          "WHERE wr.category = :category AND wr.accountByAccountId.accountId = :accountId " +
-          "AND wr.repositoryByRepoId.repoId = :repoId")
-          .setParameter("category", categoryId)
-          .setParameter("accountId", accountId)
-          .setParameter("repoId", repoId)
-          .getResultList();
+      if (repoId == null) {
+        weekDates = session.createQuery("SELECT DISTINCT wr.weekDate FROM WeeklyResult wr " +
+            "WHERE wr.category = :category AND wr.accountByAccountId.accountId = :accountId")
+            .setParameter("category", categoryId)
+            .setParameter("accountId", accountId)
+            .getResultList();
+      } else {
+        weekDates = session.createQuery("SELECT DISTINCT wr.weekDate FROM WeeklyResult wr " +
+            "WHERE wr.category = :category AND wr.accountByAccountId.accountId = :accountId " +
+            "AND wr.repositoryByRepoId.repoId = :repoId")
+            .setParameter("category", categoryId)
+            .setParameter("accountId", accountId)
+            .setParameter("repoId", repoId)
+            .getResultList();
+      }
       transaction.commit();
     } catch (Exception e) {
       e.printStackTrace();
     }
     return weekDates;
-  }
-
-  /**
-   * Метод возврата медали пользователя в указанную неделю по данной категории
-   *
-   * @param weekDate - дата подведения итогов той недели
-   * @param categoryId - id категории
-   * @param accountId - id пользователя
-   *
-   * @return Long - искомая медаль
-   * */
-  public int getAccountMedalByWeekDate(LocalDate weekDate, int categoryId, Long accountId) {
-    Transaction transaction;
-    int medal = 0;
-    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-      transaction = session.beginTransaction();
-      medal = (int) session.createQuery("SELECT wr.medal FROM WeeklyResult wr " +
-          "WHERE wr.weekDate = :weekDate " +
-          "AND wr.category = :category " +
-          "AND wr.accountByAccountId.accountId = :accountId")
-          .setParameter("weekDate", weekDate)
-          .setParameter("category", categoryId)
-          .setParameter("accountId", accountId)
-          .getSingleResult();
-      transaction.commit();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return medal;
   }
 
   /**
@@ -217,16 +172,27 @@ public class WeeklyResultDaoImpl extends DaoImpl<WeeklyResult> {
     int medal = 0;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
-      medal = (int) session.createQuery("SELECT wr.medal FROM WeeklyResult wr " +
-          "WHERE wr.weekDate = :weekDate " +
-          "AND wr.category = :category " +
-          "AND wr.accountByAccountId.accountId = :accountId " +
-          "AND wr.repositoryByRepoId.repoId = :repoId")
-          .setParameter("weekDate", weekDate)
-          .setParameter("category", categoryId)
-          .setParameter("accountId", accountId)
-          .setParameter("repoId", repoId)
-          .getSingleResult();
+      if (repoId == null) {
+        medal = (int) session.createQuery("SELECT wr.medal FROM WeeklyResult wr " +
+            "WHERE wr.weekDate = :weekDate " +
+            "AND wr.category = :category " +
+            "AND wr.accountByAccountId.accountId = :accountId")
+            .setParameter("weekDate", weekDate)
+            .setParameter("category", categoryId)
+            .setParameter("accountId", accountId)
+            .getSingleResult();
+      } else {
+        medal = (int) session.createQuery("SELECT wr.medal FROM WeeklyResult wr " +
+            "WHERE wr.weekDate = :weekDate " +
+            "AND wr.category = :category " +
+            "AND wr.accountByAccountId.accountId = :accountId " +
+            "AND wr.repositoryByRepoId.repoId = :repoId")
+            .setParameter("weekDate", weekDate)
+            .setParameter("category", categoryId)
+            .setParameter("accountId", accountId)
+            .setParameter("repoId", repoId)
+            .getSingleResult();
+      }
       transaction.commit();
     } catch (Exception e) {
       e.printStackTrace();
