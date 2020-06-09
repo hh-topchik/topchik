@@ -13,6 +13,7 @@ import java.time.LocalDate;
  * */
 @Singleton
 public class DailyCountDaoImpl extends DaoImpl<DailyCount> {
+
   /**
    * Метод подсчёта общего количества релевантных действий по категории
    *
@@ -27,13 +28,21 @@ public class DailyCountDaoImpl extends DaoImpl<DailyCount> {
     Long countSum = null;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
-      countSum = (Long) session.createQuery("SELECT SUM(dc.counter) FROM DailyCount dc " +
-          "WHERE dc.category = :category AND dc.accountByAccountId.accountId = :accountId " +
-          "AND dc.repositoryByRepoId.repoId = :repoId")
-          .setParameter("category", categoryId)
-          .setParameter("accountId", accountId)
-          .setParameter("repoId", repoId)
-          .getSingleResult();
+      if (repoId == null) {
+        countSum = (Long) session.createQuery("SELECT SUM(dc.counter) FROM DailyCount dc " +
+            "WHERE dc.category = :category AND dc.accountByAccountId.accountId = :accountId")
+            .setParameter("category", categoryId)
+            .setParameter("accountId", accountId)
+            .getSingleResult();
+      } else {
+        countSum = (Long) session.createQuery("SELECT SUM(dc.counter) FROM DailyCount dc " +
+            "WHERE dc.category = :category AND dc.accountByAccountId.accountId = :accountId " +
+            "AND dc.repositoryByRepoId.repoId = :repoId")
+            .setParameter("category", categoryId)
+            .setParameter("accountId", accountId)
+            .setParameter("repoId", repoId)
+            .getSingleResult();
+      }
       transaction.commit();
     } catch (Exception e) {
       e.printStackTrace();
@@ -56,15 +65,25 @@ public class DailyCountDaoImpl extends DaoImpl<DailyCount> {
     Long countSum = null;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
-      countSum = (Long) session.createQuery("SELECT SUM(dc.counter) FROM DailyCount dc " +
-          "WHERE date_trunc('week', dc.date) = date_trunc('week', CAST(:weekDate AS date)) " +
-          "AND dc.category = :category AND dc.accountByAccountId.accountId = :accountId " +
-          "AND dc.repositoryByRepoId.repoId = :repoId")
-          .setParameter("weekDate", weekDate)
-          .setParameter("category", categoryId)
-          .setParameter("accountId", accountId)
-          .setParameter("repoId", repoId)
-          .getSingleResult();
+      if (repoId == null) {
+        countSum = (Long) session.createQuery("SELECT SUM(dc.counter) FROM DailyCount dc " +
+            "WHERE date_trunc('week', dc.date) = date_trunc('week', CAST(:weekDate AS date)) " +
+            "AND dc.category = :category AND dc.accountByAccountId.accountId = :accountId")
+            .setParameter("weekDate", weekDate)
+            .setParameter("category", categoryId)
+            .setParameter("accountId", accountId)
+            .getSingleResult();
+      } else {
+        countSum = (Long) session.createQuery("SELECT SUM(dc.counter) FROM DailyCount dc " +
+            "WHERE date_trunc('week', dc.date) = date_trunc('week', CAST(:weekDate AS date)) " +
+            "AND dc.category = :category AND dc.accountByAccountId.accountId = :accountId " +
+            "AND dc.repositoryByRepoId.repoId = :repoId")
+            .setParameter("weekDate", weekDate)
+            .setParameter("category", categoryId)
+            .setParameter("accountId", accountId)
+            .setParameter("repoId", repoId)
+            .getSingleResult();
+      }
       transaction.commit();
     } catch (Exception e) {
       e.printStackTrace();

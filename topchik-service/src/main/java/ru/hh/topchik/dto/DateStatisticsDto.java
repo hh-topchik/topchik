@@ -1,17 +1,19 @@
 package ru.hh.topchik.dto;
 
+import java.util.List;
+
 public class DateStatisticsDto {
   private String week;
   private Long value;
-  private int medal;
+  private List<Integer> medals;
 
   public DateStatisticsDto() {
   }
 
-  public DateStatisticsDto(String week, Long value, int medal) {
+  public DateStatisticsDto(String week, Long value, List<Integer> medal) {
     this.week = week;
     this.value = value;
-    this.medal = medal;
+    this.medals = medal;
   }
 
   public String getWeek() {
@@ -30,11 +32,11 @@ public class DateStatisticsDto {
     this.value = value;
   }
 
-  public int getMedal() {
-    return medal;
+  public List<Integer> getMedal() {
+    return medals;
   }
 
-  public void setMedal(int medal) {
-    this.medal = medal;
+  public void setMedal(List<Integer> medals) {
+    this.medals = medals;
   }
 }

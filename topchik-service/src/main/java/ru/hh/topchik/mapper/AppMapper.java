@@ -22,6 +22,7 @@ import ru.hh.topchik.dto.RepositoryInfoDto;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class AppMapper {
         .collect(Collectors.toList());
 
     List<CategoryInfoDto> categoryInfoDtos = countPointsDao
-        .getCategoriesIdList()
+        .getCategoriesIdList(null)
         .stream()
         .map(catId -> new CategoryInfoDto(catId,
             Category.getById(catId).getTitle(),
@@ -85,16 +86,16 @@ public class AppMapper {
   /**
    * Получение топа в зависимости от временного промежутка
    * */
-  private List<CountPointsDto> getGlobalTop(int categoryId, String period) {
+  private List<CountPointsDto> getGlobalTop(Integer categoryId, String period) {
     switch (period) {
       case "week":
-        return countPointsDao.getWeekResults(categoryId).stream().map(this::mapCountPointsDto).collect(Collectors.toList());
+        return countPointsDao.getWeekResults(categoryId, null).stream().map(this::mapCountPointsDto).collect(Collectors.toList());
       case "quarter":
-        return countPointsDao.getQuarterResults(categoryId).stream().map(this::mapCountPointsDto).collect(Collectors.toList());
+        return countPointsDao.getQuarterResults(categoryId, null).stream().map(this::mapCountPointsDto).collect(Collectors.toList());
       case "year":
-        return countPointsDao.getYearResults(categoryId).stream().map(this::mapCountPointsDto).collect(Collectors.toList());
+        return countPointsDao.getYearResults(categoryId, null).stream().map(this::mapCountPointsDto).collect(Collectors.toList());
       case "alltime":
-        return countPointsDao.getAllTimeResults(categoryId).stream().map(this::mapCountPointsDto).collect(Collectors.toList());
+        return countPointsDao.getAllTimeResults(categoryId, null).stream().map(this::mapCountPointsDto).collect(Collectors.toList());
       default:
         System.out.println("Нет такого временного промежутка");
         return null;
@@ -150,6 +151,7 @@ public class AppMapper {
     List<ContributorInfoDto> contributorInfoDtos = countPointsDao
         .getReposAccountIdList(repoId)
         .stream()
+        .map(BigInteger::longValue)
         .map(accId -> new ContributorInfoDto(accountDao.findById(accId).getAccountId(),
             accountDao.findById(accId).getAvatar(),
             accountDao.findById(accId).getLogin()))
@@ -186,9 +188,9 @@ public class AppMapper {
     List<LocalDate> weekDates = weeklyResultDao.getDistinctWeekDates(categoryId, accountId, repoId);
     for (LocalDate weekDate : weekDates) {
       Long count = dailyCountDao.getWeekDateCountSum(weekDate, categoryId, accountId, repoId);
-      int medal = weeklyResultDao.getAccountMedalByWeekDate(weekDate, categoryId, accountId, repoId);
+      List<Integer> medals = weeklyResultDao.getAccountMedalByWeekDate(weekDate, categoryId, accountId, repoId);
       dateStatisticsDtos.add(new DateStatisticsDto(weekDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
-          count, medal));
+          count, medals));
     }
     return dateStatisticsDtos;
   }
