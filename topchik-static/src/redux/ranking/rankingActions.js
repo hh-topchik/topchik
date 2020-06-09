@@ -68,6 +68,26 @@ export const fetchRepositoryTopsFailure = (error) => {
     };
 };
 
+export const FETCH_CONTRIBUTORS_SUCCESS = 'FETCH_CONTRIBUTORS_SUCCESS';
+export const fetchContributorsSuccess = (response, repositoryId) => {
+    const contributors = {
+        repositoryId: repositoryId,
+        contributors: response.data.contributors,
+    };
+    return {
+        type: FETCH_CONTRIBUTORS_SUCCESS,
+        contributors: contributors,
+    };
+};
+
+export const FETCH_CONTRIBUTORS_FAILURE = 'FETCH_CONTRIBUTORS_FAILURE';
+export const fetchContributorsFailure = (error) => {
+    return {
+        type: FETCH_CONTRIBUTORS_FAILURE,
+        error: error,
+    };
+};
+
 export const fetchRepositoriesAndCategories = () => (dispatch) => {
     dispatch(fetchRepositoriesAndCategoriesRequest());
 
@@ -96,6 +116,14 @@ export const fetchRepositoriesAndCategories = () => (dispatch) => {
         .catch((error) => {
             dispatch(fetchRepositoriesAndCategoriesFailure(error));
         });
+    axios
+        .get(HOST + '/contributors')
+        .then((response) => {
+            dispatch(fetchContributorsSuccess(response, 'global'));
+        })
+        .catch((error) => {
+            dispatch(fetchContributorsFailure(error));
+        });
 };
 
 export const fetchCategoryTopForPeriod = (url, repositoryId, categories, period) => (dispatch) => {
@@ -115,5 +143,20 @@ export const fetchCategoryTopForPeriod = (url, repositoryId, categories, period)
         })
         .catch((error) => {
             dispatch(fetchRepositoryTopsFailure(error));
+        });
+};
+
+export const fetchContributorsByRepositoryId = (repositoryId) => (dispatch) => {
+    axios
+        .get(HOST + '/contributors', {
+            params: {
+                repoId: repositoryId,
+            },
+        })
+        .then((response) => {
+            dispatch(fetchContributorsSuccess(response, repositoryId));
+        })
+        .catch((error) => {
+            dispatch(fetchContributorsFailure(error));
         });
 };

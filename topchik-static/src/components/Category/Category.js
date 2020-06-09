@@ -15,6 +15,7 @@ export default function Category({
     description,
     repositoryId,
     unitOfMeasure,
+    title,
 }) {
     const { leaderboards } = useSelector((state) => ({
         leaderboards: state.leaderboards,
@@ -63,6 +64,13 @@ export default function Category({
         setShowPaintingAnimation(true);
     };
 
+    const counts = !!developers
+        ? developers.map((developer) =>
+              activeTimePeriod === 'week' ? developer.count : developer.points,
+          )
+        : [];
+    const maxDeveloperCount = Math.max(...counts);
+
     return (
         <div
             className={classNames('category', {
@@ -70,7 +78,8 @@ export default function Category({
             })}
             ref={refs[refId]}
         >
-            <h4 className="category__description">{description}</h4>
+            <h3 className="category__title">{title}</h3>
+            <div className="category__description">{description}</div>
             <div className="category__period-buttons-wrapper">
                 <PeriodButtons
                     activeTimePeriod={activeTimePeriod}
@@ -82,10 +91,6 @@ export default function Category({
             {!!developers && developers.length > 0 ? (
                 <div className="category__ranking">
                     {developers.map((developer, index) => {
-                        const maxDeveloperCount =
-                            activeTimePeriod === 'week'
-                                ? developers[0].count
-                                : developers[0].points;
                         const developerCount =
                             activeTimePeriod === 'week' ? developer.count : developer.points;
                         return (

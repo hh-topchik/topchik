@@ -6,6 +6,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import ContributorSelect from '../ContributorSelect/ContributorSelect';
 import ContributorDetailInfo from '../ContributorDetailInfo/ContributorDetailInfo';
 import Chart from '../Chart/Chart';
+import PropTypes from 'prop-types';
 
 export default function ContributorsStatistics() {
     const { contributors, contributorsStatistics, categories } = useSelector((state) => ({
@@ -108,8 +109,8 @@ function ChartTypeSelector({ categories, activeCategoryId, onChange }) {
     );
 }
 
-function StatisticsSummary({ count, unitOfMeasure, points }) {
-    return (
-        <div className="statistics-summary">{`Всего: ${count} ${unitOfMeasure} (${points} оч.)`}</div>
-    );
-}
+ChartTypeSelector.propTypes = {
+    categories: PropTypes.array,
+    onChange: PropTypes.func,
+    activeCategoryId: PropTypes.string,
+};

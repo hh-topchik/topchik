@@ -3,11 +3,11 @@
 .category {
   margin-bottom: 30px;
   display: none;
-  
+
   @media @screen-gt-m {
     display: block;
     width: 700px;
-    padding: 30px 50px;
+    padding: 20px 50px;
     background-color: white;
     border-radius: 10px;
     margin-bottom: 50px;
@@ -15,22 +15,28 @@
     min-height: 600px;
   }
 
-  &__description {
-    font-size: 14px;
+  &__title {
+    font-size: 20px;
     padding: 0;
     margin: 0;
+  }
+
+  &__description {
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     color: black;
-    padding: 5px 0 5px 0;
+    padding: 0;
 
     @media @screen-gt-m {
-      font-size: 16px;  
+      font-size: 16px;
+      margin-top: 10px;
     }
-
   }
 
   &__period-buttons-wrapper {
     margin: 10px 0 20px 0;
-   
+
     @media @screen-gt-m {
       margin: 20px 0;
     }
@@ -40,4 +46,3 @@
     display: block;
   }
 }
-
